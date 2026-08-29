@@ -107,6 +107,120 @@ a:hover {
 .navbar-minimal .navbar-icons { gap: 16px; }
 
 /* ============================================================
+   boton de cuenta
+   ============================================================ */
+/* Estilos para el botón de cuenta */
+
+.btn-cuenta-identico {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;                  /* Distancia exacta entre icono y texto */
+    background-color: #ffffff; /* Fondo blanco */
+    color: #111;            /* Gris oscuro suave para texto e icono */
+    border: 1px solid #cccccc; /* Borde gris claro muy fino de 1px */
+     padding-left: 7px;
+  padding-right: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+       /* Proporción exacta de márgenes internos */
+    border-radius: 6px;        /* Esquinas suavemente redondeadas */
+    font-family: 'Segoe UI', Arial, sans-serif; /* Tipografía limpia */
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    align-items: center;
+  justify-content: center;
+}
+
+/* Efecto al pasar el mouse por encima */
+.btn-cuenta-identico:hover {
+    background-color: #f9f9f9; 
+}
+
+
+/* ============================================================
+   boton de ayuda
+   ============================================================ */
+   /* Ocultar por completo el checkbox en la página */
+.sidebar-checkbox {
+  display: none;
+}
+
+/* Estilos para el botón de apertura (puedes personalizarlo como quieras) */
+.openBtn {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-family: sans-serif;
+}
+
+/* Estilos base de la barra lateral (Empieza oculta con width: 0) */
+.sidebar {
+  height: 100%;
+  width: 0; 
+  position: fixed;
+  z-index: 1000; /* Se sobrepone a todo */
+  top: 0;
+  right: 0; /* Abre desde la derecha */
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.3s ease; /* Efecto de deslizamiento suave */
+  padding-top: 60px;
+  color: white;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  font-family: sans-serif;
+}
+
+/* Contenido dentro de la barra */
+.sidebar-content {
+  padding: 20px;
+  width: 310px; /* Evita que el texto se deforme al encogerse la barra */
+}
+
+/* Botón de cerrar (X) */
+.sidebar .closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 36px;
+  color: #818181;
+  cursor: pointer;
+}
+
+.sidebar .closeBtn:hover {
+  color: #f1f1f1;
+}
+
+/* Fondo oscuro detrás de la barra (Empieza oculto) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999; /* Justo debajo de la barra lateral */
+  display: none;
+}
+
+/* ==========================================
+   CUANDO EL CHECKBOX SE ACTIVA
+   ========================================== */
+
+/* Cuando el checkbox está marcado (:checked), expande la barra lateral */
+.sidebar-checkbox:checked ~ .sidebar {
+  width: 350px; /* Ancho de la barra abierta */
+}
+
+/* Cuando el checkbox está marcado, muestra el fondo oscuro */
+.sidebar-checkbox:checked ~ .overlay {
+  display: block;
+}
+
+/* ============================================================
    CONTENIDO PRINCIPAL
    ============================================================ */
 main {
@@ -602,6 +716,51 @@ input[type="file"] { display: none; }
 
 .student-card:hover .student-photo { border-color: #2563eb; }
 
+.mensaje-seleccion {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+.mensaje-seleccion h2 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    color: #333;
+}
+
+.mensaje-seleccion p {
+    margin: 0;
+    font-size: 16px;
+    color: #777;
+}
+.titulo-jornada {
+    grid-column: 1 / -1;
+    width: 100%;
+    text-align: center;
+    margin: 40px 0 25px;
+    padding: 0;
+}
+
+.titulo-jornada h2 {
+    margin: 0 0 8px;
+    font-size: 26px;
+    color: #333;
+    text-align: center;
+}
+
+.titulo-jornada p {
+    margin: 0;
+    font-size: 15px;
+    color: #777;
+    text-align: center;
+}
+
+
 /* ============================================================
    DETALLE ESTUDIANTE / OBSERVADOR
    ============================================================ */
@@ -918,3 +1077,75 @@ input[type="file"] { display: none; }
 .text-blue { color: #2563eb; }
 .mt-4 { margin-top: 16px; }
 .mb-4 { margin-bottom: 16px; }
+
+/* --- ESTILOS DE LA BARRA LATERAL (SÓLO CSS) --- */
+
+/* Estado inicial: barra completamente oculta a la derecha */
+.sidebar {
+  height: 100%;
+  width: 0; 
+  position: fixed;
+  z-index: 10000; /* Un número muy alto para que pase por encima de la navbar y el footer */
+  top: 0;
+  right: 0; 
+  background-color: #5e5c5c;
+  overflow-x: hidden;
+  transition: width 0.3s ease; /* Transición suave al abrir/cerrar */
+  padding-top: 60px;
+  color: #ffffff;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+  font-family: sans-serif;
+}
+
+/* Espaciado del contenido */
+.sidebar-content {
+  padding: 25px;
+  width: 300px; /* Ancho fijo interno para que el texto no se rompa al colapsar */
+}
+
+/* Botón de cerrar (X) */
+.sidebar .closeBtn {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 36px;
+  color: #818181;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.sidebar .closeBtn:hover {
+  color: #ffffff;
+}
+
+/* Fondo oscuro translúcido */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(56, 55, 55, 0.5);
+  z-index: 9999; /* Justo debajo de la barra lateral, pero encima de la página */
+  display: none;
+}
+
+/* --- DETECTOR DE ESTADO (LA MAGIA) --- */
+
+/* Cuando el checkbox se activa, expande la barra lateral a 350px de ancho */
+.sidebar-checkbox:checked ~ .sidebar {
+  width: 350px; 
+}
+
+/* Cuando el checkbox se activa, muestra el fondo oscuro */
+.sidebar-checkbox:checked ~ .overlay {
+  display: block;
+}
+
+/*  ============================================================
+   barra de navegacio fija
+   ============================================================ */
+.navbar {
+    width: 100%;
+    flex-shrink: 0;
+}
