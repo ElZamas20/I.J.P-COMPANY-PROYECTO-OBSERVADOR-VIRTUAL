@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observador - Seguimiento Académico</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <span class="navbar-brand" style="font-size:13px; font-weight:700;">seguimiento academico</span>
+    <div style="display:flex; align-items:center; gap:8px; font-size:11px; color:#888; margin-right:auto; margin-left:8px;">
+        <span>(LOGO DEL COLEGIO:)</span>
+    </div>
+    <div class="navbar-icons">
+        <button title="Perfil">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </button>
+        <button title="Configuración">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+    <div class="observer-page">
+
+        <!-- Tarjeta de información del estudiante -->
+        <div class="student-info-wrapper">
+            <span class="student-info-tab">Informacion del estudiante</span>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+                <div class="student-info-box-left">
+                    <!-- Avatar -->
+                    <div class="student-avatar">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </div>
+                    <div class="student-details">
+                        <h3 id="nombre-estudiante">nombre del estudiante</h3>
+                        <p id="info-estudiante">ID: 2023-00452 &bull; Grado 10-B</p>
+                    </div>
+                </div>
+
+                <button class="btn-nueva-obs" onclick="abrirModal()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Nueva Observación
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabla de observaciones -->
+        <table class="obs-table" id="tabla-observaciones">
+            <thead>
+                <tr>
+                    <th>FECHA</th>
+                    <th>OBSERVACION</th>
+                    <th>COMPROMISO</th>
+                    <th>FIRMA</th>
+                </tr>
+            </thead>
+            <tbody id="obs-tbody">
+                <!-- Se rellena con JS -->
+            </tbody>
+        </table>
+
+        <div style="margin-top:12px;">
+            <a href="lista-estudiantes.html">
+                <button class="btn-outline">Volver a la lista</button>
+            </a>
+        </div>
+
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <span>&copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar</span>
+    <div class="footer-links">
+       <a href="#">Términos</a>
+        <a href="#">Privacidad</a>
+    </div>
+</footer>
+
+<!-- MODAL: Nueva Observación -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <h3>Nueva Observación</h3>
+        <div class="form-group">
+            <label>Fecha</label>
+            <input type="date" id="modal-fecha">
+        </div>
+        <div class="form-group">
+            <label>Tipo</label>
+            <select id="modal-tipo">
+                <option value="academico">Académico</option>
+                <option value="convivencial">Convivencial</option>
+                <option value="general">General</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Observación</label>
+            <textarea id="modal-obs" rows="3" placeholder="Describa la observación..."></textarea>
+        </div>
+        <div class="form-group">
+            <label>Compromiso</label>
+            <input type="text" id="modal-compromiso" placeholder="Compromiso del estudiante">
+        </div>
+        <div class="form-group">
+            <label>Firma (Docente/Directivo)</label>
+            <input type="text" id="modal-firma" placeholder="Ej: Prof. Gómez">
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn-primary" onclick="guardarObservacion()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Leer parámetros de URL
+    var params = new URLSearchParams(window.location.search);
+    var nombre  = params.get('nombre') || 'nombre del estudiante';
+    var codigo  = params.get('codigo') || '2023-00000';
+    var grado   = params.get('grado')  || '10-B';
+
+    document.getElementById('nombre-estudiante').textContent = nombre;
+    document.getElementById('info-estudiante').innerHTML =
+        'ID: ' + codigo + ' &bull; Grado ' + grado;
+
+    // Observaciones de muestra (se mostrarán solo para el estudiante id=1)
+    var observacionesDemo = [
+        { fecha: '2023-10-24', obs: 'Participación activa en clase de matemáticas',    compromiso: 'Mantener el ritmo',           firma: 'Prof. Gómez'         },
+        { fecha: '2023-10-20', obs: 'Inasistencia injustificada',                       compromiso: 'Traer excusa médica',         firma: 'Coord. Académica'    },
+        { fecha: '2023-10-15', obs: 'Excelente desempeño en proyecto de ciencias',      compromiso: 'Liderar grupo de estudio',    firma: 'Prof. Rodríguez'     },
+        { fecha: '2023-10-05', obs: 'Llegada tarde recurrente',                         compromiso: 'Mejorar puntualidad',         firma: 'Director de Grupo'   }
+    ];
+
+    // Observaciones guardadas en sesión para esta demo
+    var observacionesActuales = observacionesDemo.slice();
+
+    function renderTabla() {
+        var tbody = document.getElementById('obs-tbody');
+        tbody.innerHTML = '';
+        // Siempre mostrar al menos 7 filas (vacías si no hay datos)
+        var total = Math.max(observacionesActuales.length, 7);
+        for (var i = 0; i < total; i++) {
+            var tr = document.createElement('tr');
+            if (observacionesActuales[i]) {
+                var o = observacionesActuales[i];
+                tr.innerHTML =
+                    '<td>' + o.fecha + '</td>' +
+                    '<td>' + o.obs + '</td>' +
+                    '<td>' + o.compromiso + '</td>' +
+                    '<td class="firma-cell">' + o.firma + '</td>';
+            } else {
+                tr.innerHTML = '<td>&nbsp;</td><td></td><td></td><td></td>';
+            }
+            tbody.appendChild(tr);
+        }
+    }
+
+    renderTabla();
+
+    // Modal
+    function abrirModal() {
+        // Fecha por defecto: hoy
+        var hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('modal-fecha').value = hoy;
+        document.getElementById('modal-overlay').classList.add('active');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modal-overlay').classList.remove('active');
+    }
+
+    function guardarObservacion() {
+        var fecha    = document.getElementById('modal-fecha').value;
+        var obs      = document.getElementById('modal-obs').value.trim();
+        var comp     = document.getElementById('modal-compromiso').value.trim();
+        var firma    = document.getElementById('modal-firma').value.trim();
+
+        if (!fecha || !obs) {
+            alert('Por favor completa al menos la fecha y la observación.');
+            return;
+        }
+        observacionesActuales.unshift({ fecha: fecha, obs: obs, compromiso: comp, firma: firma });
+        renderTabla();
+        cerrarModal();
+    }
+
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModal();
+    });
+</script>
+</body>
+</html>
