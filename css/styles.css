@@ -261,23 +261,22 @@ footer a:hover { color: #2563eb; }
 ===================================================== */
 
 .cuenta-card {
-
     width: calc(100% - 60px);
     max-width: 900px;
 
-    margin: 55px auto 80px auto;
+    /* 25px arriba, auto lados, 5px abajo (menos espacio abajo que arriba) */
+    margin: 40px auto 0px auto;
 
     background: #ffffff;
 
     border: 1px solid #c9c9c9;
     border-radius: 20px;
 
-    padding: 32px 38px;
+    /* Reducimos un poco el relleno de abajo (12px) respecto al de arriba (18px) */
+    padding: 18px 38px 12px 38px;
 
     box-sizing: border-box;
-
 }
-
 
 /* =====================================================
    PARTE SUPERIOR
@@ -910,6 +909,9 @@ footer a:hover { color: #2563eb; }
     color: #111;
     margin-bottom: 28px;
 }
+.texto-centrado {
+    text-align: center;
+}
 
 .dashboard-welcome h1 span {
     color: #2563eb;
@@ -917,6 +919,11 @@ footer a:hover { color: #2563eb; }
 }
 
 .btn-consult {
+    display: flex; /* Quitamos el inline-block */
+    margin: 0 auto; /* Esto centra el botón horizontalmente */
+    width: fit-content; /* Evita que el botón ocupe toda la pantalla */
+    align-items: center;
+    justify-content: center;
     padding: 14px 32px;
     background: #2563eb;
     color: #fff;
@@ -925,10 +932,10 @@ footer a:hover { color: #2563eb; }
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    display: inline-block;
 }
 
 .btn-consult:hover { background: #1d4ed8; }
+
 
 /* ============================================================
    DOCUMENTOS / SUBIDA DE ARCHIVOS
@@ -1540,4 +1547,24 @@ input[type="file"] { display: none; }
 .navbar {
     width: 100%;
     flex-shrink: 0;
+}
+body {
+    /* Ruta de tu imagen (local o enlace web) */
+    background-image: url("fondo.jpg"); 
+    
+    /* Evita que la imagen se repita en mosaico */
+    background-repeat: no-repeat; 
+    
+    /* Centra la imagen en la pantalla */
+    background-position: center; 
+    
+    /* Hace que la imagen cubra todo el elemento sin deformarse */
+    background-size: cover; 
+    
+    /* Mantiene el fondo fijo mientras haces scroll (opcional) */
+    background-attachment: fixed; 
+    
+    /* Altura mínima para asegurar que ocupe toda la ventana */
+    min-height: 100vh; 
+    margin: 0;
 }
