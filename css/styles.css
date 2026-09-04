@@ -118,7 +118,7 @@ a:hover {
     background-color: #ffffff; /* Fondo blanco */
     color: #111;            /* Gris oscuro suave para texto e icono */
     border: 1px solid #cccccc; /* Borde gris claro muy fino de 1px */
-     padding-left: 7px;
+     padding-left: 5px;
   padding-right: 8px;
   padding-top: 6px;
   padding-bottom: 6px;
@@ -249,6 +249,398 @@ footer a:hover { color: #2563eb; }
     gap: 16px;
     align-items: center;
 }
+
+
+/* =====================================================
+   PAGINA DE CUENTA
+===================================================== */
+
+
+/* =====================================================
+   CUADRO DE INFORMACIÓN DE LA CUENTA
+===================================================== */
+
+.cuenta-card {
+
+    width: calc(100% - 60px);
+    max-width: 900px;
+
+    margin: 55px auto 80px auto;
+
+    background: #ffffff;
+
+    border: 1px solid #c9c9c9;
+    border-radius: 20px;
+
+    padding: 32px 38px;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =====================================================
+   PARTE SUPERIOR
+===================================================== */
+
+.cuenta-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+
+}
+
+
+/* =====================================================
+   FOTO
+===================================================== */
+
+.perfil-foto-contenedor {
+
+    width: 140px;
+
+    min-width: 140px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+}
+
+.avatar-container {
+    width: 120px;       /* Ajusta el tamaño que desees para el círculo */
+    height: 120px;
+    background-color: #e5e5e5; /* El color gris de fondo que ya tienes */
+    border-radius: 50%; /* Gracias a esto es un círculo perfecto */
+    
+    /* SOLUCIÓN PARA CENTRAR: Flexbox */
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center;     /* Centrado vertical */
+    
+    /* Opcionales para el texto */
+    text-align: center;
+    padding: 10px;           /* Espacio interno para que el texto no toque los bordes */
+    font-size: 14px;         /* Tamaño de letra adecuado */
+    box-sizing: border-box;  /* Evita que el padding altere el tamaño del círculo */
+}
+
+.perfil-foto {
+
+    width: 125px;
+    height: 125px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 1px solid #c9c9c9;
+
+    background: #f4f4f4;
+
+}
+
+
+/* =====================================================
+   INPUT DE FOTO
+===================================================== */
+
+#seleccionarFoto {
+
+    display: none;
+
+}
+
+
+/* =====================================================
+   BOTÓN CAMBIAR FOTO
+===================================================== */
+
+/* Estilo moderno para el botón con la camarita */
+.btn-cambiar-foto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Espacio entre el icono de la cámara y el texto */
+    
+    padding: 6px 14px;
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* Efecto al pasar el mouse por encima */
+.btn-cambiar-foto:hover {
+    background-color: #f5f5f5;
+    border-color: #b3b3b3;
+}
+
+/* Estilo para el icono SVG de la cámara */
+.icono-camara {
+    color: #555555;
+}
+.btn-cambiar-foto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    /* ESTA LÍNEA BAJA EL BOTÓN Y LO SEPARA DEL CÍRCULO */
+    margin-top: 12px; 
+    
+    padding: 6px 14px;
+    background-color: #ffffff;
+    color: #333333;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+
+/* =====================================================
+   INFORMACIÓN PRINCIPAL
+===================================================== */
+
+.cuenta-principal {
+
+    flex: 1;
+
+}
+
+
+.cuenta-principal h1 {
+
+    margin: 0 0 18px 0;
+
+    font-size: 26px;
+
+    font-weight: 600;
+
+    color: #202124;
+
+}
+
+
+.cuenta-principal p {
+
+    margin: 8px 0;
+
+    font-size: 14px;
+
+    color: #202124;
+
+}
+
+
+.cuenta-principal strong {
+
+    display: inline-block;
+
+    width: 65px;
+
+    color: #707070;
+
+    font-weight: normal;
+
+}
+
+
+/* =====================================================
+   SEPARADOR
+===================================================== */
+
+.cuenta-separador {
+
+    width: 100%;
+
+    height: 1px;
+
+    background: #e0e0e0;
+
+    margin: 30px 0;
+
+}
+
+
+/* =====================================================
+   INFORMACIÓN DE CONTACTO
+===================================================== */
+
+.informacion-contacto h2 {
+
+    margin: 0 0 15px 0;
+
+    font-size: 17px;
+
+    font-weight: 600;
+
+    color: #202124;
+
+}
+
+
+/* =====================================================
+   DATOS
+===================================================== */
+
+.dato-cuenta {
+
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    border-bottom: 1px solid #eeeeee;
+
+}
+
+
+.dato-cuenta:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.dato-titulo {
+
+    width: 220px;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    color: #707070;
+
+}
+
+
+.dato-valor {
+
+    flex: 1;
+
+    font-size: 14px;
+
+    color: #202124;
+
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 700px) {
+
+    .cuenta-card {
+
+        width: calc(100% - 30px);
+
+        margin-top: 35px;
+
+        padding: 25px 20px;
+
+    }
+
+
+    .cuenta-header {
+
+        flex-direction: column;
+
+        text-align: center;
+
+    }
+
+
+    .cuenta-principal {
+
+        width: 100%;
+
+    }
+
+
+    .cuenta-principal strong {
+
+        width: auto;
+
+        margin-right: 5px;
+
+    }
+
+
+    .dato-cuenta {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        justify-content: center;
+
+        gap: 5px;
+
+        padding: 12px 0;
+
+    }
+
+
+    .dato-titulo {
+
+        width: auto;
+
+    }
+
+
+    .dato-valor {
+
+        width: 100%;
+
+    }
+
+}
+
+
+@media (max-width: 450px) {
+
+    .cuenta-card {
+
+        width: calc(100% - 20px);
+
+        padding: 22px 16px;
+
+    }
+
+
+    .perfil-foto {
+
+        width: 110px;
+
+        height: 110px;
+
+    }
+
+
+    .cuenta-principal h1 {
+
+        font-size: 23px;
+
+    }
+
+}
+
 
 /* ============================================================
    PÁGINA DE LOGIN
