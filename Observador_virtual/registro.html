@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar - I.J.P. Company</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+    <style>
+        .register-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 36px;
+        }
+        .register-box {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 28px 36px;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+        .register-box h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #111;
+        }
+        .register-box label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #333;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .register-box input, .register-box select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-bottom: 14px;
+            outline: none;
+            color: #333;
+        }
+        .register-box input:focus, .register-box select:focus { border-color: #2563eb; }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-minimal">
+    <span class="navbar-brand">I.J.P. Company</span>
+<!-- Contenedor del Botón de Cuenta y Menú Desplegable -->
+<div class="account-menu-container">
+    <button class="btn-cuenta-identico" onclick="toggleAccountMenu()">
+        <i class="fa-solid fa-user"></i>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        cuenta
+    </button>
+
+    <!-- RECUADRO / MODAL DESPLEGABLE -->
+    <div class="account-card" id="accountCard">
+        <button class="btn-close-card" onclick="toggleAccountMenu()">&times;</button>
+        
+        <!-- Al hacer clic redirige a cuenta.html -->
+        <div class="profile-info-box" onclick="window.location.href='cuenta.html'">
+            <div class="profile-details">
+                <svg class="avatar-svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+                <div class="user-text">
+                    <strong>Joel P.</strong>
+                    <span>Administrador</span>
+                </div>
+            </div>
+            <button class="btn-toggle-options open" id="toggleOptionsBtn" onclick="toggleAccountOptions(event)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444746" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <!-- SECCIÓN DESPLEGABLE DE OPCIONES -->
+        <div class="options-box" id="optionsBox">
+            <a href="#" class="option-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Cambiar cuenta
+            </a>
+            <hr class="divider">
+            <a href="login.html" class="option-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Cerrar sesión
+            </a>
+        </div>
+
+        <div class="card-footer-links">
+            <a href="politica-privacidad.html">Política de Privacidad</a> &bull; <a href="terminos-condiciones.html">Términos del Servicio</a>
+        </div>
+    </div>
+</div>
+</nav>
+
+<!-- MAIN -->
+<main>
+    <div class="dashboard-actions">
+    <!-- Botón de ayuda -->
+        <label for="toggle-sidebar" style="cursor: pointer;">
+
+            <button class="btn-help" style="pointer-events: none;">
+
+                <svg width="14" height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round">
+
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+
+                </svg>
+
+                ayuda
+
+            </button>
+
+        </label>
+        </div>
+    <div class="register-page">
+        <div class="register-box">
+            <h2>CREAR CUENTA</h2>
+            <form onsubmit="return registrar(event)">
+                <label for="r-nombre">NOMBRE COMPLETO:</label>
+                <input type="text" id="r-nombre" placeholder="Ingrese su nombre" required>
+
+                <label for="r-email">CORREO ELECTRÓNICO:</label>
+                <input type="email" id="r-email" placeholder="ejemplo@correo.com" required>
+
+                <label for="r-usuario">USUARIO:</label>
+                <input type="text" id="r-usuario" placeholder="Nombre de usuario" required>
+
+                <label for="r-rol">ROL:</label>
+                <select id="r-rol">
+                    <option value="acudiente">Acudiente</option>
+                    <option value="docente">Docente</option>
+                    <option value="admin">Administrador</option>
+                </select>
+
+                <label for="r-pass">CONTRASEÑA:</label>
+                <input type="password" id="r-pass" placeholder="••••••••" required>
+
+                <label for="r-pass2">CONFIRMAR CONTRASEÑA:</label>
+                <input type="password" id="r-pass2" placeholder="••••••••" required>
+
+                <button type="submit" class="btn-login">Registrar</button>
+            </form>
+            <div style="text-align:center; margin-top:12px; font-size:13px;">
+                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- FAB Ayuda -->
+<label for="toggle-sidebar">
+
+    <button
+        class="fab-help"
+        title="Ayuda"
+        style="pointer-events: none;">
+        ?
+    </button>
+
+</label>
+
+
+<!-- ======================================================= -->
+<!-- ESTRUCTURA DE LA BARRA LATERAL OCULTA -->
+<!-- ======================================================= -->
+
+<input
+    type="checkbox"
+    id="toggle-sidebar"
+    class="sidebar-checkbox"
+    style="display: none;"
+>
+
+
+<!-- PANEL DE AYUDA -->
+<div class="sidebar">
+
+    <!-- Botón X -->
+    <label for="toggle-sidebar" class="closeBtn">
+        &times;
+    </label>
+
+
+    <div class="sidebar-content">
+    <h2>Centro de Ayuda</h2>
+    <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+    <p>Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.</p>
+    <h3>¿Qué es el Observador Virtual?</h3>
+<br>
+<p>El Observador Virtual es una herramienta digital diseñada para facilitar el registro, consulta y seguimiento de las observaciones de los estudiantes de la institución educativa.</p>
+<br>
+<h3>¿Cómo consultar la información?</h3>
+<br>
+<p>Ingrese a su cuenta y revise la información disponible del estudiante.</p>
+<br>
+<h3>¿Puedo modificar una observación?</h3>
+<br>
+<p>No. Los estudiantes y padres de familia solo pueden consultar la información registrada.</p>
+<br>
+<h3>¿Puedo eliminar una observación?</h3>
+<br>
+<p>No. Los registros son administrados únicamente por el personal autorizado de la institución.</p>
+<br>
+<h3>¿La información es privada?</h3>
+<br>
+<p>Sí. La información es de carácter institucional y solo puede ser consultada por usuarios autorizados.</p>
+<br>
+<h3>¿Más información?</h3>
+<br>
+<p>Si tiene problemas para acceder o consultar la información, comuníquese con la institución educativa.</p>
+  </div>
+
+</div>
+
+
+<!-- FONDO OSCURO -->
+<label for="toggle-sidebar" class="overlay"></label>
+
+<!-- FOOTER -->
+<footer>
+    <span>&copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar</span>
+    <div class="footer-links">
+            <a href="terminos-condiciones.html">Términos y condiciones</a>
+            <a href="politica-privacidad.html">Política de privacidad</a>
+        </div>
+</footer>
+<script>
+    function toggleAccountMenu() {
+        const card = document.getElementById('accountCard');
+        card.classList.toggle('active');
+    }
+
+    function toggleAccountOptions(e) {
+        e.stopPropagation();
+        const optionsBox = document.getElementById('optionsBox');
+        const toggleBtn = document.getElementById('toggleOptionsBtn');
+        
+        if (optionsBox.style.display === "none") {
+            optionsBox.style.display = "block";
+            toggleBtn.classList.add('open');
+        } else {
+            optionsBox.style.display = "none";
+            toggleBtn.classList.remove('open');
+        }
+    }
+</script>
+<script>
+    function registrar(e) {
+        e.preventDefault();
+        var pass  = document.getElementById('r-pass').value;
+        var pass2 = document.getElementById('r-pass2').value;
+        if (pass !== pass2) {
+            alert('Las contraseñas no coinciden.');
+            return false;
+        }
+        if (pass.length < 6) {
+            alert('La contraseña debe tener al menos 6 caracteres.');
+            return false;
+        }
+        alert('Registro exitoso. Por favor inicia sesión.');
+        window.location.href = 'login.html';
+        return false;
+    }
+</script>
+</body>
+</html>
