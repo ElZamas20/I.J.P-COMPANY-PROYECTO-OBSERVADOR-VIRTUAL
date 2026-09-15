@@ -5,6 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - I.J.P. Company</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+    <style>
+        /* Estilos para los botones de edición manteniendo la alineación original */
+        .btn-editar {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 6px;
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            color: #555;
+            transition: color 0.2s ease;
+        }
+
+        .btn-editar:hover {
+            color: #007bff;
+        }
+
+        .btn-editar svg {
+            display: block;
+        }
+
+        /* Espaciado extra para los títulos de las secciones de abajo */
+        .informacion-seguridad {
+            margin-top: 25px;
+        }
+    </style>
 </head>
 
 <body>
@@ -15,27 +44,6 @@
     <span class="navbar-brand">
         I.J.P. Company
     </span>
-
-    <!-- Botón de Cuenta -->
-    <div>
-        <button class="btn-cuenta-identico" onclick="window.location.href='cuenta.html'">
-
-            <svg width="18" height="18" viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round">
-
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-
-            </svg>
-
-            cuenta
-
-        </button>
-    </div>
 
 </nav>
 
@@ -106,49 +114,67 @@
 
 
             <!-- FOTO DE PERFIL -->
-           <div class="perfil-foto-contenedor">
-    <img
-        id="fotoPerfil"
-        src="https://placeholder.com"
-        alt="Observador Virtual"
-        class="perfil-foto"
-        style="font-weight: bold; text-align: center; padding-top: 40px; box-sizing: border-box;"
-    >
+            <div class="perfil-foto-contenedor">
+                <img
+                    id="fotoPerfil"
+                    src="https://placeholder.com"
+                    alt="Observador Virtual"
+                    class="perfil-foto"
+                    style="font-weight: bold; text-align: center; padding-top: 40px; box-sizing: border-box;"
+                >
 
-    <!-- boton para seleccionar foto con icono de camarita incluido -->
-    <label for="seleccionarFoto" class="btn-cambiar-foto">
-        <!-- Icono de camarita en SVG -->
-        <svg class="icono-camara" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-        </svg>
-        Cambiar foto
-    </label>
+                <!-- boton para seleccionar foto con icono de camarita incluido -->
+                <label for="seleccionarFoto" class="btn-cambiar-foto">
+                    <!-- Icono de camarita en SVG -->
+                    <svg class="icono-camara" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                        <circle cx="12" cy="13" r="4"></circle>
+                    </svg>
+                    Cambiar foto
+                </label>
 
-    <input
-        type="file"
-        id="seleccionarFoto"
-        accept="image/*"
-        style="display: none;" 
-    >
-</div>
+                <input
+                    type="file"
+                    id="seleccionarFoto"
+                    accept="image/*"
+                    style="display: none;" 
+                >
+            </div>
 
 
             <!-- INFORMACIÓN PRINCIPAL -->
             <div class="cuenta-principal">
 
                 <h1>
-                    Kevin Camargo
+                    <span id="val-nombre">Kevin Camargo</span>
+                    <button class="btn-editar" onclick="editarCampo('val-nombre', 'Nombre completo')" title="Editar nombre">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </h1>
 
                 <p>
                     <strong>Rol:</strong>
-                    Administrador
+                    <span id="val-rol">Administrador</span>
+                    <button class="btn-editar" onclick="editarCampo('val-rol', 'Rol')" title="Editar rol">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </p>
 
                 <p>
                     <strong>Colegio:</strong>
-                    Colegio Ciudadela Educativa De Bosa
+                    <span id="val-colegio">Colegio Ciudadela Educativa De Bosa</span>
+                    <button class="btn-editar" onclick="editarCampo('val-colegio', 'Colegio')" title="Editar colegio">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </p>
 
             </div>
@@ -156,7 +182,7 @@
         </div>
 
 
-        <!-- SEPARADOR -->
+        <!-- SEPARADOR 1 -->
         <div class="cuenta-separador"></div>
 
 
@@ -176,7 +202,13 @@
                 </span>
 
                 <span class="dato-valor">
-                    administrador@gmail.com
+                    <span id="val-correo">administrador@gmail.com</span>
+                    <button class="btn-editar" onclick="editarCampo('val-correo', 'Correo electrónico')" title="Editar correo">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </span>
 
             </div>
@@ -190,7 +222,13 @@
                 </span>
 
                 <span class="dato-valor">
-                    601 123 4567
+                    <span id="val-telefono">601 123 4567</span>
+                    <button class="btn-editar" onclick="editarCampo('val-telefono', 'Teléfono')" title="Editar teléfono">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </span>
 
             </div>
@@ -204,7 +242,13 @@
                 </span>
 
                 <span class="dato-valor">
-                    300 123 4567
+                    <span id="val-celular">300 123 4567</span>
+                    <button class="btn-editar" onclick="editarCampo('val-celular', 'Celular')" title="Editar celular">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </span>
 
             </div>
@@ -218,7 +262,67 @@
                 </span>
 
                 <span class="dato-valor">
-                    Calle 123 #45-67
+                    <span id="val-direccion">Calle 123 #45-67</span>
+                    <button class="btn-editar" onclick="editarCampo('val-direccion', 'Dirección')" title="Editar dirección">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- SEPARADOR 2 -->
+        <div class="cuenta-separador"></div>
+
+
+        <!-- SEGURIDAD DE LA CUENTA -->
+        <div class="informacion-contacto informacion-seguridad">
+
+            <h2>
+                Seguridad de la cuenta
+            </h2>
+
+
+            <!-- CORREO DE VERIFICACIÓN -->
+            <div class="dato-cuenta">
+
+                <span class="dato-titulo">
+                    Correo de verificación
+                </span>
+
+                <span class="dato-valor">
+                    <span id="val-correo-verificacion">verificacion@gmail.com</span>
+                    <button class="btn-editar" onclick="editarCampo('val-correo-verificacion', 'Correo de verificación')" title="Editar correo de verificación">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                </span>
+
+            </div>
+
+
+            <!-- CONTRASEÑA -->
+            <div class="dato-cuenta">
+
+                <span class="dato-titulo">
+                    Contraseña
+                </span>
+
+                <span class="dato-valor">
+                    <span id="val-password">••••••••••••</span>
+                    <button class="btn-editar" onclick="editarCampo('val-password', 'Contraseña')" title="Editar contraseña">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
                 </span>
 
             </div>
@@ -239,30 +343,16 @@
 
     <div class="footer-links">
 
-        <a href="#">
-            Términos
-        </a>
-
-        <a href="#">
-            Privacidad
-        </a>
+              <a href="terminos-condiciones.html">Términos y condiciones</a>
+            <a href="politica-privacidad.html">Política de privacidad</a>
+</div>
 
     </div>
 
 </footer>
 
 
-<!-- FAB Ayuda -->
-<label for="toggle-sidebar">
 
-    <button
-        class="fab-help"
-        title="Ayuda"
-        style="pointer-events: none;">
-        ?
-    </button>
-
-</label>
 
 
 <!-- ======================================================= -->
@@ -323,31 +413,40 @@
 
 
 <!-- ================================================= -->
-<!-- JAVASCRIPT PARA CAMBIAR FOTO -->
+<!-- JAVASCRIPT -->
 <!-- ================================================= -->
 
+
 <script>
+    // Cambiar foto de perfil
     document.getElementById('seleccionarFoto').addEventListener('change', function(event) {
-        const archivo = event.target.files[0]; // Selecciona el archivo cargado
+        const archivo = event.target.files[0];
         
         if (archivo) {
             const lector = new FileReader();
             lector.onload = function(e) {
                 const img = document.getElementById('fotoPerfil');
-                
-                // 1. Cambia el origen de la imagen por la foto subida
                 img.src = e.target.result;
-                
-                // 2. CORRECCIÓN: Borramos el padding y los estilos del texto para que la foto llene el círculo perfecto
                 img.style.paddingTop = "0px";
                 img.style.objectFit = "cover";
-                img.removeAttribute('alt'); // Quita el texto para que no estorbe en ningún navegador
+                img.removeAttribute('alt');
             }
             lector.readAsDataURL(archivo);
         }
     });
-</script>
 
+    // Función para editar dinámicamente los campos de texto
+    function editarCampo(idElemento, nombreCampo) {
+        const elemento = document.getElementById(idElemento);
+        const valorActual = elemento.innerText.trim();
+        const nuevoValor = prompt(`Ingrese el nuevo valor para ${nombreCampo}:`, valorActual);
+
+        if (nuevoValor !== null && nuevoValor.trim() !== "") {
+            // Si es la contraseña y el usuario ingresó texto legible, lo reemplazamos o mantenemos en formato protegido si prefieres
+            elemento.innerText = nuevoValor.trim();
+        }
+    }
+</script>
 
 </body>
 </html>
