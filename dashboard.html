@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - I.J.P. Company</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="navbar-brand-container">
+        <img src="logo empresa I.J.P COMPANY.png" alt="Logo IJP" class="navbar-logo-izquierdo">
+        <span class="navbar-brand">I.J.P. Company</span>
+    </div>
+    
+
+    <!-- Contenedor del Botón de Cuenta y Menú Desplegable -->
+    <div class="account-menu-container">
+        <button class="btn-cuenta-identico" onclick="toggleAccountMenu()">
+            <i class="fa-solid fa-user"></i>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            cuenta
+        </button>
+
+        <!-- RECUADRO / MODAL DESPLEGABLE -->
+        <div class="account-card" id="accountCard">
+            <button class="btn-close-card" onclick="toggleAccountMenu()">&times;</button>
+            
+            <!-- Al hacer clic en este recuadro te redirige a cuenta.html -->
+            <div class="profile-info-box" onclick="window.location.href='cuenta.html'">
+                <div class="profile-details">
+                    <svg class="avatar-svg" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                    </svg>
+                    <div class="user-text">
+                        <strong>Joel</strong>
+                        <span>Administrador</span>
+                    </div>
+                </div>
+                <button class="btn-toggle-options open" id="toggleOptionsBtn" onclick="toggleAccountOptions(event)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#444746" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- SECCIÓN DESPLEGABLE DE OPCIONES -->
+            <div class="options-box" id="optionsBox">
+                <a href="#" class="option-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Cambiar cuenta
+                </a>
+                <hr class="divider">
+                <a href="login.html" class="option-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Cerrar sesión
+                </a>
+            </div>
+
+            <div class="card-footer-links">
+                <a href="politica-privacidad.html">Política de Privacidad</a> &bull; <a href="terminos-condiciones.html">Términos del Servicio</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+    <!-- Botones de acción superiores -->
+    <div class="dashboard-actions">
+        <button class="btn-update-doc" onclick="window.location.href='datos-personales.html'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Actualizar documentación
+        </button>
+         
+        <!-- botón de ayuda -->
+        <label for="toggle-sidebar" style="cursor: pointer;">
+            <button class="btn-help" style="pointer-events: none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                ayuda
+            </button>
+        </label>
+    </div>
+
+        <!-- Bienvenida -->
+   <!-- SECCIÓN CENTRAL TOTALMENTE REDISEÑADA -->
+    <div class="dashboard-main-container">
+        
+        <!-- COLUMNA IZQUIERDA: Textos y Botón Principal -->
+        <div class="main-left-column">
+            <span class="system-tag-line">Sistema de seguimiento escolar</span>
+            
+            <h1 class="main-welcome-title">
+                Bienvenido al <br>
+                observador virtual <br>
+                <span class="user-name-highlight">("nombre del usuario")</span>
+            </h1>
+            
+            <p class="main-description-text">
+                Al hacer clic en el botón de consulta, podrás revisar detalladamente cada una de las observaciones y seguimientos de convivencia registrados por los docentes y directivos de la institución para los estudiantes.
+            </p>
+            
+            <button class="btn-consult-dark" onclick="window.location.href='lista-estudiantes.html'">
+                Consultar observador ahora
+            </button>
+        </div>
+
+        <!-- COLUMNA DERECHA: Bloques de Estadísticas -->
+        <div class="main-right-column">
+            
+            <!-- Tarjeta 1 -->
+            <div class="statistic-card-box">
+                <div class="stat-square-icon"></div>
+                <div class="stat-info-content">
+                    <strong>128</strong>
+                    <span>observaciones registradas</span>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2 -->
+            <div class="statistic-card-box">
+                <div class="stat-square-icon"></div>
+                <div class="stat-info-content">
+                    <strong>24</strong>
+                    <span>docentes registrando</span>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3 -->
+            <div class="statistic-card-box">
+                <div class="stat-square-icon"></div>
+                <div class="stat-info-content">
+                    <strong>96%</strong>
+                    <span>seguimientos al día</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+  <!-- SECCIÓN DE PROCESO ADICIONAL (DEBAJO DE LA INFO PRINCIPAL) -->
+       <!-- TEXTO EXPLICATIVO DEL PROCESO -->
+    <p class="process-intro-text">
+        Así se registra y se hace seguimiento a la convivencia escolar dentro de la institución.
+    </p>
+
+    <!-- SECCIÓN DE PROCESO ADICIONAL (Tu gráfico de pasos existente) -->
+    <div class="process-timeline-container">
+
+    <div class="process-timeline-container">
+        
+        <!-- Paso 1 -->
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Docente registra la observación</p>
+        </div>
+
+        <div class="timeline-connector"></div>
+
+        <!-- Paso 2 -->
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Se documenta el seguimiento</p>
+        </div>
+
+        <div class="timeline-connector"></div>
+
+        <!-- Paso 3 -->
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Directivo revisa el caso</p>
+        </div>
+
+        <div class="timeline-connector"></div>
+
+        <!-- Paso 4 -->
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Estudiante y acudiente consultan</p>
+        </div>
+
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <span>&copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar</span>
+    <div class="footer-links">
+        <a href="terminos-condiciones.html">Términos y condiciones</a>
+        <a href="politica-privacidad.html">Política de privacidad</a>
+    </div>
+</footer>
+
+<!-- ESTRUCTURA DE LA BARRA LATERAL OCULTA -->
+<input type="checkbox" id="toggle-sidebar" class="sidebar-checkbox" style="display: none;">
+
+<!-- Panel de la barra lateral -->
+<div class="sidebar">
+  <label for="toggle-sidebar" class="closeBtn">&times;</label>
+  
+  <div class="sidebar-content">
+    <h2>Centro de Ayuda</h2>
+    <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+    <p>Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.</p>
+    <h3>¿Qué es el Observador Virtual?</h3>
+    <br>
+    <p>El Observador Virtual es una herramienta digital diseñada para facilitar el registro, consulta y seguimiento de las observaciones de los estudiantes de la institución educativa.</p>
+    <br>
+    <h3>¿Cómo consultar la información?</h3>
+    <br>
+    <p>Ingrese a su cuenta y revise la información disponible del estudiante.</p>
+    <br>
+    <h3>¿Puedo modificar una observación?</h3>
+    <br>
+    <p>No. Los estudiantes y padres de familia solo pueden consultar la información registrada.</p>
+    <br>
+    <h3>¿Puedo eliminar una observación?</h3>
+    <br>
+    <p>No. Los registros son administrados únicamente por el personal autorizado de la institución.</p>
+    <br>
+    <h3>¿La información es privada?</h3>
+    <br>
+    <p>Sí. La información es de carácter institucional y solo puede ser consultada por usuarios autorizados.</p>
+    <br>
+    <h3>¿Más información?</h3>
+    <br>
+    <p>Si tiene problemas para acceder o consultar la información, comuníquese con la institución educativa.</p>
+  </div>
+</div>
+
+<!-- Fondo oscuro -->
+<label for="toggle-sidebar" class="overlay"></label>
+
+<script>
+    function toggleAccountMenu() {
+        const card = document.getElementById('accountCard');
+        card.classList.toggle('active');
+    }
+
+    function toggleAccountOptions(e) {
+        e.stopPropagation();
+        const optionsBox = document.getElementById('optionsBox');
+        const toggleBtn = document.getElementById('toggleOptionsBtn');
+        
+        if (optionsBox.style.display === "none") {
+            optionsBox.style.display = "block";
+            toggleBtn.classList.add('open');
+        } else {
+            optionsBox.style.display = "none";
+            toggleBtn.classList.remove('open');
+        }
+    }
+</script>
+</body>
+</html>
