@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observador Virtual - Iniciar Sesión</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-minimal">
+    <div class="navbar-brand-container">
+        <img src="logo empresa I.J.P COMPANY.png" alt="Logo IJP" class="navbar-logo-izquierdo">
+        <span class="navbar-brand">I.J.P. Company</span>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+    <div class="dashboard-actions">
+        <label for="toggle-sidebar" style="cursor: pointer;">
+            <button class="btn-help" style="pointer-events: none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                ayuda
+            </button>
+        </label>
+    </div>
+
+    <div class="login-page">
+        <h1 class="login-title">OBSERVADOR VIRTUAL</h1>
+
+        <img src="logo IJP COMPANY.png" width="115" height="115" alt="Logo Principal">
+
+        <div class="login-box">
+            <form onsubmit="return validarLogin(event)" novalidate>
+
+                <label for="usuario">CORREO ELECTRÓNICO:</label>
+
+                <div class="input-wrapper">
+                    <!-- Icono Usuario -->
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+
+                    <input
+                        type="text"
+                        id="usuario"
+                        name="usuario"  
+                        autocomplete="username"
+                        required
+                    >
+                </div>
+
+                <span class="input-hint">
+                    Ingresa tu correo electrónico.
+                </span>
+
+                <label for="contrasena">CONTRASEÑA:</label>
+
+                <div class="input-wrapper">
+                    <!-- Icono Candado -->
+                    <svg class="input-icon" viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                    </svg>
+
+                    <input
+                        type="password"
+                        id="contrasena"
+                        name="contrasena"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <span class="input-hint">
+                    La contraseña debe contener mínimo 6 caracteres.
+                </span>
+
+                <div id="error-box" class="mensaje-error-bonito"></div>
+
+                <button type="submit" class="btn-login">
+                    iniciar sesión
+                </button>
+            </form>
+
+            <a href="recuperar-contrasena.html" class="login-forgot">
+                ¿olvidaste tu contraseña?
+            </a>
+        </div>
+
+        <div class="login-actions">
+            <a href="registro.html">
+                <button class="btn-solid" type="button">
+                    registrar
+                </button>
+            </a>
+        </div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <span>&copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar</span>
+
+    <div class="footer-links">
+        <a href="terminos-condiciones.html">
+            Términos y condiciones
+        </a>
+
+        <a href="politica-privacidad.html">
+            Política de privacidad
+        </a>
+    </div>
+</footer>
+
+<!-- SIDEBAR DE AYUDA -->
+<input type="checkbox" id="toggle-sidebar" class="sidebar-checkbox" style="display: none;">
+
+<div class="sidebar">
+    <label for="toggle-sidebar" class="closeBtn">&times;</label>
+
+    <div class="sidebar-content">
+        <h2>Centro de Ayuda</h2>
+
+        <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+
+        <p>
+            Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.
+        </p>
+
+        <h3>¿Qué es el Observador Virtual?</h3>
+        <p>
+            El Observador Virtual es una herramienta digital diseñada para facilitar el registro, consulta y seguimiento de las observaciones de los estudiantes de la institución educativa.
+        </p>
+
+        <h3>¿Cómo iniciar sesión?</h3>
+        <p>
+            Ingresa tu nombre de usuario o correo electrónico y la contraseña que elegiste al registrarte.
+        </p>
+
+        <h3>¿Puedo modificar una observación?</h3>
+        <p>
+            No. Los estudiantes y padres de familia solo pueden consultar la información registrada.
+        </p>
+
+        <h3>¿Puedo eliminar una observación?</h3>
+        <p>
+            No. Los registros son administrados únicamente por el personal autorizado de la institución.
+        </p>
+
+        <h3>¿La información es privada?</h3>
+        <p>
+            Sí. La información es de carácter institucional y solo puede ser consultada por usuarios autorizados.
+        </p>
+
+        <h3>¿Más información?</h3>
+        <p>
+            Si tienes problemas para acceder o consultar la información, comunícate con la institución educativa.
+        </p>
+    </div>
+</div>
+
+<label for="toggle-sidebar" class="overlay"></label>
+
+<!-- LÓGICA DE INICIO DE SESIÓN CON FIREBASE -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+        getAuth,
+        signInWithEmailAndPassword,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+    // Configuración del mismo proyecto utilizado en registro.html
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+        authDomain: "observador-virtual.firebaseapp.com",
+        projectId: "observador-virtual",
+        storageBucket: "observador-virtual.firebasestorage.app",
+        messagingSenderId: "168537175075",
+        appId: "1:168537175075:web:fc0df9eb3c7d26f0e2ad96",
+        measurementId: "G-2E21RDST23"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const formulario = document.querySelector(".login-box form");
+    const campoUsuario = document.getElementById("usuario");
+    const campoContrasena = document.getElementById("contrasena");
+    const errorBox = document.getElementById("error-box");
+    const botonLogin = formulario.querySelector(".btn-login");
+
+    const iconoCampana = `
+        <svg viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2"
+             stroke-linecap="round"
+             stroke-linejoin="round"
+             width="20"
+             height="20"
+             style="flex-shrink: 0;">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+    `;
+
+    function mostrarError(mensaje) {
+        errorBox.replaceChildren();
+
+        const icono = document.createElement("span");
+        icono.innerHTML = iconoCampana;
+
+        const texto = document.createElement("span");
+        texto.textContent = mensaje;
+
+        errorBox.appendChild(icono.firstElementChild);
+        errorBox.appendChild(texto);
+        errorBox.style.display = "flex";
+    }
+
+    function ocultarError() {
+        errorBox.style.display = "none";
+        errorBox.replaceChildren();
+    }
+
+    function traducirError(error) {
+        switch (error.code) {
+            case "auth/invalid-email":
+                return "El formato del correo electrónico no es válido.";
+
+            case "auth/user-not-found":
+            case "auth/invalid-credential":
+            case "auth/wrong-password":
+                return "Nombre, correo o contraseña incorrectos.";
+
+            case "auth/user-disabled":
+                return "Esta cuenta ha sido deshabilitada.";
+
+            case "auth/too-many-requests":
+                return "Demasiados intentos. Espera un momento e inténtalo de nuevo.";
+
+            case "auth/network-request-failed":
+                return "Error de conexión. Comprueba tu internet e inténtalo de nuevo.";
+
+            case "auth/operation-not-allowed":
+                return "El acceso con correo y contraseña no está habilitado en Firebase.";
+
+            default:
+                return "No se pudo iniciar sesión. Inténtalo nuevamente.";
+        }
+    }
+
+    // Inicio de sesión: solo mediante Firebase Authentication.
+    formulario.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        ocultarError();
+
+        const correo = campoUsuario.value.trim();
+        const contrasena = campoContrasena.value;
+
+        if (!correo || !contrasena.trim()) {
+            mostrarError("Debes rellenar todos los campos.");
+            return;
+        }
+
+        if (contrasena.length < 6) {
+            mostrarError("La contraseña debe contener mínimo 6 caracteres.");
+            return;
+        }
+
+        // Firebase utiliza el correo electrónico, no el nombre de usuario.
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+    mostrarError("Ingresa una dirección de correo electrónico válida.");
+    return;
+}
+
+        botonLogin.disabled = true;
+        botonLogin.textContent = "iniciando sesión...";
+
+        try {
+            const resultado = await signInWithEmailAndPassword(
+                auth,
+                correo,
+                contrasena
+            );
+
+            const usuario = resultado.user;
+
+            // Comprobar que el correo esté verificado.
+            if (!usuario.emailVerified) {
+                await signOut(auth);
+
+                mostrarError(
+                    "Debes verificar tu correo electrónico antes de iniciar sesión."
+                );
+                return;
+            }
+
+            // Guardar solo datos básicos; nunca guardar la contraseña.
+            localStorage.setItem(
+                "sesionObservadorVirtual",
+                JSON.stringify({
+                    id: usuario.uid,
+                    nombre: usuario.displayName || "",
+                    correo: usuario.email || "",
+                    rol: ""
+                })
+            );
+
+            localStorage.setItem("usuarioActivo", "true");
+
+            window.location.href = "dashboard.html";
+
+        } catch (error) {
+            console.error("Error al iniciar sesión:", error);
+            mostrarError(traducirError(error));
+
+        } finally {
+            botonLogin.disabled = false;
+            botonLogin.textContent = "iniciar sesión";
+        }
+    });
+
+    campoUsuario.addEventListener("input", ocultarError);
+    campoContrasena.addEventListener("input", ocultarError);
+</script>
+</body>
+</html>

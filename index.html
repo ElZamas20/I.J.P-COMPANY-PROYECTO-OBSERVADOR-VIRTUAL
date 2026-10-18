@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Observador Virtual - I.J.P. Company</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* TARJETA CONTENEDORA FLOTANTE */
+        .loader-container {
+            background: #ffffff;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            animation: fadeIn 0.8s ease-out forwards;
+            text-align: center;
+        }
+
+        .logo { 
+            font-size: 28px; 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+            color: #0f172a;
+        }
+        
+        .sub { 
+            font-size: 13px; 
+            color: #64748b; 
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        /* BARRA DE CARGA ORIGINAL (Fondo oscuro, indicador blanco) */
+        .bar {
+            width: 260px;
+            height: 10px;
+            background: #111827;
+            border-radius: 20px;
+            overflow: hidden;
+            padding: 2px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+        }
+        
+        .bar-inner {
+            height: 100%;
+            background: #ffffff;
+            border-radius: 20px;
+            animation: load 1s linear forwards;
+        }
+
+        /* KEYFRAMES DE ANIMACIONES */
+        @keyframes load { 
+            from { width: 0%; } 
+            to { width: 100%; } 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container">
+        <div class="logo">I.J.P. Company</div>
+        <div class="sub">Observador Virtual — cargando...</div>
+        
+        <div class="bar">
+            <div class="bar-inner"></div>
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 1100);
+    </script>
+</body>
+</html>

@@ -1,0 +1,2167 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directorio de Personal - I.J.P. Company</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        (() => {
+            try {
+                document.documentElement.classList.toggle(
+                    "ov-dark-mode",
+                    localStorage.getItem("ov-tema") === "oscuro"
+                );
+            } catch (error) {}
+        })();
+    </script>
+
+    <style>
+        /* ==========================================
+           DIRECTORIO DE DOCENTES, ORIENTADORES
+           Y COORDINADORES
+        ========================================== */
+
+        .personal-page {
+            width: 100%;
+            padding: 25px;
+            box-sizing: border-box;
+            color: #202124;
+        }
+
+        .personal-contenedor {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .personal-encabezado {
+            margin-bottom: 25px;
+        }
+
+        .personal-encabezado h1 {
+            margin: 0 0 8px;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 700;
+        }
+
+        .personal-encabezado p {
+            margin: 0;
+            color: #5f6368;
+            line-height: 1.6;
+        }
+
+        /* Acceso a gestión de roles: visible únicamente para administradores */
+        .personal-admin-acceso {
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+            margin-top: 16px; padding: 11px 17px; border: 0; border-radius: 12px;
+            background: linear-gradient(135deg, #3157d5, #6845c6); color: #fff;
+            font: inherit; font-weight: 600; text-decoration: none; cursor: pointer;
+            box-shadow: 0 5px 14px rgba(49, 87, 213, .20); transition: transform .18s ease, box-shadow .18s ease;
+        }
+        .personal-admin-acceso:hover { transform: translateY(-1px); box-shadow: 0 8px 18px rgba(49, 87, 213, .27); }
+        .personal-admin-acceso:focus-visible { outline: 3px solid #8ba8ff; outline-offset: 3px; }
+        .personal-admin-acceso[hidden] { display: none !important; }
+        .personal-admin-acceso svg { width: 19px; height: 19px; flex: 0 0 auto; }
+
+        /* BARRA DE BÚSQUEDA Y FILTROS
+           Adaptados al estilo de lista-estudiantes.html */
+
+        .personal-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+            padding: 8px 12px;
+            background: #fff;
+            border: var(--ob-borde, 1px solid #dadce0);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+            box-sizing: border-box;
+        }
+
+        .personal-buscador {
+            display: flex;
+            align-items: center;
+            flex: 1 1 220px;
+            min-width: 0;
+            gap: 8px;
+            padding: 6px 12px;
+            background: #fff;
+            border: var(--ob-borde, 1px solid #dadce0);
+            border-radius: 8px;
+            box-sizing: border-box;
+            color: var(--ob-suave, #5f6368);
+        }
+
+        .personal-buscador::before,
+        .personal-buscador::after {
+            display: none;
+        }
+
+        .personal-buscador input {
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            min-height: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            border-radius: 0;
+            background: transparent;
+            color: var(--ob-texto, #202124);
+            font: inherit;
+            font-size: 14px;
+            box-shadow: none;
+            box-sizing: border-box;
+        }
+
+        .personal-buscador input:focus {
+            border: 0;
+            outline: 0;
+            box-shadow: none;
+        }
+
+        .personal-buscador input::placeholder {
+            color: var(--ob-suave, #5f6368);
+            opacity: 1;
+        }
+
+        .personal-filtros {
+            display: inline-flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            padding: 4px;
+            border: none;
+            border-radius: 50px;
+            background: #f1f3f4;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+
+        .personal-filtro {
+            min-height: 0;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 50px;
+            background: transparent;
+            color: var(--ob-suave, #5f6368);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 400;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color .2s, color .2s, box-shadow .2s;
+        }
+
+        .personal-filtro:hover {
+            border: none;
+            background: rgba(0, 0, 0, .05);
+            color: var(--ob-texto, #202124);
+        }
+
+        .personal-filtro.activo {
+            background: #e8f0fe;
+            border: none;
+            color: var(--ob-azul, #1a73e8);
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+        }
+
+        .personal-filtro.activo:hover {
+            background: #e8f0fe;
+            color: var(--ob-azul, #1a73e8);
+        }
+
+        .personal-resumen {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .personal-resumen h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .personal-contador {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 30px;
+            min-height: 28px;
+            padding: 0 9px;
+            border-radius: 20px;
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-size: .9rem;
+            font-weight: 700;
+        }
+
+        .personal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+            gap: 20px;
+        }
+
+        .personal-card {
+            min-width: 0;
+            padding: 20px;
+            border: 1px solid #e0e3e7;
+            border-radius: 14px;
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .04);
+            transition: transform .2s, box-shadow .2s, border-color .2s;
+        }
+
+        .personal-card:hover {
+            transform: translateY(-3px);
+            border-color: #c8d9f5;
+            box-shadow: 0 7px 20px rgba(0, 0, 0, .08);
+        }
+
+        .personal-card-cabecera {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            margin-bottom: 17px;
+        }
+
+        .personal-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 55px;
+            width: 55px;
+            height: 55px;
+            overflow: hidden;
+            border-radius: 50%;
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-size: 1.05rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .personal-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .personal-identidad {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .personal-identidad h3 {
+            overflow-wrap: anywhere;
+            margin: 0 0 6px;
+            font-size: 1.02rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .personal-rol {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 9px;
+            border-radius: 20px;
+            background: #e8f0fe;
+            color: #1a73e8;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+        .personal-rol.actualiza {
+            background: #e6f4ea;
+            color: #188038;
+        }
+
+        .personal-rol.orientador {
+            background: #f3e8fd;
+            color: #8430ce;
+        }
+
+        .personal-rol.coordinador {
+            background: #fef3e2;
+            color: #b06000;
+        }
+
+        .personal-datos {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .personal-dato {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .personal-dato-icono {
+            flex: 0 0 18px;
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            color: #70757a;
+        }
+
+        .personal-dato-contenido {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .personal-dato-etiqueta {
+            display: block;
+            margin-bottom: 3px;
+            color: #70757a;
+            font-size: .76rem;
+        }
+
+        .personal-dato-valor {
+            display: block;
+            overflow-wrap: anywhere;
+            color: #3c4043;
+            font-size: .9rem;
+            line-height: 1.45;
+        }
+
+        .personal-sin-dato {
+            color: #80868b;
+            font-style: italic;
+        }
+
+        .personal-btn-ver {
+            width: 100%;
+            min-height: 42px;
+            padding: 10px 14px;
+            border: 1px solid #1a73e8;
+            border-radius: 9px;
+            background: #fff;
+            color: #1a73e8;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+        .personal-btn-ver:hover {
+            background: #1a73e8;
+            color: #fff;
+        }
+
+        .personal-estado {
+            grid-column: 1 / -1;
+            padding: 35px 20px;
+            border: 1px dashed #dadce0;
+            border-radius: 12px;
+            color: #5f6368;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        .personal-estado strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #3c4043;
+            font-size: 1.05rem;
+        }
+
+        .personal-estado.error {
+            border-color: #f1b8b8;
+            background: #fce8e6;
+            color: #b3261e;
+        }
+
+        .personal-estado.error strong {
+            color: #b3261e;
+        }
+
+        .personal-estado button {
+            margin-top: 14px;
+            padding: 9px 16px;
+            border: 0;
+            border-radius: 8px;
+            background: #1a73e8;
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Modal de consulta */
+
+        .personal-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: min(560px, calc(100% - 30px));
+            max-width: 560px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 25px;
+            transform: translate(-50%, -50%);
+            border: 0;
+            border-radius: 15px;
+            background: #fff;
+            color: #202124;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, .2);
+        }
+
+        .personal-modal::backdrop {
+            background: rgba(0, 0, 0, .55);
+            backdrop-filter: blur(2px);
+        }
+
+        .personal-modal-cabecera {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .personal-modal-cabecera .personal-avatar {
+            flex-basis: 65px;
+            width: 65px;
+            height: 65px;
+        }
+
+        .personal-modal-cabecera h2 {
+            margin: 0 0 7px;
+            font-size: 1.25rem;
+            overflow-wrap: anywhere;
+        }
+
+        .personal-modal-cabecera p {
+            margin: 0;
+            color: #70757a;
+            font-size: .9rem;
+        }
+
+        .personal-modal-datos {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .personal-modal-dato {
+            min-width: 0;
+            padding: 13px;
+            border: 1px solid #e0e3e7;
+            border-radius: 9px;
+            background: #f8f9fa;
+        }
+
+        .personal-modal-dato.completo {
+            grid-column: 1 / -1;
+        }
+
+        .personal-modal-dato strong {
+            display: block;
+            margin-bottom: 6px;
+            color: #70757a;
+            font-size: .78rem;
+            font-weight: 500;
+        }
+
+        .personal-modal-dato span {
+            display: block;
+            overflow-wrap: anywhere;
+            color: #202124;
+            line-height: 1.5;
+        }
+
+        .personal-modal-acciones {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 22px;
+        }
+
+        .personal-modal-cerrar {
+            min-height: 42px;
+            padding: 10px 18px;
+            border: 0;
+            border-radius: 8px;
+            background: #1a73e8;
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .personal-modal-cerrar:hover {
+            background: #1558b0;
+        }
+
+        /* ==========================================
+           TEMA OSCURO
+        ========================================== */
+
+        html.ov-dark-mode body.ov-tiene-sidebar,
+        body.ov-tiene-sidebar.ov-dark-mode {
+            color-scheme: dark;
+        }
+
+        html.ov-dark-mode .personal-page,
+        body.ov-dark-mode .personal-page {
+            color: #f1f1f1;
+        }
+
+        html.ov-dark-mode .personal-encabezado p,
+        body.ov-dark-mode .personal-encabezado p {
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-toolbar,
+        body.ov-dark-mode .personal-toolbar {
+            background: #292929;
+            border-color: #484848;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+        }
+
+        html.ov-dark-mode .personal-buscador,
+        body.ov-dark-mode .personal-buscador {
+            background: #252525;
+            border-color: #505050;
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-buscador input,
+        body.ov-dark-mode .personal-buscador input {
+            background: transparent;
+            border-color: transparent;
+            color: #f1f1f1;
+        }
+
+        html.ov-dark-mode .personal-buscador input::placeholder,
+        body.ov-dark-mode .personal-buscador input::placeholder {
+            color: #a9a9a9;
+        }
+
+        html.ov-dark-mode .personal-filtros,
+        body.ov-dark-mode .personal-filtros {
+            background: #303030;
+        }
+
+        html.ov-dark-mode .personal-filtro,
+        body.ov-dark-mode .personal-filtro {
+            background: transparent;
+            border-color: transparent;
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-filtro:hover,
+        body.ov-dark-mode .personal-filtro:hover {
+            background: rgba(255, 255, 255, .06);
+            color: #e0e0e0;
+        }
+
+        html.ov-dark-mode .personal-filtro.activo,
+        body.ov-dark-mode .personal-filtro.activo {
+            background: #263b59;
+            color: #a8c7fa;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+        }
+
+        html.ov-dark-mode .personal-filtro.activo:hover,
+        body.ov-dark-mode .personal-filtro.activo:hover {
+            background: #263b59;
+            color: #a8c7fa;
+        }
+
+        html.ov-dark-mode .personal-card,
+        body.ov-dark-mode .personal-card {
+            background: #292929;
+            border-color: #484848;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, .15);
+        }
+
+        html.ov-dark-mode .personal-card:hover,
+        body.ov-dark-mode .personal-card:hover {
+            border-color: #5c7190;
+            box-shadow: 0 7px 20px rgba(0, 0, 0, .25);
+        }
+
+        html.ov-dark-mode .personal-identidad h3,
+        body.ov-dark-mode .personal-identidad h3 {
+            color: #f1f1f1;
+        }
+
+        html.ov-dark-mode .personal-dato-etiqueta,
+        body.ov-dark-mode .personal-dato-etiqueta {
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-dato-valor,
+        body.ov-dark-mode .personal-dato-valor {
+            color: #e0e0e0;
+        }
+
+        html.ov-dark-mode .personal-btn-ver,
+        body.ov-dark-mode .personal-btn-ver {
+            background: transparent;
+            border-color: #8ab4f8;
+            color: #8ab4f8;
+        }
+
+        html.ov-dark-mode .personal-btn-ver:hover,
+        body.ov-dark-mode .personal-btn-ver:hover {
+            background: #1a73e8;
+            color: #fff;
+        }
+
+        html.ov-dark-mode .personal-estado,
+        body.ov-dark-mode .personal-estado {
+            border-color: #505050;
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-estado strong,
+        body.ov-dark-mode .personal-estado strong {
+            color: #f1f1f1;
+        }
+
+        html.ov-dark-mode .personal-estado.error,
+        body.ov-dark-mode .personal-estado.error {
+            background: #3b2424;
+            border-color: #704343;
+            color: #ffcaca;
+        }
+
+        html.ov-dark-mode .personal-estado.error strong,
+        body.ov-dark-mode .personal-estado.error strong {
+            color: #ffcaca;
+        }
+
+        html.ov-dark-mode .personal-modal,
+        body.ov-dark-mode .personal-modal {
+            background: #292929;
+            color: #f1f1f1;
+        }
+
+        html.ov-dark-mode .personal-modal-cabecera p,
+        body.ov-dark-mode .personal-modal-cabecera p {
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-modal-dato,
+        body.ov-dark-mode .personal-modal-dato {
+            background: #303030;
+            border-color: #484848;
+        }
+
+        html.ov-dark-mode .personal-modal-dato strong,
+        body.ov-dark-mode .personal-modal-dato strong {
+            color: #bdbdbd;
+        }
+
+        html.ov-dark-mode .personal-modal-dato span,
+        body.ov-dark-mode .personal-modal-dato span {
+            color: #f1f1f1;
+        }
+
+        html.ov-dark-mode .personal-contador,
+        body.ov-dark-mode .personal-contador {
+            background: #263b59;
+            color: #a8c7fa;
+        }
+
+        /* Adaptación para celulares */
+
+        @media (max-width: 768px) {
+            .personal-page {
+                padding: 18px 14px;
+            }
+
+            .personal-toolbar {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .personal-buscador {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+
+            .personal-filtros {
+                display: inline-flex;
+                flex-wrap: wrap;
+                width: fit-content;
+                max-width: 100%;
+            }
+
+            .personal-filtro {
+                padding: 6px 12px;
+                font-size: .88rem;
+            }
+
+            .personal-grid {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 14px;
+            }
+
+            .personal-modal {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .personal-filtros {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .personal-filtro {
+                padding: 6px 10px;
+                font-size: .82rem;
+            }
+
+            .personal-modal-datos {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .personal-modal-dato.completo {
+                grid-column: auto;
+            }
+
+            .personal-encabezado h1 {
+                font-size: 1.55rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="ov-tiene-sidebar">
+
+<!-- BARRA LATERAL -->
+<aside class="ov-barra-lateral" id="ovBarraLateral">
+    <div class="ov-cabecera">
+        <div class="ov-nombre-pagina">
+            <svg id="ovIconoLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="button" aria-label="Contraer o expandir menú" title="Contraer o expandir menú" tabindex="0">
+                <g fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M256 100 440 192 256 284 72 192Z"/>
+                    <path d="M148 230V330C148 350 160 365 180 375L256 412 332 375C352 365 364 350 364 330V230"/>
+                    <path d="M256 284V412"/>
+                    <path d="M440 192V348"/>
+                </g>
+            </svg>
+            <span>Observador Virtual</span>
+        </div>
+
+        <button class="ov-boton-principal" type="button" onclick="window.location.href='dashboard.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M80 212v236a16 16 0 0 0 16 16h96V328a24 24 0 0 1 24-24h80a24 24 0 0 1 24 24v136h96a16 16 0 0 0 16-16V212"/>
+                <path d="M40 240l216-192 216 192"/>
+            </svg>
+            <span>Ir al inicio</span>
+        </button>
+    </div>
+
+    <nav class="ov-navegacion" aria-label="Navegación principal">
+        <ul>
+            <li>
+                <a href="cuenta.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="256" cy="144" r="88"/>
+                        <path d="M96 432c0-88.4 71.6-160 160-160s160 71.6 160 160"/>
+                    </svg>
+                    <span class="ov-texto-menu">Perfil</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="lista-estudiantes.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="256" cy="140" r="68"/>
+                        <path d="M120 400v-32a136 136 0 0 1 272 0v32"/>
+                        <circle cx="105" cy="205" r="48"/>
+                        <path d="M30 390v-18a75 75 0 0 1 77-75"/>
+                        <circle cx="407" cy="205" r="48"/>
+                        <path d="M482 390v-18a75 75 0 0 0-77-75"/>
+                    </svg>
+                    <span class="ov-texto-menu">Estudiantes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="ACTUAs.html" class="ov-activo" aria-current="page">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="330" cy="105" r="55"/>
+                        <path d="M250 290v-55a80 80 0 0 1 160 0v55"/>
+                        <path d="M250 255l-70 55-65-35"/>
+                        <rect x="35" y="90" width="180" height="210" rx="12"/>
+                        <path d="M70 150h95M70 195h65"/>
+                        <path d="M95 300v45M155 300v45M70 345h110"/>
+                        <path d="M280 290l-25 115M380 290l35 115"/>
+                        <path d="M220 435h230"/>
+                    </svg>
+                    <span class="ov-texto-menu">Docentes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="politica-privacidad.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M256 32 416 96V240c0 104-68 184-160 240C164 424 96 344 96 240V96Z"/>
+                        <rect x="184" y="224" width="144" height="112" rx="16"/>
+                        <path d="M216 224V176a40 40 0 0 1 80 0v48"/>
+                        <circle cx="256" cy="276" r="10"/>
+                        <path d="M256 286v20"/>
+                    </svg>
+                    <span class="ov-texto-menu">Privacidad</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="terminos-condiciones.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M416 221.3V64a32 32 0 0 0-32-32H128a32 32 0 0 0-32 32v384a32 32 0 0 0 32 32h146.7"/>
+                        <path d="M192 128h128M192 208h128M192 288h80M192 368h48"/>
+                        <circle cx="384" cy="384" r="96" fill="var(--ov-sidebar-bg)" stroke="currentColor" stroke-width="24"/>
+                        <path d="M336 384l32 32 64-64"/>
+                    </svg>
+                    <span class="ov-texto-menu">Términos</span>
+                </a>
+            </li>
+
+            <li>
+                <button type="button" id="ovBotonCerrarSesion" class="ov-enlace-cerrar-sesion">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M320 96h96a32 32 0 0 1 32 32v256a32 32 0 0 1-32 32h-96"/>
+                        <path d="m224 352 96-96-96-96"/>
+                        <path d="M320 256H64"/>
+                    </svg>
+                    <span class="ov-texto-menu">Cerrar sesión</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <div>
+        <div class="ov-linea"></div>
+
+        <div class="ov-modo-oscuro">
+            <div class="ov-modo-info">
+                <ion-icon id="ovIconoTema" name="moon-outline"></ion-icon>
+                <span>Modo oscuro</span>
+            </div>
+
+            <button class="ov-switch" id="ovInterruptorTema" type="button" aria-label="Cambiar modo claro u oscuro" aria-pressed="false">
+                <span class="ov-base">
+                    <span class="ov-circulo"></span>
+                </span>
+            </button>
+        </div>
+
+        <div class="ov-usuario">
+            <div class="ov-avatar" id="ovAvatarUsuario">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="25" height="25" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="256" cy="144" r="88"/>
+                    <path d="M96 432c0-88.4 71.6-160 160-160s160 71.6 160 160"/>
+                </svg>
+            </div>
+
+            <div class="ov-usuario-info">
+                <strong id="ovNombreUsuario">Cargando...</strong>
+                <span id="ovRolUsuario">Consultando rol...</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- BOTÓN DEL MENÚ MÓVIL -->
+<button class="ov-menu-movil" id="ovBotonMovil" type="button" aria-label="Abrir menú" aria-expanded="false">
+    <ion-icon name="menu-outline"></ion-icon>
+</button>
+<div class="ov-overlay" id="ovOverlay"></div>
+
+<!-- BARRA SUPERIOR -->
+<nav class="navbar">
+    <div class="navbar-brand-container">
+        <img src="logo empresa I.J.P COMPANY.png" alt="Logo IJP" class="navbar-logo-izquierdo">
+        <span class="navbar-brand">I.J.P. Company</span>
+    </div>
+
+    <div class="ayuda-espacio">
+        <label for="toggle-sidebar" class="ayuda-label">
+            <button type="button" class="btn-help" style="pointer-events:none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                ayuda
+            </button>
+        </label>
+    </div>
+</nav>
+
+<!-- CONTENIDO PRINCIPAL: DIRECTORIO DE PERSONAL -->
+<main>
+    <section class="personal-page">
+        <div class="personal-contenedor">
+
+            <header class="personal-encabezado">
+                <h1>Directorio de personal</h1>
+                <p>Consulta la información disponible de los docentes, orientadores y coordinadores registrados en la institución.</p>
+                <a href="administrar-usuarios.html" class="personal-admin-acceso" id="personalAdminAcceso" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="9" cy="8" r="3.5"/><path d="M3 20v-1.5A5.5 5.5 0 0 1 8.5 13h1A5.5 5.5 0 0 1 15 18.5V20"/><path d="M16 8h5m-2.5-2.5v5"/>
+                    </svg>
+                    Modificar roles
+                </a>
+            </header>
+
+            <div class="personal-toolbar">
+                <label class="personal-buscador">
+                    <input
+                        type="search"
+                        id="personalBuscar"
+                        placeholder="Buscar por nombre, correo, curso o jornada..."
+                        autocomplete="off"
+                        aria-label="Buscar personal"
+                    >
+                </label>
+
+                <div class="personal-filtros" id="personalFiltros" aria-label="Filtrar por rol">
+                    <button type="button" class="personal-filtro activo" data-rol="todos" aria-pressed="true">Todos</button>
+                    <button type="button" class="personal-filtro" data-rol="docente" aria-pressed="false">Docentes</button>
+                    <button type="button" class="personal-filtro" data-rol="orientador" aria-pressed="false">Orientadores</button>
+                    <button type="button" class="personal-filtro" data-rol="coordinador" aria-pressed="false">Coordinadores</button>
+                </div>
+            </div>
+
+            <div class="personal-resumen">
+                <h2>Personal registrado</h2>
+                <span class="personal-contador" id="personalContador">0</span>
+            </div>
+
+            <div class="personal-grid" id="personalGrid" aria-live="polite">
+                <div class="personal-estado">
+                    <strong>Cargando personal...</strong>
+                    Estamos consultando los registros disponibles.
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- MODAL DE CONSULTA DE PERSONAL -->
+    <dialog class="personal-modal" id="personalModal">
+        <div class="personal-modal-cabecera">
+            <div class="personal-avatar" id="personalModalAvatar">P</div>
+            <div>
+                <h2 id="personalModalNombre">Nombre del usuario</h2>
+                <p id="personalModalRol">Rol</p>
+            </div>
+        </div>
+
+        <div class="personal-modal-datos">
+            <div class="personal-modal-dato completo">
+                <strong>Correo electrónico</strong>
+                <span id="personalModalCorreo">No registrado</span>
+            </div>
+
+            <div class="personal-modal-dato">
+                <strong>Teléfono</strong>
+                <span id="personalModalTelefono">No registrado</span>
+            </div>
+
+            <div class="personal-modal-dato">
+                <strong>Celular</strong>
+                <span id="personalModalCelular">No registrado</span>
+            </div>
+
+            <div class="personal-modal-dato">
+                <strong>Curso o grado</strong>
+                <span id="personalModalCurso">No registrado</span>
+            </div>
+
+            <div class="personal-modal-dato">
+                <strong>Jornada</strong>
+                <span id="personalModalJornada">No registrada</span>
+            </div>
+
+            <div class="personal-modal-dato">
+                <strong>Director de curso</strong>
+                <span id="personalModalDirector">No registrado</span>
+            </div>
+
+            <div class="personal-modal-dato">
+                <strong>Ciclo</strong>
+                <span id="personalModalCiclo">No registrado</span>
+            </div>
+
+            <div class="personal-modal-dato completo">
+                <strong>Horario de atención</strong>
+                <span id="personalModalHorario">No registrado</span>
+            </div>
+        </div>
+
+        <div class="personal-modal-acciones">
+            <button type="button" class="personal-modal-cerrar" id="personalModalCerrar">Cerrar</button>
+        </div>
+    </dialog>
+</main>
+
+<!-- PIE DE PÁGINA -->
+<footer>
+    <span>&copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar</span>
+    <div class="footer-links">
+        <a href="terminos-condiciones.html">Términos y condiciones</a>
+        <a href="politica-privacidad.html">Política de privacidad</a>
+    </div>
+</footer>
+
+<!-- CONTROL DEL CENTRO DE AYUDA -->
+<input type="checkbox" id="toggle-sidebar" class="sidebar-checkbox" style="display:none;">
+
+<!-- CENTRO DE AYUDA -->
+<div class="sidebar" id="ovPanelAyuda">
+    <label for="toggle-sidebar" class="closeBtn" id="ovCerrarAyuda" aria-label="Cerrar centro de ayuda">&times;</label>
+
+    <div class="sidebar-content">
+        <h2>Centro de Ayuda</h2>
+        <hr style="border:0;border-top:1px solid #333;margin:15px 0;">
+
+        <p>Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.</p>
+
+        <h3>¿Qué es el Observador Virtual?</h3>
+        <br>
+        <p>El Observador Virtual es una herramienta digital diseñada para facilitar el registro, consulta y seguimiento de las observaciones de los estudiantes de la institución educativa.</p>
+        <br>
+
+        <h3>¿Cómo consultar la información?</h3>
+        <br>
+        <p>Ingrese a su cuenta y revise la información disponible del estudiante.</p>
+        <br>
+
+        <h3>¿Puedo modificar una observación?</h3>
+        <br>
+        <p>No. Los estudiantes y padres de familia solo pueden consultar la información registrada.</p>
+        <br>
+
+        <h3>¿Puedo eliminar una observación?</h3>
+        <br>
+        <p>No. Los registros son administrados únicamente por el personal autorizado de la institución.</p>
+        <br>
+
+        <h3>¿La información es privada?</h3>
+        <br>
+        <p>Sí. La información es de carácter institucional y solo puede ser consultada por usuarios autorizados.</p>
+        <br>
+
+        <h3>¿Más información?</h3>
+        <br>
+        <p>Si tiene problemas para acceder o consultar la información, comuníquese con la institución educativa.</p>
+    </div>
+</div>
+
+<label for="toggle-sidebar" class="overlay" id="ovOverlayAyuda"></label>
+
+<!-- MODAL DE CIERRE DE SESIÓN -->
+<div id="ovModalCerrarSesion" role="dialog" aria-modal="true" aria-labelledby="ovTituloCerrarSesion" aria-describedby="ovTextoCerrarSesion" hidden>
+    <div class="ov-modal-caja">
+        <h2 id="ovTituloCerrarSesion">¿Cerrar sesión?</h2>
+        <p id="ovTextoCerrarSesion">¿Estás seguro de que deseas cerrar sesión?</p>
+
+        <div class="ov-modal-botones">
+            <button type="button" id="ovConfirmarCerrarSesion">Cerrar sesión</button>
+            <button type="button" id="ovCancelarCerrarSesion">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ICONOS -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- FUNCIONES DE LA BARRA LATERAL, TEMA Y CENTRO DE AYUDA -->
+<script>
+    const ovBarra = document.getElementById('ovBarraLateral');
+    const ovIconoLogo = document.getElementById('ovIconoLogo');
+    const ovBotonMovil = document.getElementById('ovBotonMovil');
+    const ovOverlay = document.getElementById('ovOverlay');
+    const ovInterruptorTema = document.getElementById('ovInterruptorTema');
+    const ovIconoTema = document.getElementById('ovIconoTema');
+
+    function ovAplicarTema(oscuro) {
+        document.body.classList.toggle('ov-dark-mode', oscuro);
+        document.documentElement.classList.toggle('ov-dark-mode', oscuro);
+        document.documentElement.style.backgroundColor = oscuro ? '#212121' : '#f4f6f8';
+
+        ovInterruptorTema.setAttribute('aria-pressed', String(oscuro));
+        ovIconoTema.setAttribute('name', oscuro ? 'sunny-outline' : 'moon-outline');
+        ovInterruptorTema.setAttribute(
+            'aria-label',
+            oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
+        );
+    }
+
+    function ovCerrarMenuMovil() {
+        ovBarra.classList.remove('ov-movil-abierta');
+        ovOverlay.classList.remove('ov-overlay-visible');
+        ovBotonMovil.setAttribute('aria-expanded', 'false');
+        ovBotonMovil.setAttribute('aria-label', 'Abrir menú');
+        ovBotonMovil.innerHTML = '<ion-icon name="menu-outline"></ion-icon>';
+    }
+
+    function ovAlternarBarra() {
+        if (window.innerWidth <= 768) {
+            const abierta = ovBarra.classList.toggle('ov-movil-abierta');
+            ovOverlay.classList.toggle('ov-overlay-visible', abierta);
+            ovBotonMovil.setAttribute('aria-expanded', String(abierta));
+            ovBotonMovil.setAttribute('aria-label', abierta ? 'Cerrar menú' : 'Abrir menú');
+            ovBotonMovil.innerHTML = abierta
+                ? '<ion-icon name="close-outline"></ion-icon>'
+                : '<ion-icon name="menu-outline"></ion-icon>';
+        } else {
+            document.body.classList.toggle('ov-sidebar-collapsed');
+            ovBarra.classList.toggle('ov-mini');
+        }
+    }
+
+    ovIconoLogo.addEventListener('click', ovAlternarBarra);
+
+    ovIconoLogo.addEventListener('keydown', (evento) => {
+        if (evento.key === 'Enter' || evento.key === ' ') {
+            evento.preventDefault();
+            ovAlternarBarra();
+        }
+    });
+
+    ovBotonMovil.addEventListener('click', () => {
+        const abierta = ovBarra.classList.toggle('ov-movil-abierta');
+        ovOverlay.classList.toggle('ov-overlay-visible', abierta);
+        ovBotonMovil.setAttribute('aria-expanded', String(abierta));
+        ovBotonMovil.setAttribute('aria-label', abierta ? 'Cerrar menú' : 'Abrir menú');
+        ovBotonMovil.innerHTML = abierta
+            ? '<ion-icon name="close-outline"></ion-icon>'
+            : '<ion-icon name="menu-outline"></ion-icon>';
+    });
+
+    ovOverlay.addEventListener('click', ovCerrarMenuMovil);
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            ovCerrarMenuMovil();
+        }
+    });
+
+    ovInterruptorTema.addEventListener('click', () => {
+        const oscuro = !document.body.classList.contains('ov-dark-mode');
+
+        ovAplicarTema(oscuro);
+
+        try {
+            localStorage.setItem('ov-tema', oscuro ? 'oscuro' : 'claro');
+        } catch (error) {
+            // El cambio visual del tema sigue funcionando sin almacenamiento.
+        }
+    });
+
+    try {
+        const temaGuardado = localStorage.getItem('ov-tema');
+        ovAplicarTema(temaGuardado === 'oscuro');
+    } catch (error) {
+        ovAplicarTema(false);
+    }
+
+    // CENTRO DE AYUDA
+    (() => {
+        const toggle = document.getElementById('toggle-sidebar');
+        const panel = document.getElementById('ovPanelAyuda');
+        const overlayAyuda = document.getElementById('ovOverlayAyuda');
+        const cerrar = document.getElementById('ovCerrarAyuda');
+
+        if (!toggle || !panel || !overlayAyuda || !cerrar) return;
+
+        function actualizarAyuda() {
+            const abierto = toggle.checked;
+            panel.classList.toggle('active', abierto);
+            overlayAyuda.classList.toggle('active', abierto);
+            document.body.classList.toggle('help-open', abierto);
+        }
+
+        toggle.addEventListener('change', actualizarAyuda);
+
+        cerrar.addEventListener('click', (evento) => {
+            evento.preventDefault();
+            evento.stopPropagation();
+            toggle.checked = false;
+            actualizarAyuda();
+        });
+
+        overlayAyuda.addEventListener('click', (evento) => {
+            evento.preventDefault();
+            toggle.checked = false;
+            actualizarAyuda();
+        });
+
+        document.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Escape' && toggle.checked) {
+                toggle.checked = false;
+                actualizarAyuda();
+            }
+        });
+
+        actualizarAyuda();
+    })();
+
+    // CONFIRMACIÓN DE CIERRE DE SESIÓN
+    (() => {
+        const botonAbrir = document.getElementById('ovBotonCerrarSesion');
+        const modal = document.getElementById('ovModalCerrarSesion');
+        const botonCancelar = document.getElementById('ovCancelarCerrarSesion');
+        const botonConfirmar = document.getElementById('ovConfirmarCerrarSesion');
+
+        if (!botonAbrir || !modal || !botonCancelar || !botonConfirmar) {
+            return;
+        }
+
+        function abrirModal() {
+            modal.hidden = false;
+            botonCancelar.focus();
+        }
+
+        function cerrarModal() {
+            modal.hidden = true;
+            botonAbrir.focus();
+        }
+
+        botonAbrir.addEventListener('click', abrirModal);
+        botonCancelar.addEventListener('click', cerrarModal);
+
+        modal.addEventListener('click', (evento) => {
+            if (evento.target === modal) {
+                cerrarModal();
+            }
+        });
+
+        document.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Escape' && !modal.hidden) {
+                cerrarModal();
+            }
+        });
+
+        botonConfirmar.addEventListener('click', async () => {
+            botonConfirmar.disabled = true;
+            botonCancelar.disabled = true;
+            botonConfirmar.textContent = 'Cerrando sesión...';
+
+            try {
+                if (typeof window.ovCerrarSesionFirebase !== 'function') {
+                    throw new Error('La función de Firebase todavía no está disponible.');
+                }
+
+                await window.ovCerrarSesionFirebase();
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+                botonConfirmar.disabled = false;
+                botonCancelar.disabled = false;
+                botonConfirmar.textContent = 'Cerrar sesión';
+                alert('No se pudo cerrar la sesión. Inténtalo nuevamente.');
+            }
+        });
+    })();
+</script>
+
+<!-- FIREBASE: DIRECTORIO DE PERSONAL -->
+<script type="module">
+    import {
+        initializeApp,
+        getApps,
+        getApp
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+    import {
+        getFirestore,
+        collection,
+        getDocs
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+        authDomain: "observador-virtual.firebaseapp.com",
+        projectId: "observador-virtual",
+        storageBucket: "observador-virtual.firebasestorage.app",
+        messagingSenderId: "168537175075",
+        appId: "1:168537175075:web:fc0df9eb3c7d26f0e2ad96",
+        measurementId: "G-2E21RDST23"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const buscarElemento = document.getElementById('personalBuscar');
+    const filtrosElemento = document.getElementById('personalFiltros');
+    const gridElemento = document.getElementById('personalGrid');
+    const contadorElemento = document.getElementById('personalContador');
+
+    const modal = document.getElementById('personalModal');
+    const botonCerrarModal = document.getElementById('personalModalCerrar');
+
+    let personal = [];
+    let filtroActual = 'todos';
+    let cargando = false;
+
+    const COLORES_AVATAR = [
+        '#1a73e8',
+        '#188038',
+        '#8430ce',
+        '#b06000',
+        '#00897b',
+        '#c5221f',
+        '#5e35b1',
+        '#3949ab'
+    ];
+
+    function textoValido(...valores) {
+        for (const valor of valores) {
+            if (typeof valor === 'string' && valor.trim()) {
+                return valor.trim();
+            }
+
+            if (typeof valor === 'number') {
+                return String(valor);
+            }
+        }
+
+        return '';
+    }
+
+    function normalizarTexto(valor) {
+        return String(valor || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+    }
+
+    function escaparHTML(valor) {
+        return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        })[caracter]);
+    }
+
+    function obtenerIniciales(nombre) {
+        const partes = String(nombre || '')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+        return partes
+            .slice(0, 2)
+            .map(parte => parte.charAt(0))
+            .join('')
+            .toUpperCase() || 'P';
+    }
+
+    function normalizarRol(valor) {
+        const rol = normalizarTexto(valor);
+
+        if ([
+            'docente',
+            'docentes',
+            'profesor',
+            'profesora',
+            'profesores',
+            'profesoras'
+        ].includes(rol)) {
+            return 'docente';
+        }
+
+        if ([
+            'orientador',
+            'orientadora',
+            'orientadores',
+            'orientadoras'
+        ].includes(rol)) {
+            return 'orientador';
+        }
+
+        if ([
+            'coordinador',
+            'coordinadora',
+            'coordinadores',
+            'coordinadoras',
+            'cordinador',
+            'cordinadora',
+            'cordinadores',
+            'cordinadoras'
+        ].includes(rol)) {
+            return 'coordinador';
+        }
+
+        return '';
+    }
+
+    function nombreVisibleRol(rol) {
+        const nombres = {
+            docente: 'Docente',
+            orientador: 'Orientador',
+            coordinador: 'Coordinador'
+        };
+
+        return nombres[rol] || 'Personal';
+    }
+
+    function obtenerNombre(datos, correo) {
+        const nombreCompleto = textoValido(
+            datos.nombreCompleto,
+            datos.nombreYApellido,
+            datos.nombre_completo,
+            datos.nombreCompletoUsuario,
+            datos.nombre_completo_usuario
+        );
+
+        if (nombreCompleto) {
+            return nombreCompleto;
+        }
+
+        const nombres = textoValido(datos.nombre, datos.nombres);
+        const apellidos = textoValido(datos.apellidos, datos.apellido);
+
+        if (nombres || apellidos) {
+            return [nombres, apellidos].filter(Boolean).join(' ');
+        }
+
+        const usuarioCorreo = String(correo || '').split('@')[0];
+
+        return usuarioCorreo || 'Usuario sin nombre';
+    }
+
+    function obtenerCorreo(datos) {
+        return textoValido(
+            datos.correo,
+            datos.email,
+            datos.gmail,
+            datos.correoElectronico,
+            datos.correo_electronico
+        );
+    }
+
+    function obtenerFoto(datos) {
+        return textoValido(
+            datos.fotoURL,
+            datos.fotoPerfil,
+            datos.photoURL,
+            datos.foto,
+            datos.imagenPerfil
+        );
+    }
+
+    function obtenerCurso(datos) {
+        return textoValido(
+            datos.curso,
+            datos.grado,
+            datos.gradoAsignado,
+            datos.cursoAsignado,
+            datos.directoriaCurso
+        );
+    }
+
+    function obtenerJornada(datos) {
+        return textoValido(
+            datos.jornada,
+            datos.jornadaAsignada
+        );
+    }
+
+    function obtenerTelefono(datos) {
+        return textoValido(
+            datos.telefono,
+            datos.telefonoFijo
+        );
+    }
+
+    function obtenerCelular(datos) {
+        return textoValido(
+            datos.celular,
+            datos.telefonoCelular,
+            datos.movil
+        );
+    }
+
+    function obtenerDirector(datos) {
+        const valor = datos.esDirectorCurso
+            ?? datos.directorDeCurso
+            ?? datos.directorCurso
+            ?? datos.esDirector;
+
+        if (typeof valor === 'boolean') {
+            return valor ? 'Sí' : 'No';
+        }
+
+        if (typeof valor === 'string' && valor.trim()) {
+            const normalizado = normalizarTexto(valor);
+
+            if (['si', 'sí', 'true', '1'].includes(normalizado)) {
+                return 'Sí';
+            }
+
+            if (['no', 'false', '0'].includes(normalizado)) {
+                return 'No';
+            }
+
+            return valor.trim();
+        }
+
+        return '';
+    }
+
+    function obtenerCiclo(datos) {
+        return textoValido(
+            datos.ciclo,
+            datos.cicloAsignado,
+            datos.cicloAcademico
+        );
+    }
+
+    function obtenerHorario(datos) {
+        const horario = datos.horarioAtencion
+            ?? datos.horario_de_atencion
+            ?? datos.horarioAtención
+            ?? datos.horario;
+
+        if (typeof horario === 'string') {
+            return horario.trim();
+        }
+
+        if (horario && typeof horario === 'object') {
+            const dias = textoValido(horario.dias, horario.dia);
+            const inicio = textoValido(horario.horaInicio, horario.inicio);
+            const fin = textoValido(horario.horaFin, horario.fin);
+            const descripcion = textoValido(horario.descripcion);
+
+            if (descripcion) return descripcion;
+
+            return [
+                dias,
+                [inicio, fin].filter(Boolean).join(' - ')
+            ].filter(Boolean).join(' · ');
+        }
+
+        return '';
+    }
+
+    function convertirUsuario(documento) {
+        const datos = documento.data() || {};
+        const rolOriginal = textoValido(
+            datos.rol,
+            datos.tipoUsuario,
+            datos.tipoCuenta,
+            datos.tipo
+        );
+
+        const rol = normalizarRol(rolOriginal);
+
+        // Se descartan estudiantes, acudientes, rectores,
+        // administradores y cualquier otro rol.
+        if (!rol) {
+            return null;
+        }
+
+        const correo = obtenerCorreo(datos);
+
+        return {
+            id: documento.id,
+            nombre: obtenerNombre(datos, correo),
+            correo,
+            rol,
+            foto: obtenerFoto(datos),
+            telefono: obtenerTelefono(datos),
+            celular: obtenerCelular(datos),
+            curso: obtenerCurso(datos),
+            jornada: obtenerJornada(datos),
+            director: obtenerDirector(datos),
+            ciclo: obtenerCiclo(datos),
+            horario: obtenerHorario(datos)
+        };
+    }
+
+    function valorDato(valor, textoAlternativo = 'No registrado') {
+        return valor
+            ? escaparHTML(valor)
+            : '<span class="personal-sin-dato">' +
+                escaparHTML(textoAlternativo) +
+              '</span>';
+    }
+
+    function iconoDato(tipo) {
+        const iconos = {
+            correo: '<svg class="personal-dato-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+            curso: '<svg class="personal-dato-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 4l9 6-9 6-9-6Z"/><path d="M7 13v5c3 2 7 2 10 0v-5M21 10v6"/></svg>',
+            jornada: '<svg class="personal-dato-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>',
+            telefono: '<svg class="personal-dato-icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.2 18a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 3.18 2 2 0 0 1 4.07 1h3a2 2 0 0 1 2 1.72l.45 3a2 2 0 0 1-.57 1.7L7.2 9.17a16 16 0 0 0 6 6l1.75-1.75a2 2 0 0 1 1.7-.57l3 .45a2 2 0 0 1 1.72 1.62Z"/></svg>'
+        };
+
+        return iconos[tipo] || '';
+    }
+
+    function crearDato(etiqueta, valor, tipo = '') {
+        return `
+            <div class="personal-dato">
+                ${iconoDato(tipo)}
+                <div class="personal-dato-contenido">
+                    <span class="personal-dato-etiqueta">${escaparHTML(etiqueta)}</span>
+                    <span class="personal-dato-valor">${valorDato(valor)}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function crearAvatar(usuario, indice) {
+        const color = COLORES_AVATAR[indice % COLORES_AVATAR.length];
+        const iniciales = escaparHTML(obtenerIniciales(usuario.nombre));
+
+        if (usuario.foto) {
+            return `
+                <div class="personal-avatar" style="background:${color};">
+                    <img
+                        src="${escaparHTML(usuario.foto)}"
+                        alt="Foto de ${escaparHTML(usuario.nombre)}"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                        onerror="this.remove(); this.parentElement.textContent='${iniciales}'"
+                    >
+                </div>
+            `;
+        }
+
+        return `
+            <div class="personal-avatar" style="background:${color};color:#fff;">
+                ${iniciales}
+            </div>
+        `;
+    }
+
+    function mostrarEstado(titulo, mensaje, esError = false, conReintento = false) {
+        contadorElemento.textContent = '0';
+
+        gridElemento.innerHTML = `
+            <div class="personal-estado ${esError ? 'error' : ''}">
+                <strong>${escaparHTML(titulo)}</strong>
+                <span>${escaparHTML(mensaje)}</span>
+                ${conReintento ? '<br><button type="button" id="personalReintentar">Intentar nuevamente</button>' : ''}
+            </div>
+        `;
+
+        const botonReintentar = document.getElementById('personalReintentar');
+
+        if (botonReintentar) {
+            botonReintentar.addEventListener('click', cargarPersonal);
+        }
+    }
+
+    function obtenerPersonalFiltrado() {
+        const consulta = normalizarTexto(buscarElemento.value);
+
+        return personal.filter(usuario => {
+            const coincideRol =
+                filtroActual === 'todos' ||
+                usuario.rol === filtroActual;
+
+            const textoCompleto = normalizarTexto([
+                usuario.nombre,
+                usuario.correo,
+                nombreVisibleRol(usuario.rol),
+                usuario.telefono,
+                usuario.celular,
+                usuario.curso,
+                usuario.jornada,
+                usuario.director,
+                usuario.ciclo,
+                usuario.horario
+            ].join(' '));
+
+            return coincideRol && textoCompleto.includes(consulta);
+        });
+    }
+
+    function renderizarPersonal() {
+        const lista = obtenerPersonalFiltrado();
+
+        contadorElemento.textContent = String(lista.length);
+
+        if (cargando) {
+            mostrarEstado(
+                'Cargando personal...',
+                'Estamos consultando los registros disponibles.'
+            );
+            return;
+        }
+
+        if (!personal.length) {
+            mostrarEstado(
+                'No hay personal registrado',
+                'No se encontraron docentes, orientadores ni coordinadores en la colección consultada.'
+            );
+            return;
+        }
+
+        if (!lista.length) {
+            gridElemento.innerHTML = `
+                <div class="personal-estado">
+                    <strong>No se encontraron coincidencias</strong>
+                    Prueba con otro nombre, correo, curso, jornada o filtro.
+                </div>
+            `;
+            return;
+        }
+
+        gridElemento.innerHTML = lista.map(usuario => {
+            const indice = personal.findIndex(item => item.id === usuario.id);
+            const rolTexto = nombreVisibleRol(usuario.rol);
+            const claseRol = usuario.rol;
+
+            return `
+                <article class="personal-card">
+                    <div class="personal-card-cabecera">
+                        ${crearAvatar(usuario, Math.max(0, indice))}
+                        <div class="personal-identidad">
+                            <h3>${escaparHTML(usuario.nombre)}</h3>
+                            <span class="personal-rol ${claseRol}">
+                                ${escaparHTML(rolTexto)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="personal-datos">
+                        ${crearDato('Correo electrónico', usuario.correo, 'correo')}
+                        ${crearDato('Curso o grado', usuario.curso, 'curso')}
+                        ${crearDato('Jornada', usuario.jornada, 'jornada')}
+                        ${crearDato('Teléfono', usuario.telefono || usuario.celular, 'telefono')}
+                    </div>
+
+                    <button
+                        type="button"
+                        class="personal-btn-ver"
+                        data-ver-personal="${escaparHTML(usuario.id)}"
+                    >
+                        Ver información
+                    </button>
+                </article>
+            `;
+        }).join('');
+    }
+
+    function establecerTextoModal(id, valor) {
+        const elemento = document.getElementById(id);
+
+        if (elemento) {
+            elemento.textContent = valor || 'No registrado';
+        }
+    }
+
+    function abrirDetalle(id) {
+        const usuario = personal.find(item => item.id === id);
+
+        if (!usuario) return;
+
+        const avatar = document.getElementById('personalModalAvatar');
+        const iniciales = obtenerIniciales(usuario.nombre);
+        const indice = personal.findIndex(item => item.id === usuario.id);
+
+        avatar.replaceChildren();
+
+        if (usuario.foto) {
+            const imagen = document.createElement('img');
+            imagen.src = usuario.foto;
+            imagen.alt = 'Foto de perfil';
+            imagen.referrerPolicy = 'no-referrer';
+
+            imagen.addEventListener('error', () => {
+                avatar.replaceChildren();
+                avatar.textContent = iniciales;
+            });
+
+            avatar.appendChild(imagen);
+        } else {
+            avatar.textContent = iniciales;
+        }
+
+        avatar.style.background = COLORES_AVATAR[
+            Math.max(0, indice) % COLORES_AVATAR.length
+        ];
+
+        establecerTextoModal('personalModalNombre', usuario.nombre);
+        establecerTextoModal('personalModalRol', nombreVisibleRol(usuario.rol));
+        establecerTextoModal('personalModalCorreo', usuario.correo);
+        establecerTextoModal('personalModalTelefono', usuario.telefono);
+        establecerTextoModal('personalModalCelular', usuario.celular);
+        establecerTextoModal('personalModalCurso', usuario.curso);
+        establecerTextoModal('personalModalJornada', usuario.jornada);
+        establecerTextoModal('personalModalDirector', usuario.director);
+        establecerTextoModal('personalModalCiclo', usuario.ciclo);
+        establecerTextoModal('personalModalHorario', usuario.horario);
+
+        if (!modal.open) {
+            modal.showModal();
+        }
+    }
+
+    async function cargarPersonal() {
+        if (cargando) return;
+
+        cargando = true;
+
+        gridElemento.innerHTML = `
+            <div class="personal-estado">
+                <strong>Cargando personal...</strong>
+                Estamos consultando los registros disponibles.
+            </div>
+        `;
+
+        try {
+            /*
+             * El directorio consulta una colección separada y segura.
+             * No se lista "usuarios" desde cuentas de acudiente/docente,
+             * porque allí hay datos de perfil y permisos privados.
+             * En "directorioPersonal" deben existir solo los datos
+             * institucionales aprobados para mostrar en este apartado.
+             */
+            const resultado = await getDocs(collection(db, 'directorioPersonal'));
+
+            const usuariosEncontrados = resultado.docs
+                .map(convertirUsuario)
+                .filter(Boolean);
+
+            const usuariosUnicos = new Map();
+
+            usuariosEncontrados.forEach(usuario => {
+                usuariosUnicos.set(usuario.id, usuario);
+            });
+
+            personal = Array.from(usuariosUnicos.values()).sort((a, b) =>
+                a.nombre.localeCompare(b.nombre, 'es', {
+                    sensitivity: 'base'
+                })
+            );
+
+            cargando = false;
+            renderizarPersonal();
+        } catch (error) {
+            cargando = false;
+
+            console.error('Error consultando el directorio de personal:', error);
+
+            mostrarEstado(
+                'No se pudo cargar el personal',
+                'Comprueba que exista la colección "directorioPersonal", que contenga registros de docentes, orientadores o coordinadores y que las reglas permitan su lectura a usuarios autenticados. No abras la lectura general de "usuarios" para resolverlo.',
+                true,
+                true
+            );
+        }
+    }
+
+    buscarElemento.addEventListener('input', renderizarPersonal);
+
+    filtrosElemento.addEventListener('click', evento => {
+        const boton = evento.target.closest('button[data-rol]');
+
+        if (!boton) return;
+
+        filtroActual = boton.dataset.rol;
+
+        filtrosElemento.querySelectorAll('.personal-filtro').forEach(elemento => {
+            const activo = elemento === boton;
+
+            elemento.classList.toggle('activo', activo);
+            elemento.setAttribute('aria-pressed', String(activo));
+        });
+
+        renderizarPersonal();
+    });
+
+    gridElemento.addEventListener('click', evento => {
+        const boton = evento.target.closest('button[data-ver-personal]');
+
+        if (!boton) return;
+
+        abrirDetalle(boton.dataset.verPersonal);
+    });
+
+    botonCerrarModal.addEventListener('click', () => {
+        modal.close();
+    });
+
+    modal.addEventListener('click', evento => {
+        if (evento.target === modal) {
+            modal.close();
+        }
+    });
+
+    /*
+     * Se espera a que Firebase determine si hay una sesión.
+     * El directorio necesita un usuario autenticado y permisos
+     * de lectura de Firestore para consultar los registros.
+     */
+    onAuthStateChanged(auth, usuario => {
+        if (!usuario) {
+            personal = [];
+            cargando = false;
+
+            mostrarEstado(
+                'Inicia sesión para continuar',
+                'Necesitas una sesión activa para consultar el directorio.'
+            );
+
+            return;
+        }
+
+        cargarPersonal();
+    });
+</script>
+
+<!-- FIREBASE: PERFIL Y CIERRE DE SESIÓN -->
+<script type="module">
+    import {
+        initializeApp,
+        getApps,
+        getApp
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+    import {
+        getFirestore,
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+        authDomain: "observador-virtual.firebaseapp.com",
+        projectId: "observador-virtual",
+        storageBucket: "observador-virtual.firebasestorage.app",
+        messagingSenderId: "168537175075",
+        appId: "1:168537175075:web:fc0df9eb3c7d26f0e2ad96",
+        measurementId: "G-2E21RDST23"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.ovCerrarSesionFirebase = async function() {
+        await signOut(auth);
+    };
+
+    const nombreElemento = document.getElementById('ovNombreUsuario');
+    const rolElemento = document.getElementById('ovRolUsuario');
+    const avatarElemento = document.getElementById('ovAvatarUsuario');
+
+    const roles = {
+        estudiante: 'Estudiante',
+        acudiente: 'Acudiente',
+        rector: 'Rector',
+        administrador: 'Administrador',
+        coordinador: 'Coordinador',
+        cordinador: 'Coordinador',
+        orientador: 'Orientador',
+        profesor: 'Profesor',
+        docente: 'Docente'
+    };
+
+    function textoValido(...valores) {
+        for (const valor of valores) {
+            if (typeof valor === 'string' && valor.trim()) {
+                return valor.trim();
+            }
+        }
+
+        return '';
+    }
+
+    function normalizarRol(valor) {
+        const rol = String(valor || '').trim().toLowerCase();
+        return roles[rol] || (rol ? rol.charAt(0).toUpperCase() + rol.slice(1) : '');
+    }
+
+    function mostrarFoto(url) {
+        if (!url || !avatarElemento) return;
+
+        const imagen = document.createElement('img');
+        imagen.alt = 'Foto de perfil';
+        imagen.referrerPolicy = 'no-referrer';
+
+        imagen.onerror = () => {
+            imagen.remove();
+        };
+
+        imagen.src = url;
+        avatarElemento.replaceChildren(imagen);
+    }
+
+    onAuthStateChanged(auth, async usuario => {
+        if (!usuario) {
+            nombreElemento.textContent = 'Sin sesión';
+            rolElemento.textContent = 'No identificado';
+            return;
+        }
+
+        nombreElemento.textContent =
+            textoValido(usuario.displayName) ||
+            textoValido(usuario.email?.split('@')[0]) ||
+            'Usuario';
+
+        rolElemento.textContent = 'Consultando rol...';
+
+        try {
+            const referenciaUsuario = doc(db, 'usuarios', usuario.uid);
+            const resultado = await getDoc(referenciaUsuario);
+
+            if (resultado.exists()) {
+                const datos = resultado.data();
+
+                const nombreCompleto = textoValido(
+                    datos.nombreCompleto,
+                    datos.nombreYApellido,
+                    datos.nombre_completo,
+                    datos.nombre,
+                    datos.nombres
+                );
+
+                const apellidos = textoValido(
+                    datos.apellidos,
+                    datos.apellido
+                );
+
+                if (nombreCompleto) {
+                    nombreElemento.textContent = nombreCompleto;
+                } else if (datos.nombre || datos.nombres) {
+                    nombreElemento.textContent = [
+                        textoValido(datos.nombre, datos.nombres),
+                        apellidos
+                    ].filter(Boolean).join(' ');
+                } else if (apellidos && usuario.displayName) {
+                    nombreElemento.textContent =
+                        `${usuario.displayName.trim()} ${apellidos}`.trim();
+                }
+
+                const rol = normalizarRol(
+                    datos.rol || datos.tipoUsuario || datos.tipoCuenta
+                );
+
+                rolElemento.textContent = rol || 'Rol no definido';
+
+                const foto = textoValido(
+                    datos.fotoURL,
+                    datos.fotoPerfil,
+                    datos.photoURL,
+                    usuario.photoURL
+                );
+
+                mostrarFoto(foto);
+            } else {
+                rolElemento.textContent = 'Perfil no encontrado';
+            }
+
+            try {
+                const sesionAnterior = JSON.parse(
+                    localStorage.getItem('sesionObservadorVirtual') || '{}'
+                );
+
+                localStorage.setItem(
+                    'sesionObservadorVirtual',
+                    JSON.stringify({
+                        ...sesionAnterior,
+                        id: usuario.uid,
+                        nombre: nombreElemento.textContent,
+                        correo: usuario.email || '',
+                        rol: rolElemento.textContent
+                    })
+                );
+            } catch (error) {
+                console.warn('No se pudo actualizar la sesión local.', error);
+            }
+        } catch (error) {
+            console.error('Error consultando el perfil en Firestore:', error);
+            rolElemento.textContent = 'No disponible';
+        }
+    });
+</script>
+
+
+
+<!-- ACCESO DE ADMINISTRADOR A LA GESTIÓN DE ROLES -->
+<script type="module">
+    import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    const firebaseConfigRoles = {
+        apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+        authDomain: "observador-virtual.firebaseapp.com",
+        projectId: "observador-virtual",
+        storageBucket: "observador-virtual.firebasestorage.app",
+        messagingSenderId: "168537175075",
+        appId: "1:168537175075:web:fc0df9eb3c7d26f0e2ad96",
+        measurementId: "G-2E21RDST23"
+    };
+    const appRoles = getApps().length ? getApp() : initializeApp(firebaseConfigRoles);
+    const authRoles = getAuth(appRoles);
+    const dbRoles = getFirestore(appRoles);
+    const botonAdminRoles = document.getElementById('personalAdminAcceso');
+
+    function normalizarRolAdmin(valor) {
+        return String(valor || '').trim().toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    onAuthStateChanged(authRoles, async usuario => {
+        if (botonAdminRoles) botonAdminRoles.hidden = true;
+        if (!usuario || !botonAdminRoles) return;
+
+        try {
+            const perfil = await getDoc(doc(dbRoles, 'usuarios', usuario.uid));
+            if (!perfil.exists()) return;
+            const datos = perfil.data() || {};
+            const rol = normalizarRolAdmin(datos.rol || datos.tipoUsuario || datos.tipoCuenta || datos.tipo);
+            if (rol === 'administrador' || rol === 'admin') {
+                botonAdminRoles.hidden = false;
+            }
+        } catch (error) {
+            console.error('No se pudo verificar el rol para mostrar el acceso administrativo:', error);
+            if (botonAdminRoles) botonAdminRoles.hidden = true;
+        }
+    });
+</script>
+
+<script type="module" src="js/auth-guard.js"></script>
+</body>
+</html>

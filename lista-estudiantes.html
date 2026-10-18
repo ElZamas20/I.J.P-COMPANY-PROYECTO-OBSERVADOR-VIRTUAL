@@ -1,0 +1,4151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Estudiantes - I.J.P. Company</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =====================================================
+           OBSERVADOR VIRTUAL — ESTILO DEL EXPEDIENTE
+           ===================================================== */
+
+        :root {
+            --ov-azul: #2563eb;
+            --ov-azul-hover: #1d4ed8;
+            --ov-azul-claro: #a8c9e8;
+            --ov-azul-suave: #edf5ff;
+            --ov-fondo: #f3f6fb;
+            --ov-tarjeta: #ffffff;
+            --ov-superficie: #f8fafc;
+            --ov-texto: #1e293b;
+            --ov-secundario: #64748b;
+            --ov-borde: #dbe3ed;
+            --ov-naranja: #ed7d31;
+            --ov-radio: 15px;
+            --ov-sombra: 0 10px 32px rgba(30, 51, 82, .09);
+        }
+
+        body.modo-oscuro {
+            --ov-azul: #e5e5e5;
+            --ov-azul-hover: #ffffff;
+            --ov-azul-claro: #777777;
+            --ov-azul-suave: #303030;
+            --ov-fondo: #171717;
+            --ov-tarjeta: #242424;
+            --ov-superficie: #2e2e2e;
+            --ov-texto: #f5f5f5;
+            --ov-secundario: #c2c2c2;
+            --ov-borde: #484848;
+            --ov-naranja: #bdbdbd;
+            --ov-sombra: 0 12px 34px rgba(0, 0, 0, .3);
+        }
+
+        .students-page,
+        .students-page *,
+        .ob-modal,
+        .ob-modal * {
+            box-sizing: border-box;
+        }
+
+        .students-page {
+            width: 100%;
+            min-height: 70vh;
+            padding: 20px 24px 48px;
+            color: var(--ov-texto);
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        .ob-wrap {
+            width: min(1220px, 100%);
+            margin: 0 auto;
+        }
+
+        /* BÚSQUEDA Y FILTROS */
+
+        .ob-toolbar {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 28px;
+            padding: 15px;
+            background: var(--ov-tarjeta);
+            border: 1px solid var(--ov-borde);
+            border-radius: var(--ov-radio);
+            box-shadow: var(--ov-sombra);
+        }
+
+        .ob-search {
+            flex: 1 1 240px;
+            min-width: 0;
+        }
+
+        .ob-search input,
+        .ob-select {
+            width: 100%;
+            min-height: 43px;
+            padding: 10px 13px;
+            color: var(--ov-texto);
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 10px;
+            font: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .ob-select {
+            flex: 0 1 165px;
+            cursor: pointer;
+        }
+
+        .ob-search input:focus,
+        .ob-select:focus {
+            border-color: var(--ov-azul);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+        }
+
+        .ob-filtros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 4px;
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 11px;
+        }
+
+        .ob-filtro {
+            padding: 9px 12px;
+            color: var(--ov-secundario);
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 650;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .ob-filtro:hover {
+            color: var(--ov-texto);
+            background: var(--ov-azul-suave);
+        }
+
+        .ob-filtro.activo {
+            color: #fff;
+            background: var(--ov-azul);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, .15);
+        }
+
+        /* TÍTULO */
+
+        .ob-titulo {
+            position: relative;
+            margin: 0 0 25px;
+            padding: 0 0 18px;
+            border-bottom: 1px solid var(--ov-borde);
+        }
+
+        .ob-titulo h1 {
+            margin: 0 0 7px;
+            color: var(--ov-texto);
+            font-size: clamp(25px, 3vw, 34px);
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .ob-titulo p {
+            margin: 0;
+            color: var(--ov-secundario);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .ob-btn-agregar {
+            margin-top: 18px;
+            padding: 11px 17px;
+            color: #ffffff;
+            
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .ob-btn-agregar:hover {
+            background: var(--ov-azul-hover);
+            transform: translateY(-1px);
+        }
+
+        /* ESTADÍSTICAS */
+
+        .ob-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+            margin-bottom: 27px;
+        }
+
+        .ob-stat {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            min-width: 0;
+            padding: 18px;
+            background: var(--ov-tarjeta);
+            border: 1px solid var(--ov-borde);
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(30, 51, 82, .035);
+        }
+
+        .ob-stat-icono {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 43px;
+            height: 43px;
+            flex: 0 0 43px;
+            border-radius: 12px;
+            font-size: 20px;
+        }
+
+        .ob-stat strong,
+        .ob-stat span {
+            display: block;
+        }
+
+        .ob-stat strong {
+            color: var(--ov-texto);
+            font-size: 23px;
+            line-height: 1.2;
+        }
+
+        .ob-stat span {
+            margin-top: 4px;
+            color: var(--ov-secundario);
+            font-size: 12px;
+        }
+
+        /* TARJETAS DE ESTUDIANTES */
+
+        .ob-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+            gap: 17px;
+        }
+
+        .ob-card {
+            min-width: 0;
+            padding: 19px;
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border: 1px solid var(--ov-borde);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(30, 51, 82, .035);
+            transition: transform .2s, box-shadow .2s, border-color .2s;
+        }
+
+        .ob-card:hover {
+            transform: translateY(-3px);
+            border-color: #a9c9f0;
+            box-shadow: var(--ov-sombra);
+        }
+
+        .ob-card-cab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .ob-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 49px;
+            height: 49px;
+            flex: 0 0 49px;
+            color: #fff;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .ob-card-cab > div:last-child {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ob-card-cab strong,
+        .ob-card-cab small {
+            display: block;
+            overflow-wrap: anywhere;
+        }
+
+        .ob-card-cab strong {
+            color: var(--ov-texto);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .ob-card-cab small {
+            margin-top: 4px;
+            color: var(--ov-secundario);
+            font-size: 12px;
+        }
+
+        .ob-badges {
+            margin-top: 17px;
+        }
+
+        .ob-badge,
+        .ob-sin-obs {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .ob-sin-obs {
+            color: var(--ov-secundario);
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+        }
+
+        .ob-nota {
+            margin-top: 13px;
+            color: var(--ov-secundario);
+            font-size: 12px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .ob-acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            padding-top: 15px;
+            margin-top: 15px;
+            border-top: 1px solid var(--ov-borde);
+        }
+
+        .ob-acciones button {
+            flex: 1 1 auto;
+            min-height: 34px;
+            padding: 7px 9px;
+            color: var(--ov-azul);
+            background: var(--ov-azul-suave);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .ob-acciones button:hover {
+            border-color: var(--ov-azul);
+        }
+
+        .ob-acciones .ob-eliminar {
+            color: #b42318;
+            background: #fff0ef;
+        }
+
+        body.modo-oscuro .ob-acciones .ob-eliminar {
+            color: #fecaca;
+            background: #42252a;
+        }
+
+        .ob-vacio {
+            grid-column: 1 / -1;
+            padding: 35px 15px;
+            color: var(--ov-secundario);
+            background: var(--ov-tarjeta);
+            border: 1px dashed var(--ov-borde);
+            border-radius: 14px;
+            text-align: center;
+            line-height: 1.7;
+        }
+
+        /* =====================================================
+           VENTANAS MODALES
+           ===================================================== */
+
+        .ob-modal {
+            width: min(680px, 94vw);
+            max-width: 680px;
+            max-height: 90dvh;
+            padding: 25px;
+            overflow-y: auto;
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border: 1px solid var(--ov-borde);
+            border-radius: 18px;
+            box-shadow: 0 24px 75px rgba(0, 0, 0, .22);
+        }
+
+        .ob-modal::backdrop {
+            background: rgba(12, 21, 36, .57);
+            backdrop-filter: blur(3px);
+        }
+
+        .ob-modal-expediente {
+            width: min(760px, 94vw);
+            max-width: 760px;
+            padding: 25px;
+        }
+
+        #modalNuevaObs {
+            width: min(560px, 94vw);
+            max-width: 560px;
+        }
+
+        .ob-modal h2,
+        .ob-modal h3 {
+            color: var(--ov-texto);
+        }
+
+        /* ENCABEZADO DEL EXPEDIENTE */
+
+        .expediente-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 19px;
+            padding: 2px 0 20px;
+            border-bottom: 1px solid var(--ov-borde);
+        }
+
+        .expediente-header h2 {
+            margin: 0;
+            color: var(--ov-texto);
+            font-size: clamp(20px, 3vw, 26px);
+            line-height: 1.3;
+            font-weight: 800;
+            letter-spacing: -.4px;
+            overflow-wrap: anywhere;
+        }
+
+        .student-header-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            flex: 0 0 58px;
+            color: #fff;
+            background: var(--ov-naranja);
+            border-radius: 13px;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .expediente-meta {
+            margin-top: 7px;
+            color: var(--ov-secundario);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .expediente-kicker {
+            display: block;
+            margin-top: 5px;
+            color: var(--ov-secundario);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .expediente-close {
+            align-self: flex-start;
+            margin-left: auto;
+            padding: 5px 10px;
+            color: var(--ov-secundario);
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            font-size: 27px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .expediente-close:hover {
+            color: var(--ov-texto);
+            background: var(--ov-superficie);
+        }
+
+        /* BOTÓN ACTUALIZAR INFORMACIÓN */
+
+        .expediente-actualizar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 53px;
+            padding: 12px 16px;
+            color: #183650;
+            background: var(--ov-azul-claro);
+            border: 1px solid color-mix(in srgb, var(--ov-azul-claro), #315c80 15%);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .expediente-actualizar:hover,
+        .expediente-actualizar.active {
+            filter: brightness(.96);
+            transform: translateY(-1px);
+        }
+
+        body.modo-oscuro .expediente-actualizar {
+            color: #f1f5f9;
+        }
+
+        /* BOTONES INFERIORES: OBSERVACIONES / DOCUMENTOS */
+
+        .expediente-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-top: 10px;
+            border: 1px solid var(--ov-borde);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .expediente-tab {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            min-height: 51px;
+            padding: 10px;
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border: 0;
+            border-right: 1px solid var(--ov-borde);
+            font-size: 15px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: background .2s, color .2s;
+        }
+
+        .expediente-tab:last-child {
+            border-right: 0;
+        }
+
+        .expediente-tab:hover {
+            background: var(--ov-superficie);
+        }
+
+        .expediente-tab.active {
+            color: var(--ov-azul);
+            background: var(--ov-azul-suave);
+            box-shadow: inset 0 -3px var(--ov-azul);
+        }
+
+        .expediente-contador {
+            min-width: 23px;
+            padding: 3px 7px;
+            color: var(--ov-secundario);
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 99px;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* PANELES */
+
+        .expediente-panel {
+            margin-top: 22px;
+        }
+
+        .expediente-panel[hidden] {
+            display: none !important;
+        }
+
+        .expediente-panel h3 {
+            margin: 0 0 12px;
+            color: var(--ov-texto);
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .expediente-subtitulo {
+            margin: 0 0 18px;
+            color: var(--ov-secundario);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* FORMULARIOS */
+
+        .expediente-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0 15px;
+        }
+
+        .expediente-fieldset {
+            min-width: 0;
+            margin: 0 0 18px;
+            padding: 17px;
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 12px;
+        }
+
+        .expediente-fieldset legend {
+            padding: 0 8px;
+            color: var(--ov-azul);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .ob-campo {
+            display: block;
+            min-width: 0;
+            margin: 0 0 16px;
+        }
+
+        .ob-campo > label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--ov-texto);
+            font-size: 12px;
+            font-weight: 750;
+            line-height: 1.5;
+        }
+
+        .ob-campo input:not([type="checkbox"]),
+        .ob-campo select,
+        .ob-campo textarea {
+            display: block;
+            width: 100%;
+            min-width: 0;
+            margin-top: 5px;
+            padding: 11px 12px;
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border: 1px solid var(--ov-borde);
+            border-radius: 9px;
+            font: inherit;
+            font-size: 13px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .ob-campo textarea {
+            resize: vertical;
+            line-height: 1.65;
+        }
+
+        .ob-campo input:focus,
+        .ob-campo select:focus,
+        .ob-campo textarea:focus {
+            border-color: var(--ov-azul);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+        }
+
+        .ob-campo input:disabled,
+        .ob-campo select:disabled,
+        .ob-campo textarea:disabled {
+            cursor: not-allowed;
+            opacity: .75;
+        }
+
+        .ob-campo-ayuda {
+            display: block;
+            margin-top: 7px;
+            color: var(--ov-secundario);
+            font-size: 11px;
+            line-height: 1.65;
+        }
+
+        .ob-falta-ayuda {
+            margin-top: 9px;
+            padding: 12px;
+            color: var(--ov-texto);
+            background: var(--ov-azul-suave);
+            border: 1px solid var(--ov-borde);
+            border-left: 4px solid var(--ov-azul);
+            border-radius: 9px;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* BOTONES DE LOS PANELES */
+
+        .expediente-actions {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-top: 17px;
+            margin-top: 17px;
+            border-top: 1px solid var(--ov-borde);
+        }
+
+        .expediente-actions button,
+        .expediente-primary,
+        .expediente-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 10px 15px;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 750;
+            cursor: pointer;
+            transition: background .2s, transform .2s, border-color .2s;
+        }
+
+        .expediente-primary {
+            color: #fff;
+            background: var(--ov-azul);
+            border: 1px solid var(--ov-azul);
+        }
+
+        .expediente-primary:hover {
+            background: var(--ov-azul-hover);
+            transform: translateY(-1px);
+        }
+
+        .expediente-secondary {
+            color: var(--ov-texto);
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+        }
+
+        .expediente-secondary:hover {
+            border-color: var(--ov-azul);
+            background: var(--ov-azul-suave);
+        }
+
+        button:disabled {
+            opacity: .55;
+            cursor: not-allowed !important;
+            transform: none !important;
+        }
+
+        /* OBSERVACIONES */
+
+        .obs-card-item {
+            margin-bottom: 13px;
+            padding: 16px;
+            color: var(--ov-texto);
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 12px;
+        }
+
+        .obs-card-item p {
+            color: var(--ov-texto);
+            font-size: 13px;
+        }
+
+        .obs-clasificacion {
+            display: inline-flex;
+            align-items: center;
+            margin: 3px 0 8px;
+            padding: 5px 9px;
+            color: #1d4ed8;
+            background: #eaf1ff;
+            border: 1px solid #c7d8ff;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .obs-clasificacion.grave {
+            color: #92400e;
+            background: #fff7df;
+            border-color: #f7df9e;
+        }
+
+        .obs-clasificacion.muy-grave {
+            color: #b42318;
+            background: #fff0ef;
+            border-color: #ffc9c4;
+        }
+
+        .obs-clasificacion.no-presenta {
+            color: #166534;
+            background: #eaf8ee;
+            border-color: #b8e5c5;
+        }
+
+        .obs-clasificacion-desc {
+            margin: 0 0 10px;
+            color: var(--ov-secundario);
+            font-size: 12px !important;
+            line-height: 1.65;
+        }
+
+        .obs-firma {
+            display: flex;
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 7px;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--ov-borde);
+        }
+
+        .obs-firma-titulo {
+            color: var(--ov-secundario);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+        }
+
+        .obs-firma img {
+            display: block;
+            max-width: 100%;
+            max-height: 105px;
+            object-fit: contain;
+            object-position: left center;
+            padding: 5px;
+            background: #fff;
+            border: 1px solid var(--ov-borde);
+            border-radius: 7px;
+        }
+
+        .obs-firma-ayuda-legal {
+            color: var(--ov-secundario);
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .ob-firma-preview {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 12px;
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 10px;
+        }
+
+        .ob-firma-preview[hidden] {
+            display: none !important;
+        }
+
+        .ob-firma-preview img {
+            display: block;
+            width: min(230px, 60%);
+            max-height: 90px;
+            object-fit: contain;
+            background: #fff;
+            border: 1px solid var(--ov-borde);
+            border-radius: 7px;
+        }
+
+        .ob-firma-preview-info {
+            flex: 1;
+            min-width: 0;
+            color: var(--ov-secundario);
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .ob-btn-secundario {
+            margin-top: 9px;
+            padding: 7px 10px;
+            color: var(--ov-texto);
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 7px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        /* DOCUMENTOS */
+
+        .documentos-subir {
+            margin-bottom: 19px;
+            padding: 17px;
+            background: var(--ov-superficie);
+            border: 1px solid var(--ov-borde);
+            border-radius: 12px;
+        }
+
+        .documentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
+            gap: 12px;
+        }
+
+        .documento-card {
+            min-width: 0;
+            padding: 15px;
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border: 1px solid var(--ov-borde);
+            border-radius: 12px;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .documento-card:hover {
+            border-color: #a7c5ea;
+            box-shadow: 0 5px 17px rgba(30, 51, 82, .06);
+        }
+
+        .documento-card-title {
+            color: var(--ov-texto);
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .documento-card-meta {
+            margin-top: 7px;
+            color: var(--ov-secundario);
+            font-size: 11px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .documento-card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 13px;
+        }
+
+        .documento-card-actions button {
+            flex: 1 1 auto;
+            padding: 8px 9px;
+            color: var(--ov-azul);
+            background: var(--ov-azul-suave);
+            border: 1px solid var(--ov-borde);
+            border-radius: 7px;
+            font-size: 11px;
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        .documento-card-actions button:hover {
+            border-color: var(--ov-azul);
+        }
+
+        .documento-vacio {
+            grid-column: 1 / -1;
+            padding: 28px 17px;
+            color: var(--ov-secundario);
+            background: var(--ov-superficie);
+            border: 1px dashed var(--ov-borde);
+            border-radius: 12px;
+            font-size: 12px;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* =============================================
+           LOGO DE LA BARRA SUPERIOR: CENTRADO
+           ============================================= */
+
+        .navbar {
+            justify-content: center;
+        }
+
+        .navbar-brand-container {
+            justify-content: center;
+        }
+
+        .navbar-logo-izquierdo {
+            height: 48px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        /* Ajuste del contenido para la barra lateral */
+
+        body.ov-tiene-sidebar .students-page {
+            max-width: 1220px;
+            margin: 0 auto;
+        }
+
+        /* MODO OSCURO (integrado con ov-dark-mode) */
+
+        body.ov-dark-mode.modo-oscuro .ob-modal,
+        body.modo-oscuro .ob-modal {
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border-color: var(--ov-borde);
+        }
+
+        body.modo-oscuro .ob-modal h2,
+        body.modo-oscuro .ob-modal h3,
+        body.modo-oscuro .ob-modal p {
+            color: var(--ov-texto);
+        }
+
+        body.ov-dark-mode .ob-card,
+        body.ov-dark-mode .ob-stat,
+        body.modo-oscuro .ob-card,
+        body.modo-oscuro .ob-stat,
+        body.modo-oscuro .documento-card,
+        body.modo-oscuro .obs-card-item {
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border-color: var(--ov-borde);
+        }
+
+        body.ov-dark-mode .ob-card-cab strong,
+        body.ov-dark-mode .ob-stat strong,
+        body.modo-oscuro .ob-card-cab strong,
+        body.modo-oscuro .ob-stat strong,
+        body.modo-oscuro .documento-card-title {
+            color: var(--ov-texto);
+        }
+
+        body.ov-dark-mode .ob-toolbar,
+        body.ov-dark-mode .documentos-subir,
+        body.modo-oscuro .ob-toolbar,
+        body.modo-oscuro .documentos-subir,
+        body.modo-oscuro .expediente-fieldset,
+        body.modo-oscuro .ob-firma-preview {
+            background: var(--ov-superficie);
+            border-color: var(--ov-borde);
+        }
+
+        body.ov-dark-mode .ob-search input,
+        body.ov-dark-mode .ob-select,
+        body.ov-dark-mode .ob-campo input,
+        body.ov-dark-mode .ob-campo select,
+        body.ov-dark-mode .ob-campo textarea,
+        body.modo-oscuro .ob-search input,
+        body.modo-oscuro .ob-select,
+        body.modo-oscuro .ob-campo input,
+        body.modo-oscuro .ob-campo select,
+        body.modo-oscuro .ob-campo textarea {
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border-color: var(--ov-borde);
+        }
+
+        body.ov-dark-mode .expediente-tab,
+        body.modo-oscuro .expediente-tab {
+            color: var(--ov-texto);
+            background: var(--ov-tarjeta);
+            border-color: var(--ov-borde);
+        }
+
+        body.modo-oscuro .expediente-tab.active {
+            color: #f0f0f0;
+            background: var(--ov-azul-suave);
+        }
+
+        body.ov-dark-mode .ob-filtro,
+        body.modo-oscuro .ob-filtro {
+            color: var(--ov-secundario);
+        }
+
+        body.modo-oscuro .ob-filtro.activo {
+            color: #171717;
+            background: #e6e6e6;
+        }
+
+        body.ov-dark-mode .expediente-secondary,
+        body.ov-dark-mode .documento-card-actions button,
+        body.ov-dark-mode .ob-btn-secundario,
+        body.modo-oscuro .expediente-secondary,
+        body.modo-oscuro .documento-card-actions button,
+        body.modo-oscuro .ob-btn-secundario {
+            color: var(--ov-texto);
+            background: var(--ov-superficie);
+            border-color: var(--ov-borde);
+        }
+
+        body.modo-oscuro .expediente-meta,
+        body.modo-oscuro .expediente-kicker,
+        body.modo-oscuro .expediente-subtitulo,
+        body.modo-oscuro .documento-card-meta,
+        body.modo-oscuro .ob-campo-ayuda,
+        body.modo-oscuro .obs-clasificacion-desc,
+        body.modo-oscuro .obs-firma-ayuda-legal {
+            color: var(--ov-secundario);
+        }
+
+        body.modo-oscuro .ob-falta-ayuda {
+            color: var(--ov-texto);
+            background: var(--ov-azul-suave);
+            border-color: var(--ov-borde);
+            border-left-color: var(--ov-azul);
+        }
+
+        body.modo-oscuro .obs-firma {
+            border-top-color: var(--ov-borde);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 850px) {
+            .students-page {
+                padding: 17px 16px 35px;
+            }
+
+            .ob-toolbar {
+                gap: 10px;
+            }
+
+            .ob-stats {
+                gap: 10px;
+            }
+
+            .ob-stat {
+                padding: 14px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .students-page {
+                padding: 13px 10px 30px;
+            }
+
+            .ob-toolbar {
+                padding: 12px;
+                border-radius: 12px;
+            }
+
+            .ob-search {
+                flex-basis: 100%;
+            }
+
+            .ob-select {
+                flex: 1 1 120px;
+            }
+
+            .ob-filtros {
+                width: 100%;
+            }
+
+            .ob-filtro {
+                flex: 1 1 auto;
+                padding: 9px 7px;
+                font-size: 10px;
+            }
+
+            .ob-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .ob-stat {
+                max-width: none;
+            }
+
+            .ob-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ob-modal,
+            .ob-modal-expediente {
+                width: 96vw;
+                max-width: 96vw;
+                max-height: 92dvh;
+                padding: 16px;
+                border-radius: 14px;
+            }
+
+            .expediente-header {
+                gap: 10px;
+            }
+
+            .expediente-header .student-header-avatar {
+                width: 46px;
+                height: 46px;
+                flex-basis: 46px;
+                font-size: 15px;
+                border-radius: 10px;
+            }
+
+            .expediente-header h2 {
+                font-size: 19px;
+            }
+
+            .expediente-tab {
+                gap: 5px;
+                min-height: 48px;
+                padding: 8px 5px;
+                font-size: 12px;
+            }
+
+            .expediente-form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .expediente-fieldset {
+                padding: 12px;
+            }
+
+            .expediente-actions {
+                flex-direction: column-reverse;
+            }
+
+            .expediente-actions button {
+                width: 100%;
+            }
+
+            .ob-firma-preview {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .ob-firma-preview img {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .students-page *,
+            .ob-modal * {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+
+
+        /* =====================================================
+           REPARACIÓN VISUAL FINAL: TEMA OSCURO Y EXPEDIENTE
+           Se aplica al nombre de clase que usa el interruptor
+           de la barra lateral: body.ov-dark-mode.
+           ===================================================== */
+
+        body.ov-dark-mode {
+            --ov-azul: #e6e6e6;
+            --ov-azul-hover: #ffffff;
+            --ov-azul-claro: #777777;
+            --ov-azul-suave: #303030;
+            --ov-fondo: #171717;
+            --ov-tarjeta: #242424;
+            --ov-superficie: #2e2e2e;
+            --ov-texto: #f5f5f5;
+            --ov-secundario: #c2c2c2;
+            --ov-borde: #484848;
+            --ov-sombra: 0 12px 34px rgba(0, 0, 0, .30);
+            color-scheme: dark;
+        }
+
+        body.ov-dark-mode .students-page,
+        body.ov-dark-mode .ob-wrap {
+            color: var(--ov-texto) !important;
+        }
+
+        body.ov-dark-mode .ob-toolbar,
+        body.ov-dark-mode .ob-stat,
+        body.ov-dark-mode .ob-card,
+        body.ov-dark-mode .ob-vacio,
+        body.ov-dark-mode .ob-modal,
+        body.ov-dark-mode .documento-card,
+        body.ov-dark-mode .obs-card-item,
+        body.ov-dark-mode .documentos-subir,
+        body.ov-dark-mode .expediente-fieldset,
+        body.ov-dark-mode .ob-firma-preview,
+        body.ov-dark-mode .documento-vacio {
+            color: var(--ov-texto) !important;
+            background-color: var(--ov-tarjeta) !important;
+            border-color: var(--ov-borde) !important;
+        }
+
+        body.ov-dark-mode .ob-filtros,
+        body.ov-dark-mode .ob-nota,
+        body.ov-dark-mode .expediente-secondary,
+        body.ov-dark-mode .documento-card-actions button,
+        body.ov-dark-mode .ob-btn-secundario,
+        body.ov-dark-mode .expediente-contador {
+            color: var(--ov-texto) !important;
+            background-color: var(--ov-superficie) !important;
+            border-color: var(--ov-borde) !important;
+        }
+
+        body.ov-dark-mode .ob-search,
+        body.ov-dark-mode .ob-search input,
+        body.ov-dark-mode .ob-select,
+        body.ov-dark-mode .ob-campo input:not([type="checkbox"]),
+        body.ov-dark-mode .ob-campo select,
+        body.ov-dark-mode .ob-campo textarea,
+        body.ov-dark-mode #docArchivo,
+        body.ov-dark-mode #obsFirmaArchivo {
+            color: var(--ov-texto) !important;
+            background-color: #1d1d1d !important;
+            border-color: var(--ov-borde) !important;
+            color-scheme: dark;
+        }
+
+        body.ov-dark-mode .ob-select option,
+        body.ov-dark-mode .ob-campo select option {
+            color: var(--ov-texto);
+            background: #1d1d1d;
+        }
+
+        body.ov-dark-mode .ob-titulo h1,
+        body.ov-dark-mode .ob-titulo p,
+        body.ov-dark-mode .ob-stat strong,
+        body.ov-dark-mode .ob-stat span,
+        body.ov-dark-mode .ob-card-cab strong,
+        body.ov-dark-mode .ob-card-cab small,
+        body.ov-dark-mode .ob-nota,
+        body.ov-dark-mode .ob-vacio,
+        body.ov-dark-mode .documento-card-title,
+        body.ov-dark-mode .documento-card-meta,
+        body.ov-dark-mode .expediente-header h2,
+        body.ov-dark-mode .expediente-meta,
+        body.ov-dark-mode .expediente-kicker,
+        body.ov-dark-mode .expediente-panel h3,
+        body.ov-dark-mode .expediente-subtitulo,
+        body.ov-dark-mode .expediente-fieldset legend,
+        body.ov-dark-mode .ob-campo > label,
+        body.ov-dark-mode .ob-campo-ayuda,
+        body.ov-dark-mode .obs-card-item,
+        body.ov-dark-mode .obs-card-item p,
+        body.ov-dark-mode .obs-firma-titulo,
+        body.ov-dark-mode .obs-firma-ayuda-legal,
+        body.ov-dark-mode .ob-firma-preview-info,
+        body.ov-dark-mode .documento-vacio {
+            color: var(--ov-texto) !important;
+        }
+
+        body.ov-dark-mode .ob-titulo p,
+        body.ov-dark-mode .ob-stat span,
+        body.ov-dark-mode .ob-card-cab small,
+        body.ov-dark-mode .ob-nota,
+        body.ov-dark-mode .documento-card-meta,
+        body.ov-dark-mode .expediente-meta,
+        body.ov-dark-mode .expediente-kicker,
+        body.ov-dark-mode .expediente-subtitulo,
+        body.ov-dark-mode .ob-campo-ayuda,
+        body.ov-dark-mode .obs-clasificacion-desc,
+        body.ov-dark-mode .obs-firma-ayuda-legal {
+            color: var(--ov-secundario) !important;
+        }
+
+        body.ov-dark-mode .expediente-tabs {
+            background-color: var(--ov-tarjeta) !important;
+            border-color: var(--ov-borde) !important;
+        }
+
+        body.ov-dark-mode .expediente-tab {
+            color: var(--ov-texto) !important;
+            background-color: var(--ov-tarjeta) !important;
+            border-color: var(--ov-borde) !important;
+        }
+
+        body.ov-dark-mode .expediente-tab:hover,
+        body.ov-dark-mode .expediente-secondary:hover,
+        body.ov-dark-mode .documento-card-actions button:hover,
+        body.ov-dark-mode .ob-btn-secundario:hover {
+            background-color: var(--ov-azul-suave) !important;
+            border-color: #777777 !important;
+        }
+
+        body.ov-dark-mode .expediente-tab.active {
+            color: #ffffff !important;
+            background-color: #383838 !important;
+            box-shadow: inset 0 -3px #bdbdbd !important;
+        }
+
+        body.ov-dark-mode .expediente-actualizar {
+            color: #ffffff !important;
+            background-color: #444444 !important;
+            border-color: #707070 !important;
+        }
+
+        body.ov-dark-mode .expediente-actions {
+            border-top-color: var(--ov-borde) !important;
+        }
+
+        body.ov-dark-mode .ob-falta-ayuda {
+            color: #f2f2f2 !important;
+            background-color: #303030 !important;
+            border-color: var(--ov-borde) !important;
+            border-left-color: #888888 !important;
+        }
+
+        body.ov-dark-mode .ob-sin-obs {
+            color: #e5e5e5 !important;
+            background-color: #303030 !important;
+            border-color: var(--ov-borde) !important;
+        }
+
+        body.ov-dark-mode .ob-badge {
+            background-color: #383838 !important;
+            color: #f0f0f0 !important;
+        }
+
+        body.ov-dark-mode .obs-clasificacion {
+            color: #eeeeee !important;
+            background: #333333 !important;
+            border-color: #666666 !important;
+        }
+
+        body.ov-dark-mode .obs-clasificacion.grave {
+            color: #f0f0f0 !important;
+            background: #383838 !important;
+            border-color: #707070 !important;
+        }
+
+        body.ov-dark-mode .obs-clasificacion.muy-grave {
+            color: #f0f0f0 !important;
+            background: #383838 !important;
+            border-color: #707070 !important;
+        }
+
+        body.ov-dark-mode .obs-clasificacion.no-presenta {
+            color: #eeeeee !important;
+            background: #303030 !important;
+            border-color: #666666 !important;
+        }
+
+        /* La zona blanca de la imagen se mantiene adrede para poder
+           distinguir una firma manuscrita clara sobre cualquier tema. */
+        body.ov-dark-mode .obs-firma img,
+        body.ov-dark-mode .ob-firma-preview img {
+            background-color: #fff !important;
+            border-color: #64748b !important;
+        }
+
+        /* El expediente se mantiene centrado, con espaciado consistente,
+           evitando textos comprimidos por estilos globales del sitio. */
+        dialog.ob-modal[open] {
+            display: block;
+            position: fixed;
+            inset: 50% auto auto 50%;
+            transform: translate(-50%, -50%);
+            margin: 0;
+            max-height: min(90dvh, 900px);
+            overflow-x: hidden;
+            overflow-y: auto;
+            line-height: 1.55;
+            isolation: isolate;
+        }
+
+        dialog#obModal[open] {
+            width: min(760px, calc(100vw - 28px));
+            max-width: 760px;
+        }
+
+        dialog#modalNuevaObs[open] {
+            width: min(560px, calc(100vw - 28px));
+            max-width: 560px;
+        }
+
+        .ob-modal,
+        .ob-modal * {
+            box-sizing: border-box;
+        }
+
+        .ob-modal .expediente-header {
+            position: relative;
+            min-width: 0;
+            align-items: flex-start;
+        }
+
+        .ob-modal .expediente-header > div:nth-child(2) {
+            min-width: 0;
+            flex: 1 1 auto;
+        }
+
+        .ob-modal .expediente-header h2 {
+            overflow-wrap: anywhere;
+            word-break: normal;
+            line-height: 1.3;
+        }
+
+        .ob-modal .expediente-meta,
+        .ob-modal .expediente-kicker,
+        .ob-modal .expediente-subtitulo,
+        .ob-modal .ob-campo-ayuda {
+            overflow-wrap: anywhere;
+            line-height: 1.6;
+        }
+
+        .ob-modal .expediente-panel,
+        .ob-modal .expediente-fieldset,
+        .ob-modal .expediente-form-grid,
+        .ob-modal .ob-campo,
+        .ob-modal .obs-card-item,
+        .ob-modal .documento-card {
+            min-width: 0;
+        }
+
+        .ob-modal .expediente-fieldset {
+            display: block;
+        }
+
+        .ob-modal .expediente-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+            gap: 0 15px;
+        }
+
+        .ob-modal .ob-campo > label {
+            display: block;
+            line-height: 1.45;
+            overflow-wrap: anywhere;
+        }
+
+        .ob-modal .ob-campo input,
+        .ob-modal .ob-campo select,
+        .ob-modal .ob-campo textarea {
+            min-height: 42px;
+            line-height: 1.45;
+        }
+
+        .ob-modal .ob-campo textarea {
+            min-height: 75px;
+        }
+
+        .ob-modal .expediente-actions {
+            position: relative;
+            clear: both;
+            align-items: center;
+        }
+
+        .ob-modal .expediente-actions button,
+        .ob-modal .expediente-tab,
+        .ob-modal .expediente-actualizar {
+            line-height: 1.35;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+
+        .ob-modal .obs-card-item p {
+            margin-top: 8px;
+            margin-bottom: 8px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .ob-modal .obs-card-item strong {
+            color: inherit;
+        }
+
+        .ob-modal .documento-vacio {
+            border: 1px dashed var(--ov-borde);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        body.ov-dark-mode .ob-modal,
+        body.ov-dark-mode .ob-modal h1,
+        body.ov-dark-mode .ob-modal h2,
+        body.ov-dark-mode .ob-modal h3,
+        body.ov-dark-mode .ob-modal p,
+        body.ov-dark-mode .ob-modal label,
+        body.ov-dark-mode .ob-modal legend,
+        body.ov-dark-mode .ob-modal small,
+        body.ov-dark-mode .ob-modal strong,
+        body.ov-dark-mode .ob-modal span,
+        body.ov-dark-mode .ob-modal div {
+            text-shadow: none !important;
+        }
+
+        body.ov-dark-mode .ob-modal h2,
+        body.ov-dark-mode .ob-modal h3,
+        body.ov-dark-mode .ob-modal .expediente-fieldset legend {
+            color: var(--ov-texto) !important;
+        }
+
+        body.ov-dark-mode .ob-modal .expediente-close {
+            color: var(--ov-secundario) !important;
+            background: transparent !important;
+        }
+
+        body.ov-dark-mode .ob-modal .expediente-primary {
+            color: #fff !important;
+            background: #3479d4 !important;
+            border-color: #3479d4 !important;
+        }
+
+        body.ov-dark-mode .ob-modal .expediente-primary:hover {
+            background: #2868bc !important;
+        }
+
+        @media (max-width: 600px) {
+            dialog#obModal[open],
+            dialog#modalNuevaObs[open] {
+                width: calc(100vw - 16px);
+                max-width: calc(100vw - 16px);
+                max-height: 92dvh;
+                padding: 15px;
+            }
+
+            .ob-modal .expediente-form-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .ob-modal .expediente-header {
+                gap: 9px;
+                padding-bottom: 14px;
+            }
+
+            .ob-modal .expediente-close {
+                padding: 2px 5px;
+                font-size: 24px;
+            }
+
+            .ob-modal .expediente-tabs {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            }
+
+            .ob-modal .expediente-tab {
+                gap: 4px;
+                padding: 8px 4px;
+                font-size: 12px;
+            }
+        }
+
+    </style>
+</head>
+
+<body class="ov-tiene-sidebar">
+
+<!-- BARRA LATERAL PRINCIPAL -->
+<aside class="ov-barra-lateral" id="ovBarraLateral">
+    <div class="ov-cabecera">
+        <div class="ov-nombre-pagina">
+            <svg id="ovIconoLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="button" aria-label="Contraer o expandir menú" title="Contraer o expandir menú" tabindex="0">
+                <g fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M256 100 440 192 256 284 72 192Z"/>
+                    <path d="M148 230V330C148 350 160 365 180 375L256 412 332 375C352 365 364 350 364 330V230"/>
+                    <path d="M256 284V412"/>
+                    <path d="M440 192V348"/>
+                </g>
+            </svg>
+            <span>Observador Virtual</span>
+        </div>
+
+        <button class="ov-boton-principal" type="button" onclick="window.location.href='dashboard.html'">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M80 212v236a16 16 0 0 0 16 16h96V328a24 24 0 0 1 24-24h80a24 24 0 0 1 24 24v136h96a16 16 0 0 0 16-16V212"/>
+                <path d="M40 240l216-192 216 192"/>
+            </svg>
+            <span>Ir al inicio</span>
+        </button>
+    </div>
+
+    <nav class="ov-navegacion" aria-label="Navegación principal">
+        <ul>
+            <li>
+                <a href="cuenta.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="256" cy="144" r="88"/>
+                        <path d="M96 432c0-88.4 71.6-160 160-160s160 71.6 160 160"/>
+                    </svg>
+                    <span class="ov-texto-menu">Perfil</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="lista-estudiantes.html" class="ov-activo">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="256" cy="140" r="68"/>
+                        <path d="M120 400v-32a136 136 0 0 1 272 0v32"/>
+                        <circle cx="105" cy="205" r="48"/>
+                        <path d="M30 390v-18a75 75 0 0 1 77-75"/>
+                        <circle cx="407" cy="205" r="48"/>
+                        <path d="M482 390v-18a75 75 0 0 0-77-75"/>
+                    </svg>
+                    <span class="ov-texto-menu">Estudiantes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="docentes.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="330" cy="105" r="55"/>
+                        <path d="M250 290v-55a80 80 0 0 1 160 0v55"/>
+                        <path d="M250 255l-70 55-65-35"/>
+                        <rect x="35" y="90" width="180" height="210" rx="12"/>
+                        <path d="M70 150h95M70 195h65"/>
+                        <path d="M95 300v45M155 300v45M70 345h110"/>
+                        <path d="M280 290l-25 115M380 290l35 115"/>
+                        <path d="M220 435h230"/>
+                    </svg>
+                    <span class="ov-texto-menu">Docentes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="politica-privacidad.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M256 32 416 96V240c0 104-68 184-160 240C164 424 96 344 96 240V96Z"/>
+                        <rect x="184" y="224" width="144" height="112" rx="16"/>
+                        <path d="M216 224V176a40 40 0 0 1 80 0v48"/>
+                        <circle cx="256" cy="276" r="10"/>
+                        <path d="M256 286v20"/>
+                    </svg>
+                    <span class="ov-texto-menu">Privacidad</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="terminos-condiciones.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M416 221.3V64a32 32 0 0 0-32-32H128a32 32 0 0 0-32 32v384a32 32 0 0 0 32 32h146.7"/>
+                        <path d="M192 128h128M192 208h128M192 288h80M192 368h48"/>
+                        <circle cx="384" cy="384" r="96" fill="var(--ov-sidebar-bg)" stroke="currentColor" stroke-width="24"/>
+                        <path d="M336 384l32 32 64-64"/>
+                    </svg>
+                    <span class="ov-texto-menu">Términos</span>
+                </a>
+            </li>
+
+            <!-- CERRAR SESIÓN -->
+            <li>
+                <button type="button" id="ovBotonCerrarSesion" class="ov-enlace-cerrar-sesion">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M320 96h96a32 32 0 0 1 32 32v256a32 32 0 0 1-32 32h-96"/>
+                        <path d="m224 352 96-96-96-96"/>
+                        <path d="M320 256H64"/>
+                    </svg>
+                    <span class="ov-texto-menu">Cerrar sesión</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <div>
+        <div class="ov-linea"></div>
+
+        <div class="ov-modo-oscuro">
+            <div class="ov-modo-info">
+                <ion-icon id="ovIconoTema" name="moon-outline"></ion-icon>
+                <span>Modo oscuro</span>
+            </div>
+
+            <button class="ov-switch" id="ovInterruptorTema" type="button" aria-label="Cambiar modo claro u oscuro" aria-pressed="false">
+                <span class="ov-base">
+                    <span class="ov-circulo"></span>
+                </span>
+            </button>
+        </div>
+
+        <div class="ov-usuario">
+            <div class="ov-avatar" id="ovAvatarUsuario">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="25" height="25" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="256" cy="144" r="88"/>
+                    <path d="M96 432c0-88.4 71.6-160 160-160s160 71.6 160 160"/>
+                </svg>
+            </div>
+
+            <div class="ov-usuario-info">
+                <strong id="ovNombreUsuario">Cargando...</strong>
+                <span id="ovRolUsuario">Consultando rol...</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- BOTÓN DEL MENÚ MÓVIL -->
+<button class="ov-menu-movil" id="ovBotonMovil" type="button" aria-label="Abrir menú" aria-expanded="false">
+    <ion-icon name="menu-outline"></ion-icon>
+</button>
+<div class="ov-overlay" id="ovOverlay"></div>
+
+<nav class="navbar">
+    <div class="navbar-brand-container">
+        <img src="logo empresa I.J.P COMPANY.png"
+             alt="Logo IJP"
+             class="navbar-logo-izquierdo">
+
+        <span class="navbar-brand">I.J.P. Company</span>
+    </div>
+</nav>
+
+<main>
+    <div class="dashboard-actions">
+        <label for="toggle-sidebar" style="cursor:pointer;">
+            <button class="btn-help" type="button"
+                    style="pointer-events:none;">Ayuda</button>
+        </label>
+    </div>
+
+    <div class="students-page">
+        <div class="ob-wrap">
+
+            <div class="ob-toolbar">
+                <label class="ob-search">
+                    <input type="search" id="obBuscar"
+                           placeholder="Buscar estudiante...">
+                </label>
+
+                <select class="ob-select" id="obCurso"></select>
+
+                <select class="ob-select" id="obJornada">
+                    <option value="Mañana">Jornada mañana</option>
+                    <option value="Tarde">Jornada tarde</option>
+                </select>
+
+                <div class="ob-filtros" id="obFiltros">
+                    <button type="button" class="ob-filtro activo" data-f="todos">Todos</button>
+                    <button type="button" class="ob-filtro" data-f="con">Con observaciones</button>
+                    <button type="button" class="ob-filtro" data-f="sin">Sin observaciones</button>
+                </div>
+            </div>
+
+            <div class="ob-titulo">
+                <h1 id="obTitulo"></h1>
+                <p id="obSub"></p>
+                <button type="button" class="ob-btn-agregar" id="obAgregar">
+                    + Agregar estudiante
+                </button>
+            </div>
+
+            <div class="ob-stats" id="obStats"></div>
+            <div class="ob-grid" id="obGrid"></div>
+        </div>
+
+        <!-- EXPEDIENTE DEL ESTUDIANTE -->
+
+        <dialog class="ob-modal ob-modal-expediente" id="obModal"
+                aria-labelledby="modalNombreVista">
+
+            <div class="expediente-header">
+                <div class="student-header-avatar" id="modalAvatar">JP</div>
+
+                <div style="flex:1;min-width:0;">
+                    <h2 id="modalNombreVista">Nombre del estudiante</h2>
+                    <div class="expediente-meta" id="modalCursoJornadaTxt">
+                        Curso 2 · Jornada Mañana
+                    </div>
+                    <span class="expediente-kicker">Expediente del estudiante</span>
+                </div>
+
+                <button type="button" class="expediente-close"
+                        id="obCerrarPrincipal"
+                        aria-label="Cerrar expediente">&times;</button>
+            </div>
+
+            <div class="expediente-nav">
+                <button type="button" id="tabActualizar"
+                        class="expediente-actualizar">
+                    Actualizar Información Personal 
+                </button>
+
+                <div class="expediente-tabs" role="tablist"
+                     aria-label="Secciones del expediente">
+
+                    <button type="button" id="tabObservaciones"
+                            class="expediente-tab active"
+                            role="tab" aria-selected="true">
+                        Observaciones
+                        <span class="expediente-contador"
+                              id="contadorObservaciones">0</span>
+                    </button>
+
+                    <button type="button" id="tabDocumentos"
+                            class="expediente-tab"
+                            role="tab" aria-selected="false">
+                        Documentos
+                        <span class="expediente-contador"
+                              id="contadorDocumentos">0</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL ACTUALIZAR INFORMACIÓN -->
+
+            <section class="expediente-panel" id="panelActualizar" hidden>
+                <h3>Información general</h3>
+
+                <p class="expediente-subtitulo">
+                    Actualiza los datos personales, el curso, la jornada
+                    y la información de contacto del acudiente.
+                </p>
+
+                <fieldset class="expediente-fieldset">
+                    <legend>Datos del estudiante</legend>
+
+                    <div class="expediente-form-grid">
+                        <div class="ob-campo">
+                            <label for="fNombre">Nombre completo *</label>
+                            <input type="text" id="fNombre"
+                                   required maxlength="100">
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fDocumentoEstudiante">
+                                Documento / tarjeta de identidad
+                            </label>
+                            <input type="text" id="fDocumentoEstudiante"
+                                   maxlength="40">
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fCurso">Curso *</label>
+                            <select id="fCurso" required></select>
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fJornada">Jornada *</label>
+                            <select id="fJornada" required>
+                                <option value="Mañana">Mañana</option>
+                                <option value="Tarde">Tarde</option>
+                            </select>
+                        </div>
+
+                        <div class="ob-campo" style="grid-column:1/-1;">
+                            <label for="fDireccionEstudiante">Dirección de residencia</label>
+                            <input type="text" id="fDireccionEstudiante"
+                                   maxlength="180">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="expediente-fieldset">
+                    <legend>Información del acudiente</legend>
+
+                    <div class="expediente-form-grid">
+                        <div class="ob-campo">
+                            <label for="fAcudienteNombre">Nombre completo</label>
+                            <input type="text" id="fAcudienteNombre"
+                                   maxlength="100">
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fAcudienteParentesco">Parentesco</label>
+                            <select id="fAcudienteParentesco">
+                                <option value="">Seleccione...</option>
+                                <option>Madre</option>
+                                <option>Padre</option>
+                                <option>Abuela</option>
+                                <option>Abuelo</option>
+                                <option>Tía</option>
+                                <option>Tío</option>
+                                <option>Hermana</option>
+                                <option>Hermano</option>
+                                <option>Tutor legal</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fAcudienteFijo">Teléfono fijo</label>
+                            <input type="tel" id="fAcudienteFijo" maxlength="30">
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fAcudienteCel">Celular</label>
+                            <input type="tel" id="fAcudienteCel" maxlength="30">
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fAcudienteCorreo">Correo electrónico</label>
+                            <input type="email" id="fAcudienteCorreo" maxlength="150">
+                        </div>
+
+                        <div class="ob-campo">
+                            <label for="fAcudienteTrabajo">Trabajo / ocupación</label>
+                            <input type="text" id="fAcudienteTrabajo" maxlength="120">
+                        </div>
+
+                        <div class="ob-campo" style="grid-column:1/-1;">
+                            <label for="fAcudienteDireccion">
+                                Dirección del acudiente (si es diferente)
+                            </label>
+                            <input type="text" id="fAcudienteDireccion"
+                                   maxlength="180">
+                        </div>
+
+                        <div class="ob-campo" style="grid-column:1/-1;">
+                            <label for="fAcudienteTelefonoTrabajo">
+                                Teléfono del trabajo (opcional)
+                            </label>
+                            <input type="tel" id="fAcudienteTelefonoTrabajo"
+                                   maxlength="30">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="expediente-actions">
+                    <button type="button" class="expediente-secondary"
+                            id="btnCancelarInformacion">
+                        Cancelar
+                    </button>
+
+                    <button type="button" class="expediente-primary"
+                            id="btnGuardarInformacion">
+                        Guardar información
+                    </button>
+                </div>
+            </section>
+
+            <!-- PANEL OBSERVACIONES -->
+
+            <section class="expediente-panel" id="panelObservaciones"
+                     role="tabpanel">
+
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
+                    <div>
+                        <h3 style="margin-bottom:5px;">Observaciones</h3>
+                        <p class="expediente-subtitulo" style="margin:0;">
+                            Consulta el historial registrado para este estudiante.
+                        </p>
+                    </div>
+
+                    <button type="button" id="btnAbrirNuevaObs"
+                            class="expediente-primary">
+                        + Agregar observación
+                    </button>
+                </div>
+
+                <div id="modalListaObs"></div>
+            </section>
+
+            <!-- PANEL DOCUMENTOS -->
+
+            <section class="expediente-panel" id="panelDocumentos"
+                     role="tabpanel" hidden>
+
+                <h3>Documentos del estudiante</h3>
+
+                <p class="expediente-subtitulo">
+                    Adjunta y consulta documentos relacionados con la matrícula
+                    y el seguimiento del estudiante.
+                </p>
+
+                <div class="documentos-subir" id="bloqueSubirDocumento">
+                    <form id="formSubirDocumento">
+                        <div class="expediente-form-grid">
+
+                            <div class="ob-campo">
+                                <label for="docTipo">Tipo de documento *</label>
+                                <select id="docTipo" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="tarjeta_identidad">Tarjeta de identidad del estudiante</option>
+                                    <option value="documento_acudiente">Documento del acudiente</option>
+                                    <option value="certificado_eps">Certificado de afiliación a EPS</option>
+                                    <option value="recibo_hogar">Recibo de servicio público / hogar</option>
+                                    <option value="registro_civil">Registro civil</option>
+                                    <option value="certificado_estudio">Certificado de estudio</option>
+                                    <option value="otro">Otro documento</option>
+                                </select>
+                            </div>
+
+                            <div class="ob-campo">
+                                <label for="docArchivo">Seleccionar archivo *</label>
+                                <input type="file" id="docArchivo" required
+                                       accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
+                            </div>
+                        </div>
+
+                        <div class="ob-campo"
+                             id="campoNombreOtroDocumento" hidden>
+                            <label for="docNombreOtro">Nombre del documento</label>
+                            <input type="text" id="docNombreOtro"
+                                   maxlength="100"
+                                   placeholder="Ej. Autorización firmada">
+                        </div>
+
+                        <small class="ob-campo-ayuda">
+                            Formatos admitidos: PDF, PNG, JPG/JPEG y WebP.
+                            Tamaño máximo por archivo: 10 MB.
+                        </small>
+
+                        <div style="display:flex;justify-content:flex-end;margin-top:14px;">
+                            <button type="submit"
+                                    class="expediente-primary"
+                                    id="btnSubirDocumento">
+                                Guardar documento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="documentosLista" class="documentos-grid"
+                     aria-live="polite">
+                    <div class="documento-vacio">
+                        No hay documentos cargados todavía.
+                    </div>
+                </div>
+            </section>
+
+            <div class="expediente-actions">
+                <button type="button" class="expediente-secondary"
+                        id="btnCerrarExpediente">
+                    Cerrar
+                </button>
+            </div>
+        </dialog>
+
+        <!-- MODAL CREAR / EDITAR OBSERVACIÓN -->
+
+        <dialog class="ob-modal" id="modalNuevaObs">
+            <form id="formNuevaObs" method="dialog">
+                <h3 style="margin-top:0;margin-bottom:20px;">
+                    Nueva observación
+                </h3>
+
+                <div class="expediente-form-grid">
+                    <div class="ob-campo">
+                        <label for="obsTipo">Tipo *</label>
+                        <select id="obsTipo" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Académica">Académica</option>
+                            <option value="Comportamiento">Comportamiento</option>
+                        </select>
+                    </div>
+
+                    <div class="ob-campo">
+                        <label for="obsFecha">Fecha *</label>
+                        <input type="date" id="obsFecha" required>
+                    </div>
+                </div>
+
+                <div class="ob-campo">
+                    <label for="obsDesc">Descripción</label>
+                    <textarea id="obsDesc" rows="4"
+                              placeholder="Describe los hechos de forma clara y objetiva..."></textarea>
+                </div>
+
+                <div class="ob-campo">
+                    <label for="obsCompromiso">Compromiso del estudiante</label>
+                    <textarea id="obsCompromiso" rows="2"
+                              placeholder="Compromiso adquirido..."></textarea>
+                </div>
+
+                <div class="ob-campo">
+                    <label for="obsFalta">Clasificación de la falta *</label>
+                    <select id="obsFalta" required>
+                        <option value="">Seleccione una clasificación...</option>
+
+                        <optgroup label="Situaciones de convivencia escolar">
+                            <option value="tipo1">Situación Tipo I</option>
+                            <option value="tipo2">Situación Tipo II</option>
+                            <option value="tipo3">Situación Tipo III</option>
+                        </optgroup>
+
+                        <optgroup label="Escala del manual institucional">
+                            <option value="leve">Leve</option>
+                            <option value="grave">Grave</option>
+                            <option value="muy_grave">Muy grave</option>
+                        </optgroup>
+
+                        <option value="no_presenta">No presenta falta</option>
+                    </select>
+
+                    <div id="obsFaltaAyuda" class="ob-falta-ayuda"
+                         role="status" aria-live="polite">
+                        Selecciona una categoría para ver su descripción.
+                    </div>
+
+                    <small class="ob-campo-ayuda">
+                        Tipo I, II y III no equivalen automáticamente a leve,
+                        grave y muy grave. Verifica el Manual de Convivencia.
+                    </small>
+                </div>
+
+                <div class="ob-campo">
+                    <label for="obsFirmaArchivo">
+                        Imagen de firma del docente o rector (opcional)
+                    </label>
+
+                    <input type="file" id="obsFirmaArchivo"
+                           accept="image/png,image/jpeg,image/webp">
+
+                    <small class="ob-campo-ayuda">
+                        PNG, JPG/JPEG o WebP. Máximo 5 MB antes de procesar.
+                    </small>
+
+                    <div id="obsFirmaPreview" class="ob-firma-preview" hidden>
+                        <img id="obsFirmaPreviewImg"
+                             alt="Vista previa de la firma">
+
+                        <div class="ob-firma-preview-info">
+                            <strong id="obsFirmaNombre">Firma adjunta</strong>
+
+                            <div id="obsFirmaEstado"></div>
+
+                            <button type="button" id="btnQuitarFirma"
+                                    class="ob-btn-secundario">
+                                Quitar imagen adjunta
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expediente-actions">
+                    <button type="button" id="btnCancelarObs"
+                            class="expediente-secondary">
+                        Cancelar
+                    </button>
+
+                    <button type="submit" class="expediente-primary">
+                        Guardar observación
+                    </button>
+                </div>
+            </form>
+        </dialog>
+    </div>
+</main>
+
+<!-- AYUDA LATERAL -->
+
+<input type="checkbox" id="toggle-sidebar"
+       class="sidebar-checkbox" style="display:none;">
+
+<div class="sidebar">
+    <label for="toggle-sidebar" class="closeBtn">&times;</label>
+
+    <div class="sidebar-content">
+        <h2>Centro de Ayuda</h2>
+        <hr style="border:0;border-top:1px solid #777;margin:15px 0;">
+
+        <p>Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.</p>
+
+        <h3>¿Cómo consultar un estudiante?</h3>
+        <p>Utiliza el buscador y los filtros para localizar al estudiante.
+           Haz clic en su tarjeta para abrir el expediente.</p>
+
+        <h3>¿Cómo actualizar información?</h3>
+        <p>Abre el expediente, selecciona Actualizar Información y guarda
+           los cambios cuando termines.</p>
+
+        <h3>¿Cómo adjuntar documentos?</h3>
+        <p>Abre la sección Documentos, selecciona el tipo de documento
+           y el archivo que deseas guardar.</p>
+
+        <h3>¿La información es privada?</h3>
+        <p>Los documentos contienen datos personales. Esta versión guarda
+           archivos en el navegador y debe conectarse a Firebase con permisos
+           antes de utilizarse como expediente institucional compartido.</p>
+    </div>
+</div>
+
+<label for="toggle-sidebar" class="overlay" id="ovOverlayAyuda"></label>
+
+<!-- MODAL DE CIERRE DE SESIÓN -->
+<div id="ovModalCerrarSesion" role="dialog" aria-modal="true" aria-labelledby="ovTituloCerrarSesion" aria-describedby="ovTextoCerrarSesion" hidden>
+    <div class="ov-modal-caja">
+        <h2 id="ovTituloCerrarSesion">¿Cerrar sesión?</h2>
+        <p id="ovTextoCerrarSesion">¿Estás seguro de que deseas cerrar sesión?</p>
+
+        <div class="ov-modal-botones">
+            <button type="button" id="ovConfirmarCerrarSesion">Cerrar sesión</button>
+            <button type="button" id="ovCancelarCerrarSesion">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<!-- ICONOS -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+<script>
+(function () {
+    'use strict';
+
+    var KEY = 'ob_estudiantes_v2';
+    var DB_NAME = 'observadorVirtualDocumentos';
+    var DB_VERSION = 1;
+    var DB_STORE = 'documentos';
+
+    var COLORES = [
+        '#1a73e8', '#0f9d58', '#9334e6', '#f57c00',
+        '#00897b', '#d81b60', '#5e35b1', '#3949ab'
+    ];
+
+    var $ = function (id) {
+        return document.getElementById(id);
+    };
+
+    var filtro = 'todos';
+    var editId = null;
+    var editObsIndex = null;
+    var modoSoloLectura = false;
+
+    var firmaActual = '';
+    var firmaProcesando = false;
+    var firmaSolicitud = 0;
+    var objectUrls = [];
+
+    var AYUDAS_FALTAS = {
+        tipo1:
+            'Conflicto manejado inadecuadamente o situación esporádica ' +
+            'que afecta la convivencia, sin daño al cuerpo o a la salud. ' +
+            'Debe aplicarse el protocolo institucional para Tipo I.',
+
+        tipo2:
+            'Situación de agresión, acoso o ciberacoso repetido o con daño ' +
+            'al cuerpo o a la salud sin incapacidad, que no reúna ' +
+            'características de delito. Aplicar el protocolo para Tipo II.',
+
+        tipo3:
+            'Situación de agresión que presuntamente puede constituir un ' +
+            'delito. Aplicar la ruta institucional y avisar a las autoridades ' +
+            'competentes según el protocolo.',
+
+        leve:
+            'Incumplimiento de menor impacto conforme a la definición del ' +
+            'Manual de Convivencia institucional.',
+
+        grave:
+            'Conducta que el Manual de Convivencia define como grave por ' +
+            'su impacto, circunstancias o reiteración.',
+
+        muy_grave:
+            'Conducta que el Manual de Convivencia define como muy grave ' +
+            'por su impacto o riesgo.',
+
+        no_presenta:
+            'No se identifica una falta disciplinaria. Esta opción puede ' +
+            'utilizarse para seguimiento académico, informativo o positivo.'
+    };
+
+    var ETIQUETAS_FALTAS = {
+        tipo1: 'Situación Tipo I',
+        tipo2: 'Situación Tipo II',
+        tipo3: 'Situación Tipo III',
+        leve: 'Leve',
+        grave: 'Grave',
+        muy_grave: 'Muy grave',
+        no_presenta: 'No presenta falta'
+    };
+
+    function semilla() {
+        return [
+            {
+                id: 1,
+                nombre: 'Juan Pablo Pérez',
+                curso: 2,
+                jornada: 'Mañana',
+                documentoEstudiante: '',
+                direccionEstudiante: '',
+                acudienteNombre: 'Marta Pérez',
+                acudienteParentesco: 'Madre',
+                acudienteFijo: '6012345',
+                acudienteCel: '3101234567',
+                acudienteCorreo: 'marta@mail.com',
+                acudienteDireccion: '',
+                acudienteTrabajo: '',
+                acudienteTelefonoTrabajo: '',
+                observaciones: [
+                    {
+                        tipo: 'Académica',
+                        fecha: '2026-09-12',
+                        desc: 'No entregó la tarea de matemáticas.',
+                        compromiso: 'Entregar el lunes.',
+                        clasificacion: '',
+                        firma: ''
+                    },
+                    {
+                        tipo: 'Comportamiento',
+                        fecha: '2026-09-13',
+                        desc: 'Interrumpió la clase en dos ocasiones.',
+                        compromiso: 'Mejorar actitud.',
+                        clasificacion: '',
+                        firma: ''
+                    }
+                ]
+            },
+            {
+                id: 2,
+                nombre: 'Lucas González',
+                curso: 2,
+                jornada: 'Mañana',
+                documentoEstudiante: '',
+                direccionEstudiante: '',
+                acudienteNombre: 'Carlos González',
+                acudienteParentesco: 'Padre',
+                acudienteFijo: '',
+                acudienteCel: '3209876543',
+                acudienteCorreo: 'carlos@mail.com',
+                acudienteDireccion: '',
+                acudienteTrabajo: '',
+                acudienteTelefonoTrabajo: '',
+                observaciones: []
+            }
+        ];
+    }
+
+    function cargar() {
+        try {
+            var guardados = localStorage.getItem(KEY);
+
+            if (guardados) {
+                var parsed = JSON.parse(guardados);
+
+                if (Array.isArray(parsed)) {
+                    parsed.forEach(function (estudiante) {
+                        if (!Array.isArray(estudiante.observaciones)) {
+                            estudiante.observaciones = [];
+                        }
+                    });
+
+                    return parsed;
+                }
+            }
+        } catch (error) {
+            console.error('Error al cargar estudiantes:', error);
+        }
+
+        return semilla();
+    }
+
+    var datos = cargar();
+
+    function guardar() {
+        try {
+            localStorage.setItem(KEY, JSON.stringify(datos));
+
+            localStorage.setItem(
+                'totalEstudiantes',
+                String(datos.length)
+            );
+
+            localStorage.setItem(
+                'totalObservaciones',
+                String(datos.reduce(function (total, estudiante) {
+                    return total + estudiante.observaciones.length;
+                }, 0))
+            );
+
+            return true;
+        } catch (error) {
+            console.error('Error al guardar:', error);
+
+            alert(
+                'No fue posible guardar los cambios. ' +
+                'Comprueba el espacio disponible en el navegador.'
+            );
+
+            return false;
+        }
+    }
+
+    function esc(valor) {
+        return String(valor == null ? '' : valor).replace(
+            /[&<>"']/g,
+            function (c) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#39;'
+                }[c];
+            }
+        );
+    }
+
+    function norm(valor) {
+        return String(valor || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function iniciales(nombre) {
+        return (nombre || '')
+            .trim()
+            .split(/\s+/)
+            .slice(0, 2)
+            .map(function (parte) {
+                return parte[0] || '';
+            })
+            .join('')
+            .toUpperCase();
+    }
+
+    function etiquetaFalta(valor) {
+        return ETIQUETAS_FALTAS[valor] || 'Sin clasificar';
+    }
+
+    function claseFalta(valor) {
+        if (valor === 'tipo2' || valor === 'grave') return 'grave';
+        if (valor === 'tipo3' || valor === 'muy_grave') return 'muy-grave';
+        if (valor === 'no_presenta') return 'no-presenta';
+        return '';
+    }
+
+    function esImagenFirmaValida(valor) {
+        return typeof valor === 'string' &&
+            /^data:image\/(png|jpeg|webp);base64,/i.test(valor);
+    }
+
+
+    /* DOCUMENTOS LOCALES: INDEXEDDB */
+
+    function abrirBDDocumentos() {
+        return new Promise(function (resolve, reject) {
+            if (!('indexedDB' in window)) {
+                reject(new Error('IndexedDB no está disponible.'));
+                return;
+            }
+
+            var solicitud = indexedDB.open(DB_NAME, DB_VERSION);
+
+            solicitud.onupgradeneeded = function () {
+                var db = solicitud.result;
+
+                if (!db.objectStoreNames.contains(DB_STORE)) {
+                    var almacen = db.createObjectStore(
+                        DB_STORE,
+                        { keyPath: 'id' }
+                    );
+
+                    almacen.createIndex(
+                        'estudianteId',
+                        'estudianteId',
+                        { unique: false }
+                    );
+                }
+            };
+
+            solicitud.onsuccess = function () {
+                resolve(solicitud.result);
+            };
+
+            solicitud.onerror = function () {
+                reject(solicitud.error);
+            };
+        });
+    }
+
+    function guardarDocumentoDB(documento) {
+        return abrirBDDocumentos().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var tx = db.transaction(DB_STORE, 'readwrite');
+
+                tx.objectStore(DB_STORE).put(documento);
+
+                tx.oncomplete = function () {
+                    db.close();
+                    resolve();
+                };
+
+                tx.onerror = function () {
+                    db.close();
+                    reject(tx.error);
+                };
+            });
+        });
+    }
+
+    function listarDocumentosDB(estudianteId) {
+        return abrirBDDocumentos().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var tx = db.transaction(DB_STORE, 'readonly');
+                var indice = tx.objectStore(DB_STORE).index('estudianteId');
+                var solicitud = indice.getAll(
+                    IDBKeyRange.only(Number(estudianteId))
+                );
+
+                solicitud.onsuccess = function () {
+                    var documentos = solicitud.result || [];
+
+                    documentos.sort(function (a, b) {
+                        return (b.creado || 0) - (a.creado || 0);
+                    });
+
+                    resolve(documentos);
+                };
+
+                solicitud.onerror = function () {
+                    reject(solicitud.error);
+                };
+
+                tx.oncomplete = function () {
+                    db.close();
+                };
+
+                tx.onerror = function () {
+                    db.close();
+                };
+            });
+        });
+    }
+
+    function obtenerDocumentoDB(id) {
+        return abrirBDDocumentos().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var tx = db.transaction(DB_STORE, 'readonly');
+                var solicitud = tx.objectStore(DB_STORE).get(id);
+
+                solicitud.onsuccess = function () {
+                    resolve(solicitud.result || null);
+                };
+
+                solicitud.onerror = function () {
+                    reject(solicitud.error);
+                };
+
+                tx.oncomplete = function () {
+                    db.close();
+                };
+            });
+        });
+    }
+
+    function eliminarDocumentoDB(id) {
+        return abrirBDDocumentos().then(function (db) {
+            return new Promise(function (resolve, reject) {
+                var tx = db.transaction(DB_STORE, 'readwrite');
+
+                tx.objectStore(DB_STORE).delete(id);
+
+                tx.oncomplete = function () {
+                    db.close();
+                    resolve();
+                };
+
+                tx.onerror = function () {
+                    db.close();
+                    reject(tx.error);
+                };
+            });
+        });
+    }
+
+    function eliminarDocumentosEstudianteDB(id) {
+        return listarDocumentosDB(id).then(function (documentos) {
+            return Promise.all(documentos.map(function (documento) {
+                return eliminarDocumentoDB(documento.id);
+            }));
+        });
+    }
+
+    function formatoTamano(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+
+        if (bytes < 1024 * 1024) {
+            return (bytes / 1024).toFixed(1) + ' KB';
+        }
+
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
+
+    function fechaLegible(timestamp) {
+        return new Date(timestamp).toLocaleDateString('es-CO');
+    }
+
+
+    /* LISTADO DE ESTUDIANTES */
+
+    function render() {
+        var curso = +$('obCurso').value;
+        var jornada = $('obJornada').value;
+        var busqueda = norm($('obBuscar').value);
+
+        var base = datos.filter(function (estudiante) {
+            return +estudiante.curso === curso &&
+                estudiante.jornada === jornada;
+        });
+
+        $('obTitulo').textContent = 'Jornada ' + jornada.toLowerCase();
+
+        $('obSub').textContent =
+            'Estudiantes del curso ' + curso +
+            ' - jornada ' + jornada.toLowerCase() + '.';
+
+        var totalObs = base.reduce(function (total, estudiante) {
+            return total + estudiante.observaciones.length;
+        }, 0);
+
+        var conAcudiente = base.filter(function (estudiante) {
+            return estudiante.acudienteNombre &&
+                estudiante.acudienteNombre.trim() !== '';
+        }).length;
+
+        var estadisticas = [
+            [base.length, 'Estudiantes', '👥', '#eaf2ff'],
+            [totalObs, 'Observaciones totales', '📘', '#e9f6ef'],
+            [conAcudiente, 'Con acudiente', '👤', '#fff1e7']
+        ];
+
+        $('obStats').innerHTML = estadisticas.map(function (item) {
+            return (
+                '<div class="ob-stat">' +
+                    '<div class="ob-stat-icono" style="background:' +
+                    item[3] + '">' + item[2] + '</div>' +
+                    '<div><strong>' + item[0] + '</strong>' +
+                    '<span>' + item[1] + '</span></div>' +
+                '</div>'
+            );
+        }).join('');
+
+        var lista = base.filter(function (estudiante) {
+            var total = estudiante.observaciones.length;
+
+            return norm(estudiante.nombre).indexOf(busqueda) !== -1 &&
+                (
+                    filtro === 'todos' ||
+                    (filtro === 'con' ? total > 0 : total === 0)
+                );
+        });
+
+        $('obGrid').innerHTML = lista.length
+            ? lista.map(function (estudiante) {
+                var total = estudiante.observaciones.length;
+
+                var insignia = total === 0
+                    ? '<span class="ob-sin-obs">Sin observaciones</span>'
+                    : '<span class="ob-badge" style="background:#e8f0fe;color:#1a73e8;">' +
+                      total + ' observación(es)</span>';
+
+                return (
+                    '<article class="ob-card" data-student-id="' +
+                    Number(estudiante.id) + '" tabindex="0">' +
+
+                        '<div class="ob-card-cab">' +
+                            '<div class="ob-avatar" style="background:' +
+                            COLORES[Math.abs(Number(estudiante.id)) % COLORES.length] +
+                            '">' + esc(iniciales(estudiante.nombre)) + '</div>' +
+
+                            '<div><strong>' + esc(estudiante.nombre) +
+                            '</strong><small>Curso ' + esc(estudiante.curso) +
+                            ' · ' + esc(estudiante.jornada) + '</small></div>' +
+                        '</div>' +
+
+                        '<div class="ob-badges">' + insignia + '</div>' +
+
+                        '<div class="ob-nota">Acudiente: ' +
+                        esc(estudiante.acudienteNombre || 'No registrado') +
+                        '</div>' +
+
+                        '<div class="ob-acciones">' +
+                            '<button type="button" data-act="editar" data-id="' +
+                            Number(estudiante.id) + '">Abrir expediente</button>' +
+
+                            '<button type="button" class="ob-eliminar" data-act="eliminar" data-id="' +
+                            Number(estudiante.id) + '">Eliminar</button>' +
+                        '</div>' +
+                    '</article>'
+                );
+            }).join('')
+            : '<p class="ob-vacio">No hay estudiantes que coincidan con la búsqueda.</p>';
+    }
+
+
+    /* ABRIR Y CERRAR SECCIONES DEL EXPEDIENTE */
+
+    function cambiarPanel(nombre) {
+        var paneles = {
+            actualizar: 'panelActualizar',
+            observaciones: 'panelObservaciones',
+            documentos: 'panelDocumentos'
+        };
+
+        Object.keys(paneles).forEach(function (clave) {
+            $(paneles[clave]).hidden = clave !== nombre;
+        });
+
+        $('tabActualizar').classList.toggle('active', nombre === 'actualizar');
+        $('tabObservaciones').classList.toggle('active', nombre === 'observaciones');
+        $('tabDocumentos').classList.toggle('active', nombre === 'documentos');
+
+        $('tabObservaciones').setAttribute(
+            'aria-selected',
+            String(nombre === 'observaciones')
+        );
+
+        $('tabDocumentos').setAttribute(
+            'aria-selected',
+            String(nombre === 'documentos')
+        );
+
+        if (nombre === 'documentos') renderDocumentos();
+    }
+
+    function cargarCamposInformacion(estudiante) {
+        $('fNombre').value = estudiante.nombre || '';
+        $('fDocumentoEstudiante').value = estudiante.documentoEstudiante || '';
+        $('fDireccionEstudiante').value = estudiante.direccionEstudiante || '';
+        $('fCurso').value = String(estudiante.curso || 1);
+        $('fJornada').value = estudiante.jornada || 'Mañana';
+
+        $('fAcudienteNombre').value = estudiante.acudienteNombre || '';
+        $('fAcudienteParentesco').value = estudiante.acudienteParentesco || '';
+        $('fAcudienteFijo').value = estudiante.acudienteFijo || '';
+        $('fAcudienteCel').value = estudiante.acudienteCel || '';
+        $('fAcudienteCorreo').value = estudiante.acudienteCorreo || '';
+        $('fAcudienteDireccion').value = estudiante.acudienteDireccion || '';
+        $('fAcudienteTrabajo').value = estudiante.acudienteTrabajo || '';
+        $('fAcudienteTelefonoTrabajo').value =
+            estudiante.acudienteTelefonoTrabajo || '';
+    }
+
+    function establecerModoLectura() {
+        [
+            'fNombre',
+            'fDocumentoEstudiante',
+            'fDireccionEstudiante',
+            'fCurso',
+            'fJornada',
+            'fAcudienteNombre',
+            'fAcudienteParentesco',
+            'fAcudienteFijo',
+            'fAcudienteCel',
+            'fAcudienteCorreo',
+            'fAcudienteDireccion',
+            'fAcudienteTrabajo',
+            'fAcudienteTelefonoTrabajo'
+        ].forEach(function (id) {
+            $(id).disabled = modoSoloLectura;
+        });
+
+        $('btnGuardarInformacion').hidden = modoSoloLectura;
+        $('btnCancelarInformacion').hidden = modoSoloLectura;
+        $('tabActualizar').hidden = modoSoloLectura;
+        $('btnAbrirNuevaObs').hidden = modoSoloLectura;
+        $('bloqueSubirDocumento').hidden = modoSoloLectura;
+    }
+
+    function abrirModalEstudiante(estudiante, lectura) {
+        editId = estudiante.id;
+        modoSoloLectura = !!lectura;
+
+        $('modalNombreVista').textContent =
+            estudiante.nombre || 'Estudiante';
+
+        $('modalAvatar').textContent = iniciales(estudiante.nombre);
+
+        $('modalAvatar').style.background =
+            COLORES[Math.abs(Number(estudiante.id)) % COLORES.length];
+
+        $('modalCursoJornadaTxt').textContent =
+            'Curso ' + estudiante.curso +
+            ' · Jornada ' + estudiante.jornada;
+
+        cargarCamposInformacion(estudiante);
+        establecerModoLectura();
+        pintarObsModal(estudiante);
+
+        $('contadorObservaciones').textContent =
+            String(estudiante.observaciones.length);
+
+        $('docTipo').value = '';
+        $('docArchivo').value = '';
+        $('docNombreOtro').value = '';
+        $('docNombreOtro').required = false;
+        $('campoNombreOtroDocumento').hidden = true;
+
+        cambiarPanel('observaciones');
+        $('obModal').showModal();
+    }
+
+
+    /* MOSTRAR OBSERVACIONES */
+
+    function pintarObsModal(estudiante) {
+        var contenedor = $('modalListaObs');
+        var observaciones = estudiante.observaciones || [];
+
+        $('contadorObservaciones').textContent =
+            String(observaciones.length);
+
+        if (!observaciones.length) {
+            contenedor.innerHTML =
+                '<div class="documento-vacio">' +
+                'Este estudiante todavía no tiene observaciones registradas.' +
+                '</div>';
+
+            return;
+        }
+
+        contenedor.innerHTML = observaciones.map(function (obs, indice) {
+            var tipo = obs.tipo || 'Observación';
+
+            var colorTipo = tipo === 'Académica'
+                ? 'background:#1a73e8;color:#fff;'
+                : 'background:#ed7d31;color:#fff;';
+
+            var clasificacion = obs.clasificacion || obs.falta || '';
+
+            var firmaHTML = esImagenFirmaValida(obs.firma)
+                ? (
+                    '<div class="obs-firma">' +
+                        '<span class="obs-firma-titulo">Firma adjunta</span>' +
+                        '<img src="' + esc(obs.firma) +
+                        '" alt="Imagen de firma adjunta" loading="lazy">' +
+                        '<span class="obs-firma-ayuda-legal">' +
+                        'Imagen gráfica adjunta. La identidad del firmante ' +
+                        'debe verificarse mediante el procedimiento institucional.' +
+                        '</span>' +
+                    '</div>'
+                )
+                : '';
+
+            var acciones = modoSoloLectura
+                ? ''
+                : (
+                    '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">' +
+                        '<button type="button" class="expediente-secondary" onclick="editarObs(' +
+                        indice + ')">Editar</button>' +
+
+                        '<button type="button" onclick="eliminarObs(' +
+                        indice + ')" style="padding:8px 10px;color:#b42318;background:#fff0ef;border:1px solid #ffc9c4;border-radius:8px;font-size:12px;cursor:pointer;">Eliminar</button>' +
+                    '</div>'
+                );
+
+            return (
+                '<div class="obs-card-item">' +
+
+                    '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
+                        '<span style="padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800;' +
+                        colorTipo + '">' + esc(tipo) + '</span>' +
+
+                        '<small style="color:var(--ov-secundario);">' +
+                        esc(obs.fecha || 'Sin fecha') + '</small>' +
+                    '</div>' +
+
+                    (
+                        clasificacion
+                            ? '<span class="obs-clasificacion ' +
+                                claseFalta(clasificacion) + '">' +
+                                esc(etiquetaFalta(clasificacion)) + '</span>' +
+                                '<p class="obs-clasificacion-desc">' +
+                                esc(AYUDAS_FALTAS[clasificacion] || '') + '</p>'
+                            : '<p class="obs-clasificacion-desc">Esta observación no tiene clasificación guardada.</p>'
+                    ) +
+
+                    '<p style="margin:8px 0;line-height:1.7;white-space:pre-wrap;">' +
+                    esc(obs.desc || 'Sin descripción.') + '</p>' +
+
+                    (
+                        obs.compromiso
+                            ? '<p style="margin:8px 0;line-height:1.6;"><strong>Compromiso:</strong> ' +
+                                esc(obs.compromiso) + '</p>'
+                            : ''
+                    ) +
+
+                    firmaHTML +
+                    acciones +
+
+                '</div>'
+            );
+        }).join('');
+    }
+
+
+    /* EDITAR OBSERVACIONES */
+
+    function actualizarAyudaFalta() {
+        $('obsFaltaAyuda').textContent =
+            AYUDAS_FALTAS[$('obsFalta').value] ||
+            'Selecciona una categoría para ver una descripción orientativa.';
+    }
+
+    function actualizarVistaFirma() {
+        if (firmaActual && esImagenFirmaValida(firmaActual)) {
+            $('obsFirmaPreviewImg').src = firmaActual;
+            $('obsFirmaPreview').hidden = false;
+            $('obsFirmaNombre').textContent = 'Firma adjunta';
+            $('obsFirmaEstado').textContent =
+                'Esta imagen aparecerá debajo de la observación guardada.';
+        } else {
+            $('obsFirmaPreviewImg').removeAttribute('src');
+            $('obsFirmaPreview').hidden = true;
+            $('obsFirmaEstado').textContent = '';
+        }
+    }
+
+    function limpiarFormularioObservacion() {
+        $('obsTipo').value = '';
+        $('obsFecha').value = '';
+        $('obsDesc').value = '';
+        $('obsCompromiso').value = '';
+        $('obsFalta').value = '';
+        $('obsFirmaArchivo').value = '';
+
+        firmaActual = '';
+        firmaSolicitud++;
+        firmaProcesando = false;
+
+        $('formNuevaObs')
+            .querySelector('button[type="submit"]').disabled = false;
+
+        actualizarAyudaFalta();
+        actualizarVistaFirma();
+    }
+
+    function abrirEditorObservacion(obs, indice) {
+        if (modoSoloLectura) return;
+
+        editObsIndex = indice;
+        limpiarFormularioObservacion();
+
+        if (obs) {
+            $('obsTipo').value = obs.tipo || '';
+            $('obsFecha').value = obs.fecha || '';
+            $('obsDesc').value = obs.desc || '';
+            $('obsCompromiso').value = obs.compromiso || '';
+            $('obsFalta').value = obs.clasificacion || obs.falta || '';
+
+            firmaActual = esImagenFirmaValida(obs.firma)
+                ? obs.firma
+                : '';
+        }
+
+        $('formNuevaObs')
+            .querySelector('button[type="submit"]').textContent =
+            obs ? 'Guardar cambios' : 'Guardar observación';
+
+        actualizarAyudaFalta();
+        actualizarVistaFirma();
+
+        $('modalNuevaObs').showModal();
+    }
+
+    window.editarObs = function (indice) {
+        if (modoSoloLectura) return;
+
+        var estudiante = datos.find(function (item) {
+            return item.id === editId;
+        });
+
+        if (!estudiante || !estudiante.observaciones[indice]) return;
+
+        abrirEditorObservacion(estudiante.observaciones[indice], indice);
+    };
+
+    window.eliminarObs = function (indice) {
+        if (modoSoloLectura) return;
+
+        var estudiante = datos.find(function (item) {
+            return item.id === editId;
+        });
+
+        if (!estudiante) return;
+
+        if (confirm('¿Seguro que deseas eliminar esta observación?')) {
+            var anterior = estudiante.observaciones.splice(indice, 1)[0];
+
+            if (!guardar()) {
+                estudiante.observaciones.splice(indice, 0, anterior);
+                return;
+            }
+
+            pintarObsModal(estudiante);
+            render();
+        }
+    };
+
+    $('btnAbrirNuevaObs').addEventListener('click', function () {
+        if (!modoSoloLectura) {
+            abrirEditorObservacion(null, null);
+        }
+    });
+
+    $('btnCancelarObs').addEventListener('click', function () {
+        $('modalNuevaObs').close();
+    });
+
+    $('obsFalta').addEventListener('change', actualizarAyudaFalta);
+
+    $('formNuevaObs').addEventListener('submit', function (evento) {
+        evento.preventDefault();
+
+        if (modoSoloLectura || firmaProcesando) return;
+
+        var tipo = $('obsTipo').value;
+        var fecha = $('obsFecha').value;
+        var falta = $('obsFalta').value;
+
+        if (!tipo || !fecha || !falta) {
+            alert('Tipo, fecha y clasificación son obligatorios.');
+            return;
+        }
+
+        var estudiante = datos.find(function (item) {
+            return item.id === editId;
+        });
+
+        if (!estudiante) return;
+
+        var nueva = {
+            tipo: tipo,
+            fecha: fecha,
+            desc: $('obsDesc').value.trim(),
+            compromiso: $('obsCompromiso').value.trim(),
+            clasificacion: falta,
+            firma: firmaActual || ''
+        };
+
+        var anterior = null;
+
+        if (editObsIndex !== null) {
+            anterior = estudiante.observaciones[editObsIndex];
+            estudiante.observaciones[editObsIndex] = nueva;
+        } else {
+            estudiante.observaciones.push(nueva);
+        }
+
+        if (!guardar()) {
+            if (editObsIndex !== null) {
+                estudiante.observaciones[editObsIndex] = anterior;
+            } else {
+                estudiante.observaciones.pop();
+            }
+
+            return;
+        }
+
+        pintarObsModal(estudiante);
+        render();
+        $('modalNuevaObs').close();
+        limpiarFormularioObservacion();
+    });
+
+
+    /* CARGAR IMAGEN DE FIRMA */
+
+    $('obsFirmaArchivo').addEventListener('change', function (evento) {
+        var archivo = evento.target.files && evento.target.files[0];
+
+        if (!archivo) return;
+
+        var solicitudActual = ++firmaSolicitud;
+
+        if (['image/png', 'image/jpeg', 'image/webp'].indexOf(archivo.type) === -1) {
+            alert('Selecciona una imagen PNG, JPG/JPEG o WebP.');
+            evento.target.value = '';
+            return;
+        }
+
+        if (archivo.size > 5 * 1024 * 1024) {
+            alert('La imagen supera los 5 MB.');
+            evento.target.value = '';
+            return;
+        }
+
+        firmaProcesando = true;
+
+        var botonGuardar = $('formNuevaObs')
+            .querySelector('button[type="submit"]');
+
+        botonGuardar.disabled = true;
+        $('obsFirmaPreview').hidden = false;
+        $('obsFirmaEstado').textContent = 'Preparando imagen…';
+
+        var lector = new FileReader();
+
+        lector.onerror = function () {
+            if (solicitudActual !== firmaSolicitud) return;
+
+            firmaProcesando = false;
+            botonGuardar.disabled = false;
+            actualizarVistaFirma();
+
+            alert('No se pudo leer la imagen.');
+        };
+
+        lector.onload = function () {
+            if (solicitudActual !== firmaSolicitud) return;
+
+            var imagen = new Image();
+
+            imagen.onerror = function () {
+                if (solicitudActual !== firmaSolicitud) return;
+
+                firmaProcesando = false;
+                botonGuardar.disabled = false;
+                actualizarVistaFirma();
+
+                alert('No se pudo procesar la imagen seleccionada.');
+            };
+
+            imagen.onload = function () {
+                if (solicitudActual !== firmaSolicitud) return;
+
+                try {
+                    var proporcion = Math.min(
+                        1,
+                        1200 / imagen.naturalWidth,
+                        420 / imagen.naturalHeight
+                    );
+
+                    var canvas = document.createElement('canvas');
+
+                    canvas.width = Math.max(
+                        1,
+                        Math.round(imagen.naturalWidth * proporcion)
+                    );
+
+                    canvas.height = Math.max(
+                        1,
+                        Math.round(imagen.naturalHeight * proporcion)
+                    );
+
+                    canvas.getContext('2d').drawImage(
+                        imagen, 0, 0, canvas.width, canvas.height
+                    );
+
+                    var resultado = canvas.toDataURL('image/png');
+
+                    if (resultado.length > 300000) {
+                        var webp = canvas.toDataURL('image/webp', .84);
+
+                        if (webp.indexOf('data:image/webp;base64,') === 0) {
+                            resultado = webp;
+                        }
+                    }
+
+                    if (resultado.length > 450000) {
+                        firmaProcesando = false;
+                        botonGuardar.disabled = false;
+                        actualizarVistaFirma();
+
+                        alert('La imagen sigue siendo muy grande. Reduce su tamaño.');
+
+                        return;
+                    }
+
+                    firmaActual = resultado;
+                    firmaProcesando = false;
+                    botonGuardar.disabled = false;
+
+                    actualizarVistaFirma();
+
+                    $('obsFirmaEstado').textContent =
+                        'Imagen lista para adjuntar.';
+
+                } catch (error) {
+                    console.error(error);
+
+                    firmaProcesando = false;
+                    botonGuardar.disabled = false;
+                    actualizarVistaFirma();
+
+                    alert('No fue posible preparar la imagen.');
+                }
+            };
+
+            imagen.src = lector.result;
+        };
+
+        lector.readAsDataURL(archivo);
+    });
+
+    $('btnQuitarFirma').addEventListener('click', function () {
+        if (modoSoloLectura) return;
+
+        firmaSolicitud++;
+        firmaActual = '';
+        firmaProcesando = false;
+
+        $('obsFirmaArchivo').value = '';
+
+        $('formNuevaObs')
+            .querySelector('button[type="submit"]').disabled = false;
+
+        actualizarVistaFirma();
+    });
+
+
+    /* ACTUALIZAR INFORMACIÓN DEL ESTUDIANTE */
+
+    $('btnGuardarInformacion').addEventListener('click', function () {
+        if (modoSoloLectura) return;
+
+        var estudiante = datos.find(function (item) {
+            return item.id === editId;
+        });
+
+        if (!estudiante) return;
+
+        if (!$('fNombre').value.trim()) {
+            alert('El nombre del estudiante es obligatorio.');
+            $('fNombre').focus();
+            return;
+        }
+
+        var cambios = {
+            nombre: $('fNombre').value.trim(),
+            documentoEstudiante: $('fDocumentoEstudiante').value.trim(),
+            direccionEstudiante: $('fDireccionEstudiante').value.trim(),
+            curso: +$('fCurso').value,
+            jornada: $('fJornada').value,
+
+            acudienteNombre: $('fAcudienteNombre').value.trim(),
+            acudienteParentesco: $('fAcudienteParentesco').value,
+            acudienteFijo: $('fAcudienteFijo').value.trim(),
+            acudienteCel: $('fAcudienteCel').value.trim(),
+            acudienteCorreo: $('fAcudienteCorreo').value.trim(),
+            acudienteDireccion: $('fAcudienteDireccion').value.trim(),
+            acudienteTrabajo: $('fAcudienteTrabajo').value.trim(),
+            acudienteTelefonoTrabajo: $('fAcudienteTelefonoTrabajo').value.trim()
+        };
+
+        var anteriores = {};
+
+        Object.keys(cambios).forEach(function (campo) {
+            anteriores[campo] = estudiante[campo];
+            estudiante[campo] = cambios[campo];
+        });
+
+        if (!guardar()) {
+            Object.keys(anteriores).forEach(function (campo) {
+                if (anteriores[campo] === undefined) {
+                    delete estudiante[campo];
+                } else {
+                    estudiante[campo] = anteriores[campo];
+                }
+            });
+
+            return;
+        }
+
+        $('modalNombreVista').textContent = estudiante.nombre;
+        $('modalAvatar').textContent = iniciales(estudiante.nombre);
+
+        $('modalCursoJornadaTxt').textContent =
+            'Curso ' + estudiante.curso + ' · Jornada ' + estudiante.jornada;
+
+        render();
+        cambiarPanel('observaciones');
+
+        alert('La información se actualizó en este navegador.');
+    });
+
+    $('btnCancelarInformacion').addEventListener('click', function () {
+        var estudiante = datos.find(function (item) {
+            return item.id === editId;
+        });
+
+        if (estudiante) {
+            cargarCamposInformacion(estudiante);
+        }
+
+        cambiarPanel('observaciones');
+    });
+
+
+    /* DOCUMENTOS: SUBIR, LISTAR, DESCARGAR Y ELIMINAR */
+
+    $('docTipo').addEventListener('change', function () {
+        var esOtro = $('docTipo').value === 'otro';
+
+        $('campoNombreOtroDocumento').hidden = !esOtro;
+        $('docNombreOtro').required = esOtro;
+    });
+
+    function nombreTipoDocumento(tipo, otro) {
+        var nombres = {
+            tarjeta_identidad: 'Tarjeta de identidad del estudiante',
+            documento_acudiente: 'Documento del acudiente',
+            certificado_eps: 'Certificado de afiliación a EPS',
+            recibo_hogar: 'Recibo de servicio público / hogar',
+            registro_civil: 'Registro civil',
+            certificado_estudio: 'Certificado de estudio',
+            otro: otro || 'Otro documento'
+        };
+
+        return nombres[tipo] || 'Documento';
+    }
+
+    function renderDocumentos() {
+        var estudianteId = editId;
+
+        $('documentosLista').innerHTML =
+            '<div class="documento-vacio">Cargando documentos...</div>';
+
+        listarDocumentosDB(estudianteId)
+            .then(function (documentos) {
+                if (Number(editId) !== Number(estudianteId)) return;
+
+                $('contadorDocumentos').textContent = String(documentos.length);
+
+                if (!documentos.length) {
+                    $('documentosLista').innerHTML =
+                        '<div class="documento-vacio">' +
+                        'Todavía no hay documentos guardados para este estudiante.' +
+                        '</div>';
+
+                    return;
+                }
+
+                $('documentosLista').innerHTML = documentos.map(function (doc) {
+                    var nombre = nombreTipoDocumento(
+                        doc.tipo,
+                        doc.nombrePersonalizado
+                    );
+
+                    var botones =
+                        '<button type="button" data-doc-act="descargar" data-doc-id="' +
+                        esc(doc.id) + '">Descargar</button>';
+
+                    if (!modoSoloLectura) {
+                        botones +=
+                            '<button type="button" data-doc-act="eliminar" data-doc-id="' +
+                            esc(doc.id) + '">Eliminar</button>';
+                    }
+
+                    return (
+                        '<article class="documento-card">' +
+                            '<div class="documento-card-title">' +
+                            esc(nombre) + '</div>' +
+
+                            '<div class="documento-card-meta">' +
+                            esc(doc.nombreArchivo) + '<br>' +
+                            esc(formatoTamano(doc.size || 0)) +
+                            ' · ' + esc(fechaLegible(doc.creado)) +
+                            '</div>' +
+
+                            '<div class="documento-card-actions">' +
+                            botones + '</div>' +
+                        '</article>'
+                    );
+                }).join('');
+            })
+            .catch(function (error) {
+                console.error(error);
+
+                $('documentosLista').innerHTML =
+                    '<div class="documento-vacio">' +
+                    'No se pudieron cargar los documentos en este navegador.' +
+                    '</div>';
+            });
+    }
+
+    $('formSubirDocumento').addEventListener('submit', function (evento) {
+        evento.preventDefault();
+
+        if (modoSoloLectura) return;
+
+        var archivo = $('docArchivo').files &&
+            $('docArchivo').files[0];
+
+        var tipo = $('docTipo').value;
+        var otro = $('docNombreOtro').value.trim();
+
+        if (!tipo || !archivo) {
+            alert('Selecciona el tipo de documento y el archivo.');
+            return;
+        }
+
+        if (tipo === 'otro' && !otro) {
+            alert('Escribe el nombre del documento.');
+            return;
+        }
+
+        var extensiones = /\.(pdf|png|jpe?g|webp)$/i;
+        var tiposPermitidos = [
+            'application/pdf',
+            'image/png',
+            'image/jpeg',
+            'image/webp'
+        ];
+
+        if (
+            tiposPermitidos.indexOf(archivo.type) === -1 &&
+            !extensiones.test(archivo.name)
+        ) {
+            alert('Formato no admitido. Selecciona un PDF o una imagen compatible.');
+            return;
+        }
+
+        if (archivo.size > 10 * 1024 * 1024) {
+            alert('El documento supera los 10 MB.');
+            return;
+        }
+
+        var boton = $('btnSubirDocumento');
+
+        boton.disabled = true;
+        boton.textContent = 'Guardando…';
+
+        var documento = {
+            id: 'doc_' + Date.now() + '_' +
+                Math.random().toString(36).slice(2, 9),
+
+            estudianteId: Number(editId),
+            tipo: tipo,
+            nombrePersonalizado: otro,
+            nombreArchivo: archivo.name,
+            mimeType: archivo.type || 'application/octet-stream',
+            size: archivo.size,
+            creado: Date.now(),
+            blob: archivo
+        };
+
+        guardarDocumentoDB(documento)
+            .then(function () {
+                $('formSubirDocumento').reset();
+                $('campoNombreOtroDocumento').hidden = true;
+                $('docNombreOtro').required = false;
+
+                renderDocumentos();
+            })
+            .catch(function (error) {
+                console.error(error);
+
+                alert(
+                    'No se pudo guardar el documento. Revisa el espacio ' +
+                    'disponible del navegador e inténtalo de nuevo.'
+                );
+            })
+            .finally(function () {
+                boton.disabled = false;
+                boton.textContent = 'Guardar documento';
+            });
+    });
+
+    $('documentosLista').addEventListener('click', function (evento) {
+        var boton = evento.target.closest('button[data-doc-act]');
+
+        if (!boton) return;
+
+        var id = boton.dataset.docId;
+
+        if (boton.dataset.docAct === 'descargar') {
+            obtenerDocumentoDB(id)
+                .then(function (doc) {
+                    if (!doc || !doc.blob) {
+                        alert('No se encontró el archivo.');
+                        return;
+                    }
+
+                    var url = URL.createObjectURL(doc.blob);
+                    objectUrls.push(url);
+
+                    var enlace = document.createElement('a');
+
+                    enlace.href = url;
+                    enlace.download = doc.nombreArchivo || 'documento';
+
+                    document.body.appendChild(enlace);
+                    enlace.click();
+                    enlace.remove();
+
+                    setTimeout(function () {
+                        URL.revokeObjectURL(url);
+
+                        objectUrls = objectUrls.filter(function (item) {
+                            return item !== url;
+                        });
+                    }, 1500);
+                })
+                .catch(function (error) {
+                    console.error(error);
+                    alert('No fue posible descargar el documento.');
+                });
+
+        } else if (boton.dataset.docAct === 'eliminar') {
+            if (modoSoloLectura) return;
+
+            if (confirm('¿Eliminar este documento?')) {
+                eliminarDocumentoDB(id)
+                    .then(renderDocumentos)
+                    .catch(function (error) {
+                        console.error(error);
+                        alert('No se pudo eliminar el documento.');
+                    });
+            }
+        }
+    });
+
+
+    /* BOTONES DEL EXPEDIENTE */
+
+    $('tabActualizar').addEventListener('click', function () {
+        if (modoSoloLectura) return;
+
+        cargarCamposInformacion(
+            datos.find(function (item) {
+                return item.id === editId;
+            })
+        );
+
+        cambiarPanel('actualizar');
+    });
+
+    $('tabObservaciones').addEventListener('click', function () {
+        cambiarPanel('observaciones');
+    });
+
+    $('tabDocumentos').addEventListener('click', function () {
+        cambiarPanel('documentos');
+    });
+
+    $('obCerrarPrincipal').addEventListener('click', function () {
+        $('obModal').close();
+    });
+
+    $('btnCerrarExpediente').addEventListener('click', function () {
+        $('obModal').close();
+    });
+
+
+    /* FILTROS Y BÚSQUEDA */
+
+    $('obBuscar').addEventListener('input', render);
+    $('obCurso').addEventListener('change', render);
+    $('obJornada').addEventListener('change', render);
+
+    $('obFiltros').addEventListener('click', function (evento) {
+        var boton = evento.target.closest('.ob-filtro');
+
+        if (!boton) return;
+
+        filtro = boton.dataset.f;
+
+        document.querySelectorAll('#obFiltros .ob-filtro')
+            .forEach(function (item) {
+                item.classList.toggle('activo', item === boton);
+            });
+
+        render();
+    });
+
+
+    /* CREAR ESTUDIANTE */
+
+    $('obAgregar').addEventListener('click', function () {
+        var nuevo = {
+            id: Date.now(),
+            nombre: '',
+            curso: +$('obCurso').value,
+            jornada: $('obJornada').value,
+
+            documentoEstudiante: '',
+            direccionEstudiante: '',
+
+            acudienteNombre: '',
+            acudienteParentesco: '',
+            acudienteFijo: '',
+            acudienteCel: '',
+            acudienteCorreo: '',
+            acudienteDireccion: '',
+            acudienteTrabajo: '',
+            acudienteTelefonoTrabajo: '',
+
+            observaciones: []
+        };
+
+        datos.push(nuevo);
+
+        if (!guardar()) {
+            datos.pop();
+            return;
+        }
+
+        render();
+        abrirModalEstudiante(nuevo, false);
+        cambiarPanel('actualizar');
+        $('fNombre').focus();
+    });
+
+
+    /* ACCIONES DE TARJETA */
+
+    $('obGrid').addEventListener('click', function (evento) {
+        var boton = evento.target.closest('button[data-act]');
+        var tarjeta = evento.target.closest('.ob-card');
+
+        var id = boton
+            ? Number(boton.dataset.id)
+            : tarjeta
+                ? Number(tarjeta.dataset.studentId)
+                : NaN;
+
+        if (!Number.isFinite(id)) return;
+
+        var estudiante = datos.find(function (item) {
+            return Number(item.id) === id;
+        });
+
+        if (!estudiante) return;
+
+        if (boton && boton.dataset.act === 'eliminar') {
+            if (
+                confirm(
+                    '¿Eliminar a ' +
+                    (estudiante.nombre || 'este estudiante') + '?'
+                )
+            ) {
+                var anteriores = datos;
+
+                datos = datos.filter(function (item) {
+                    return Number(item.id) !== id;
+                });
+
+                if (!guardar()) {
+                    datos = anteriores;
+                    return;
+                }
+
+                render();
+
+                eliminarDocumentosEstudianteDB(id).catch(function (error) {
+                    console.warn('No se pudieron eliminar documentos locales:', error);
+                });
+            }
+
+        } else if (boton && boton.dataset.act === 'ver') {
+            abrirModalEstudiante(estudiante, true);
+
+        } else {
+            abrirModalEstudiante(estudiante, false);
+        }
+    });
+
+    $('obGrid').addEventListener('keydown', function (evento) {
+        if (evento.target.closest('button')) return;
+
+        if (evento.key !== 'Enter' && evento.key !== ' ') return;
+
+        var tarjeta = evento.target.closest('.ob-card');
+
+        if (!tarjeta) return;
+
+        evento.preventDefault();
+
+        var estudiante = datos.find(function (item) {
+            return Number(item.id) === Number(tarjeta.dataset.studentId);
+        });
+
+        if (estudiante) {
+            abrirModalEstudiante(estudiante, false);
+        }
+    });
+
+
+    /* INICIALIZACIÓN */
+
+    ['obCurso', 'fCurso'].forEach(function (id) {
+        for (var i = 1; i <= 11; i++) {
+            $(id).insertAdjacentHTML(
+                'beforeend',
+                '<option value="' + i + '">Curso ' + i + '</option>'
+            );
+        }
+    });
+
+    $('obCurso').value = '2';
+
+    $('modalNuevaObs').addEventListener('close', function () {
+        firmaSolicitud++;
+        firmaProcesando = false;
+
+        $('formNuevaObs')
+            .querySelector('button[type="submit"]').disabled = false;
+    });
+
+    $('obModal').addEventListener('close', function () {
+        objectUrls.forEach(function (url) {
+            URL.revokeObjectURL(url);
+        });
+
+        objectUrls = [];
+    });
+
+    guardar();
+    render();
+
+})();
+
+
+/* MENÚ SUPERIOR DE CUENTA */
+
+function toggleAccountMenu() {
+    document.getElementById('accountCard')?.classList.toggle('active');
+}
+
+function toggleAccountOptions(evento) {
+    evento.stopPropagation();
+
+    var caja = document.getElementById('optionsBox');
+
+    if (!caja) return;
+
+    caja.style.display =
+        caja.style.display === 'block' ? 'none' : 'block';
+}
+</script>
+
+<!-- FUNCIONES DE LA BARRA LATERAL, TEMA Y CENTRO DE AYUDA -->
+<script>
+    const ovBarra = document.getElementById('ovBarraLateral');
+    const ovIconoLogo = document.getElementById('ovIconoLogo');
+    const ovBotonMovil = document.getElementById('ovBotonMovil');
+    const ovOverlay = document.getElementById('ovOverlay');
+    const ovInterruptorTema = document.getElementById('ovInterruptorTema');
+    const ovIconoTema = document.getElementById('ovIconoTema');
+
+    function ovAplicarTema(oscuro) {
+        document.body.classList.toggle('ov-dark-mode', oscuro);
+        document.body.classList.toggle('modo-oscuro', oscuro);
+        document.documentElement.classList.toggle('ov-dark-mode', oscuro);
+        document.documentElement.style.backgroundColor = oscuro ? '#111827' : '#f4f6f8';
+
+        ovInterruptorTema.setAttribute('aria-pressed', String(oscuro));
+        ovIconoTema.setAttribute('name', oscuro ? 'sunny-outline' : 'moon-outline');
+        ovInterruptorTema.setAttribute(
+            'aria-label',
+            oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
+        );
+    }
+
+    function ovCerrarMenuMovil() {
+        ovBarra.classList.remove('ov-movil-abierta');
+        ovOverlay.classList.remove('ov-overlay-visible');
+        ovBotonMovil.setAttribute('aria-expanded', 'false');
+        ovBotonMovil.setAttribute('aria-label', 'Abrir menú');
+        ovBotonMovil.innerHTML = '<ion-icon name="menu-outline"></ion-icon>';
+    }
+
+    function ovAlternarBarra() {
+        if (window.innerWidth <= 768) {
+            const abierta = ovBarra.classList.toggle('ov-movil-abierta');
+            ovOverlay.classList.toggle('ov-overlay-visible', abierta);
+            ovBotonMovil.setAttribute('aria-expanded', String(abierta));
+            ovBotonMovil.setAttribute('aria-label', abierta ? 'Cerrar menú' : 'Abrir menú');
+            ovBotonMovil.innerHTML = abierta
+                ? '<ion-icon name="close-outline"></ion-icon>'
+                : '<ion-icon name="menu-outline"></ion-icon>';
+        } else {
+            document.body.classList.toggle('ov-sidebar-collapsed');
+            ovBarra.classList.toggle('ov-mini');
+        }
+    }
+
+    ovIconoLogo.addEventListener('click', ovAlternarBarra);
+
+    ovIconoLogo.addEventListener('keydown', (evento) => {
+        if (evento.key === 'Enter' || evento.key === ' ') {
+            evento.preventDefault();
+            ovAlternarBarra();
+        }
+    });
+
+    ovBotonMovil.addEventListener('click', () => {
+        const abierta = ovBarra.classList.toggle('ov-movil-abierta');
+        ovOverlay.classList.toggle('ov-overlay-visible', abierta);
+        ovBotonMovil.setAttribute('aria-expanded', String(abierta));
+        ovBotonMovil.setAttribute('aria-label', abierta ? 'Cerrar menú' : 'Abrir menú');
+        ovBotonMovil.innerHTML = abierta
+            ? '<ion-icon name="close-outline"></ion-icon>'
+            : '<ion-icon name="menu-outline"></ion-icon>';
+    });
+
+    ovOverlay.addEventListener('click', ovCerrarMenuMovil);
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            ovCerrarMenuMovil();
+        }
+    });
+
+    ovInterruptorTema.addEventListener('click', () => {
+        const oscuro = !document.body.classList.contains('ov-dark-mode');
+        ovAplicarTema(oscuro);
+
+        try {
+            localStorage.setItem('ov-tema', oscuro ? 'oscuro' : 'claro');
+        } catch (error) {
+            // El tema sigue funcionando si el navegador bloquea el almacenamiento.
+        }
+    });
+
+    try {
+        const temaGuardado = localStorage.getItem('ov-tema');
+        ovAplicarTema(temaGuardado === 'oscuro');
+    } catch (error) {
+        ovAplicarTema(false);
+    }
+
+    // CENTRO DE AYUDA
+    (() => {
+        const toggle = document.getElementById('toggle-sidebar');
+        const panel = document.querySelector('.sidebar');
+        const overlayAyuda = document.getElementById('ovOverlayAyuda');
+        const cerrar = document.querySelector('.closeBtn');
+
+        if (!toggle || !panel || !overlayAyuda || !cerrar) return;
+
+        function actualizarAyuda() {
+            const abierto = toggle.checked;
+            panel.classList.toggle('active', abierto);
+            overlayAyuda.classList.toggle('active', abierto);
+            document.body.classList.toggle('help-open', abierto);
+        }
+
+        toggle.addEventListener('change', actualizarAyuda);
+
+        cerrar.addEventListener('click', (evento) => {
+            evento.preventDefault();
+            evento.stopPropagation();
+            toggle.checked = false;
+            actualizarAyuda();
+        });
+
+        overlayAyuda.addEventListener('click', (evento) => {
+            evento.preventDefault();
+            toggle.checked = false;
+            actualizarAyuda();
+        });
+
+        document.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Escape' && toggle.checked) {
+                toggle.checked = false;
+                actualizarAyuda();
+            }
+        });
+
+        actualizarAyuda();
+    })();
+
+    // CONFIRMACIÓN DE CIERRE DE SESIÓN
+    (() => {
+        const botonAbrir = document.getElementById('ovBotonCerrarSesion');
+        const modal = document.getElementById('ovModalCerrarSesion');
+        const botonCancelar = document.getElementById('ovCancelarCerrarSesion');
+        const botonConfirmar = document.getElementById('ovConfirmarCerrarSesion');
+
+        if (!botonAbrir || !modal || !botonCancelar || !botonConfirmar) {
+            return;
+        }
+
+        function abrirModal() {
+            modal.hidden = false;
+            botonCancelar.focus();
+        }
+
+        function cerrarModal() {
+            modal.hidden = true;
+            botonAbrir.focus();
+        }
+
+        botonAbrir.addEventListener('click', abrirModal);
+        botonCancelar.addEventListener('click', cerrarModal);
+
+        modal.addEventListener('click', (evento) => {
+            if (evento.target === modal) {
+                cerrarModal();
+            }
+        });
+
+        document.addEventListener('keydown', (evento) => {
+            if (evento.key === 'Escape' && !modal.hidden) {
+                cerrarModal();
+            }
+        });
+
+        botonConfirmar.addEventListener('click', async () => {
+            botonConfirmar.disabled = true;
+            botonCancelar.disabled = true;
+            botonConfirmar.textContent = 'Cerrando sesión...';
+
+            try {
+                if (typeof window.ovCerrarSesionFirebase !== 'function') {
+                    throw new Error('La función de Firebase todavía no está disponible.');
+                }
+
+                await window.ovCerrarSesionFirebase();
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+                botonConfirmar.disabled = false;
+                botonCancelar.disabled = false;
+                botonConfirmar.textContent = 'Cerrar sesión';
+                alert('No se pudo cerrar la sesión. Inténtalo nuevamente.');
+            }
+        });
+    })();
+</script>
+
+<!-- FIREBASE: PERFIL Y CIERRE DE SESIÓN -->
+<script type="module">
+    import {
+        initializeApp,
+        getApps,
+        getApp
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+    import {
+        getFirestore,
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+        authDomain: "observador-virtual.firebaseapp.com",
+        projectId: "observador-virtual",
+        storageBucket: "observador-virtual.firebasestorage.app",
+        messagingSenderId: "168537175075",
+        appId: "1:168537175075:web:fc0df9eb3c7d26f0e2ad96",
+        measurementId: "G-2E21RDST23"
+    };
+
+    const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.ovCerrarSesionFirebase = async function() {
+        await signOut(auth);
+    };
+
+    const nombreElemento = document.getElementById('ovNombreUsuario');
+    const rolElemento = document.getElementById('ovRolUsuario');
+    const avatarElemento = document.getElementById('ovAvatarUsuario');
+
+    const roles = {
+        estudiante: 'Estudiante',
+        acudiente: 'Acudiente',
+        rector: 'Rector',
+        coordinador: 'Coordinador',
+        cordinador: 'Coordinador',
+        orientador: 'Orientador',
+        profesor: 'Profesor',
+        docente: 'Docente'
+    };
+
+    function textoValido(...valores) {
+        for (const valor of valores) {
+            if (typeof valor === 'string' && valor.trim()) {
+                return valor.trim();
+            }
+        }
+        return '';
+    }
+
+    function normalizarRol(valor) {
+        const rol = String(valor || '').trim().toLowerCase();
+        return roles[rol] || (rol ? rol.charAt(0).toUpperCase() + rol.slice(1) : '');
+    }
+
+    function mostrarFoto(url) {
+        if (!url || !avatarElemento) return;
+
+        const imagen = document.createElement('img');
+        imagen.alt = 'Foto de perfil';
+        imagen.referrerPolicy = 'no-referrer';
+
+        imagen.onerror = () => {
+            imagen.remove();
+        };
+
+        imagen.src = url;
+        avatarElemento.replaceChildren(imagen);
+    }
+
+    onAuthStateChanged(auth, async (usuario) => {
+        if (!usuario) {
+            nombreElemento.textContent = 'Sin sesión';
+            rolElemento.textContent = 'No identificado';
+            return;
+        }
+
+        nombreElemento.textContent =
+            textoValido(usuario.displayName) ||
+            textoValido(usuario.email?.split('@')[0]) ||
+            'Usuario';
+
+        rolElemento.textContent = 'Consultando rol...';
+
+        try {
+            const referenciaUsuario = doc(db, 'usuarios', usuario.uid);
+            const resultado = await getDoc(referenciaUsuario);
+
+            if (resultado.exists()) {
+                const datos = resultado.data();
+
+                const nombreCompleto = textoValido(
+                    datos.nombreCompleto,
+                    datos.nombreYApellido,
+                    datos.nombre_completo,
+                    datos.nombre,
+                    datos.nombres
+                );
+
+                const apellidos = textoValido(
+                    datos.apellidos,
+                    datos.apellido
+                );
+
+                if (nombreCompleto) {
+                    nombreElemento.textContent = nombreCompleto;
+                } else if (datos.nombre || datos.nombres) {
+                    nombreElemento.textContent =
+                        [textoValido(datos.nombre, datos.nombres), apellidos]
+                            .filter(Boolean)
+                            .join(' ');
+                } else if (apellidos && usuario.displayName) {
+                    nombreElemento.textContent =
+                        `${usuario.displayName.trim()} ${apellidos}`.trim();
+                }
+
+                const rol = normalizarRol(
+                    datos.rol || datos.tipoUsuario || datos.tipoCuenta
+                );
+
+                rolElemento.textContent = rol || 'Rol no definido';
+
+                const foto = textoValido(
+                    datos.fotoURL,
+                    datos.fotoPerfil,
+                    datos.photoURL,
+                    usuario.photoURL
+                );
+
+                mostrarFoto(foto);
+            } else {
+                rolElemento.textContent = 'Perfil no encontrado';
+            }
+
+            try {
+                const sesionAnterior = JSON.parse(
+                    localStorage.getItem('sesionObservadorVirtual') || '{}'
+                );
+
+                localStorage.setItem(
+                    'sesionObservadorVirtual',
+                    JSON.stringify({
+                        ...sesionAnterior,
+                        id: usuario.uid,
+                        nombre: nombreElemento.textContent,
+                        correo: usuario.email || '',
+                        rol: rolElemento.textContent
+                    })
+                );
+            } catch (error) {
+                console.warn('No se pudo actualizar la sesión local.', error);
+            }
+        } catch (error) {
+            console.error('Error consultando el perfil en Firestore:', error);
+            rolElemento.textContent = 'No disponible';
+        }
+    });
+</script>
+
+<script type="module" src="js/auth-guard.js"></script>
+
+</body>
+</html>

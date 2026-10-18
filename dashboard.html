@@ -1,0 +1,859 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - I.J.P. Company</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="logo circular IJP COMPANY-.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+
+<body class="ov-tiene-sidebar">
+
+<!-- BARRA LATERAL -->
+<aside class="ov-barra-lateral" id="ovBarraLateral">
+
+    <div class="ov-cabecera">
+        <div class="ov-nombre-pagina">
+            <svg id="ovIconoLogo"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 512 512"
+                 role="button"
+                 aria-label="Contraer o expandir menú"
+                 title="Contraer o expandir menú"
+                 tabindex="0">
+                <g fill="none" stroke="currentColor" stroke-width="28"
+                   stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M256 100 440 192 256 284 72 192Z"/>
+                    <path d="M148 230V330C148 350 160 365 180 375L256 412 332 375C352 365 364 350 364 330V230"/>
+                    <path d="M256 284V412"/>
+                    <path d="M440 192V348"/>
+                </g>
+            </svg>
+            <span>Observador Virtual</span>
+        </div>
+
+        <button class="ov-boton-principal" type="button"
+                onclick="window.location.href='dashboard.html'">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 512 512"
+                 fill="none" stroke="currentColor" stroke-width="32"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M80 212v236a16 16 0 0 0 16 16h96V328a24 24 0 0 1 24-24h80a24 24 0 0 1 24 24v136h96a16 16 0 0 0 16-16V212"/>
+                <path d="M40 240l216-192 216 192"/>
+            </svg>
+            <span>Ir al inicio</span>
+        </button>
+    </div>
+
+    <nav class="ov-navegacion" aria-label="Navegación principal">
+        <ul>
+            <li>
+                <a href="cuenta.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512" fill="none" stroke="currentColor"
+                         stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="256" cy="144" r="88"/>
+                        <path d="M96 432c0-88.4 71.6-160 160-160s160 71.6 160 160"/>
+                    </svg>
+                    <span class="ov-texto-menu">Perfil</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="lista-estudiantes.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512" fill="none" stroke="currentColor"
+                         stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="256" cy="140" r="68"/>
+                        <path d="M120 400v-32a136 136 0 0 1 272 0v32"/>
+                        <circle cx="105" cy="205" r="48"/>
+                        <path d="M30 390v-18a75 75 0 0 1 77-75"/>
+                        <circle cx="407" cy="205" r="48"/>
+                        <path d="M482 390v-18a75 75 0 0 0-77-75"/>
+                    </svg>
+                    <span class="ov-texto-menu">Estudiantes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="docentes.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512" fill="none" stroke="currentColor"
+                         stroke-width="28" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="330" cy="105" r="55"/>
+                        <path d="M250 290v-55a80 80 0 0 1 160 0v55"/>
+                        <path d="M250 255l-70 55-65-35"/>
+                        <rect x="35" y="90" width="180" height="210" rx="12"/>
+                        <path d="M70 150h95M70 195h65"/>
+                        <path d="M95 300v45M155 300v45M70 345h110"/>
+                        <path d="M280 290l-25 115M380 290l35 115"/>
+                        <path d="M220 435h230"/>
+                    </svg>
+                    <span class="ov-texto-menu">Docentes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="politica-privacidad.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512" fill="none" stroke="currentColor"
+                         stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M256 32 416 96V240c0 104-68 184-160 240C164 424 96 344 96 240V96Z"/>
+                        <rect x="184" y="224" width="144" height="112" rx="16"/>
+                        <path d="M216 224V176a40 40 0 0 1 80 0v48"/>
+                        <circle cx="256" cy="276" r="10"/>
+                        <path d="M256 286v20"/>
+                    </svg>
+                    <span class="ov-texto-menu">Privacidad</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="terminos-condiciones.html">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512" fill="none" stroke="currentColor"
+                         stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M416 221.3V64a32 32 0 0 0-32-32H128a32 32 0 0 0-32 32v384a32 32 0 0 0 32 32h146.7"/>
+                        <path d="M192 128h128M192 208h128M192 288h80M192 368h48"/>
+                        <circle cx="384" cy="384" r="96"
+                                fill="var(--ov-sidebar-bg)" stroke="currentColor"
+                                stroke-width="24"/>
+                        <path d="M336 384l32 32 64-64"/>
+                    </svg>
+                    <span class="ov-texto-menu">Términos</span>
+                </a>
+            </li>
+
+            <!-- CERRAR SESIÓN: DEBAJO DE TÉRMINOS -->
+            <li>
+                <button type="button" id="ovBotonCerrarSesion"
+                        class="ov-enlace-cerrar-sesion">
+                    <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 512 512" fill="none" stroke="currentColor"
+                         stroke-width="32" stroke-linecap="round" stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M320 96h96a32 32 0 0 1 32 32v256a32 32 0 0 1-32 32h-96"/>
+                        <path d="m224 352 96-96-96-96"/>
+                        <path d="M320 256H64"/>
+                    </svg>
+                    <span class="ov-texto-menu">Cerrar sesión</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <div>
+        <div class="ov-linea"></div>
+
+        <div class="ov-modo-oscuro">
+            <div class="ov-modo-info">
+                <ion-icon id="ovIconoTema" name="moon-outline"></ion-icon>
+                <span>Modo oscuro</span>
+            </div>
+
+            <button class="ov-switch" id="ovInterruptorTema" type="button"
+                    aria-label="Cambiar modo claro u oscuro" aria-pressed="false">
+                <span class="ov-base"><span class="ov-circulo"></span></span>
+            </button>
+        </div>
+
+        <div class="ov-usuario">
+            <div class="ov-avatar" id="ovAvatarUsuario">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 512 512" width="25" height="25"
+                     fill="none" stroke="currentColor" stroke-width="32"
+                     stroke-linecap="round" stroke-linejoin="round"
+                     aria-hidden="true">
+                    <circle cx="256" cy="144" r="88"/>
+                    <path d="M96 432c0-88.4 71.6-160 160-160s160 71.6 160 160"/>
+                </svg>
+            </div>
+
+            <div class="ov-usuario-info">
+                <strong id="ovNombreUsuario">Cargando...</strong>
+                <span id="ovRolUsuario">Consultando rol...</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- MENÚ MÓVIL -->
+<button class="ov-menu-movil" id="ovBotonMovil" type="button"
+        aria-label="Abrir menú" aria-expanded="false">
+    <ion-icon name="menu-outline"></ion-icon>
+</button>
+
+<div class="ov-overlay" id="ovOverlay"></div>
+
+<!-- BARRA SUPERIOR -->
+<nav class="navbar">
+    <div class="navbar-brand-container">
+        <img src="logo empresa I.J.P COMPANY.png" alt="Logo IJP" class="navbar-logo-izquierdo">
+        <span class="navbar-brand">I.J.P. Company</span>
+    </div>
+
+    <div class="ayuda-espacio">
+        <label for="toggle-sidebar" class="ayuda-label">
+            <button type="button" class="btn-help" style="pointer-events:none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                ayuda
+            </button>
+        </label>
+    </div>
+</nav>
+
+<!-- CONTENIDO DEL DASHBOARD -->
+<main>
+    <div class="dashboard-main-container">
+        <div class="main-left-column">
+            <span class="system-tag-line">Sistema de seguimiento escolar</span>
+
+            <h1 class="main-welcome-title">
+                Bienvenido al <br>
+                observador virtual <br>
+                <span class="user-name-highlight" id="val-nombre-principal">Cargando...</span>
+            </h1>
+
+            <p class="main-description-text">
+                Al hacer clic en consultar observador, podrás revisar las
+                observaciones y seguimientos registrados por docentes y
+                directivos a los estudiantes. Solo podrás ver los estudiantes
+                asociados a tu cuenta.
+            </p>
+
+            <button class="btn-consult-dark"
+                    onclick="window.location.href='lista-estudiantes.html'"
+                    type="button">
+                Consultar observador ahora
+            </button>
+        </div>
+
+        <div class="main-right-column">
+            <div class="statistic-card-box">
+                <div class="stat-square-icon" style="display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:28px;line-height:1;">📝</span>
+                </div>
+                <div class="stat-info-content">
+                    <strong id="total-observaciones">0</strong>
+                    <span>observaciones registradas</span>
+                </div>
+            </div>
+
+            <div class="statistic-card-box">
+                <div class="stat-square-icon" style="display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:28px;line-height:1;">🧑🏻‍🎓</span>
+                </div>
+                <div class="stat-info-content">
+                    <strong id="total-estudiantes">0</strong>
+                    <span>estudiantes registrados</span>
+                </div>
+            </div>
+
+            <div class="statistic-card-box">
+                <div class="stat-square-icon" style="display:flex;align-items:center;justify-content:center;">
+                    <span style="font-size:28px;line-height:1;">🧑🏼‍🏫</span>
+                </div>
+                <div class="stat-info-content">
+                    <strong id="total-docentes">0</strong>
+                    <span>docentes registrando</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="process-intro-text">
+        Así se registra y se hace seguimiento a la convivencia escolar
+        dentro de la institución.
+    </p>
+
+    <div class="process-timeline-container">
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Docente registra la observación</p>
+        </div>
+
+        <div class="timeline-connector"></div>
+
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Estudiante firma la observación</p>
+        </div>
+
+        <div class="timeline-connector"></div>
+
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Se sube la observación al sistema</p>
+        </div>
+
+        <div class="timeline-connector"></div>
+
+        <div class="timeline-step">
+            <div class="step-circle"></div>
+            <p class="step-text">Estudiante y acudiente consultan</p>
+        </div>
+    </div>
+</main>
+
+<!-- PIE DE PÁGINA -->
+<footer>
+    <span>&copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar</span>
+    <div class="footer-links">
+        <a href="terminos-condiciones.html">Términos y condiciones</a>
+        <a href="politica-privacidad.html">Política de privacidad</a>
+    </div>
+</footer>
+
+<!-- CHECKBOX QUE CONTROLA EL CENTRO DE AYUDA -->
+<input type="checkbox"
+       id="toggle-sidebar"
+       class="sidebar-checkbox"
+       aria-hidden="true"
+       tabindex="-1">
+
+<!-- CENTRO DE AYUDA -->
+<div class="sidebar" id="ovPanelAyuda"
+     role="dialog"
+     aria-modal="true"
+     aria-label="Centro de ayuda"
+     aria-hidden="true">
+
+    <label for="toggle-sidebar"
+           class="closeBtn"
+           id="ovCerrarAyuda"
+           role="button"
+           tabindex="0"
+           aria-label="Cerrar centro de ayuda">&times;</label>
+
+    <div class="sidebar-content">
+        <h2>Centro de Ayuda</h2>
+        <hr style="border:0;border-top:1px solid #333;margin:15px 0;">
+
+        <p>Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.</p>
+
+        <h3>¿Qué es el Observador Virtual?</h3>
+        <br>
+        <p>El Observador Virtual es una herramienta digital diseñada para facilitar el registro, consulta y seguimiento de las observaciones de los estudiantes de la institución educativa.</p>
+        <br>
+
+        <h3>¿Cómo consultar la información?</h3>
+        <br>
+        <p>Ingrese a su cuenta y revise la información disponible del estudiante.</p>
+        <br>
+
+        <h3>¿Puedo modificar una observación?</h3>
+        <br>
+        <p>No. Los estudiantes y padres de familia solo pueden consultar la información registrada.</p>
+        <br>
+
+        <h3>¿Puedo eliminar una observación?</h3>
+        <br>
+        <p>No. Los registros son administrados únicamente por el personal autorizado de la institución.</p>
+        <br>
+
+        <h3>¿La información es privada?</h3>
+        <br>
+        <p>Sí. La información es de carácter institucional y solo puede ser consultada por usuarios autorizados.</p>
+        <br>
+
+        <h3>¿Más información?</h3>
+        <br>
+        <p>Si tiene problemas para acceder o consultar la información, comuníquese con la institución educativa.</p>
+    </div>
+</div>
+
+<label for="toggle-sidebar"
+       class="overlay"
+       id="ovOverlayAyuda"
+       aria-label="Cerrar centro de ayuda"></label>
+
+<!-- MODAL CIERRE DE SESIÓN -->
+<div id="ovModalCerrarSesion" role="dialog" aria-modal="true"
+     aria-labelledby="ovTituloCerrarSesion"
+     aria-describedby="ovTextoCerrarSesion" hidden>
+    <div class="ov-modal-caja">
+        <h2 id="ovTituloCerrarSesion">¿Cerrar sesión?</h2>
+        <p id="ovTextoCerrarSesion">¿Estás seguro de que deseas cerrar sesión?</p>
+        <div class="ov-modal-botones">
+            <button type="button" id="ovConfirmarCerrarSesion">Cerrar sesión</button>
+            <button type="button" id="ovCancelarCerrarSesion">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- ESTADÍSTICAS -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const valores = [
+        ["total-observaciones", "totalObservaciones"],
+        ["total-estudiantes", "totalEstudiantes"],
+        ["total-docentes", "totalDocentes"]
+    ];
+
+    valores.forEach(([id, clave]) => {
+        const elemento = document.getElementById(id);
+        if (!elemento) return;
+
+        try {
+            elemento.textContent = parseInt(localStorage.getItem(clave), 10) || 0;
+        } catch (error) {
+            elemento.textContent = "0";
+        }
+    });
+});
+</script>
+
+<!-- FUNCIONES DE BARRA LATERAL, AYUDA Y MODAL -->
+<script>
+(() => {
+    const barra = document.getElementById("ovBarraLateral");
+    const iconoLogo = document.getElementById("ovIconoLogo");
+    const botonMovil = document.getElementById("ovBotonMovil");
+    const overlayMenu = document.getElementById("ovOverlay");
+    const interruptorTema = document.getElementById("ovInterruptorTema");
+    const iconoTema = document.getElementById("ovIconoTema");
+
+    /* CENTRO DE AYUDA: SISTEMA ORIGINAL CON CHECKBOX */
+    const toggleAyuda = document.getElementById("toggle-sidebar");
+    const botonAbrirAyuda = document.getElementById("ovBotonAbrirAyuda");
+    const panelAyuda = document.getElementById("ovPanelAyuda");
+    const overlayAyuda = document.getElementById("ovOverlayAyuda");
+    const botonCerrarAyuda = document.getElementById("ovCerrarAyuda");
+
+    function actualizarAyuda() {
+        if (!toggleAyuda || !panelAyuda || !overlayAyuda) return;
+
+        const abierto = toggleAyuda.checked;
+
+        panelAyuda.classList.toggle("active", abierto);
+        overlayAyuda.classList.toggle("active", abierto);
+        document.body.classList.toggle("help-open", abierto);
+
+        panelAyuda.setAttribute("aria-hidden", String(!abierto));
+
+        if (botonAbrirAyuda) {
+            botonAbrirAyuda.setAttribute("aria-expanded", String(abierto));
+        }
+
+        if (abierto) {
+            if (barra && window.innerWidth <= 768) {
+                cerrarMenuMovil();
+            }
+        }
+    }
+
+    function abrirAyuda() {
+        if (!toggleAyuda) return;
+        toggleAyuda.checked = true;
+        actualizarAyuda();
+    }
+
+    function cerrarAyuda() {
+        if (!toggleAyuda) return;
+
+        toggleAyuda.checked = false;
+        actualizarAyuda();
+
+        if (botonAbrirAyuda) {
+            botonAbrirAyuda.focus();
+        }
+    }
+
+    if (toggleAyuda) {
+        toggleAyuda.addEventListener("change", actualizarAyuda);
+    }
+
+    if (botonAbrirAyuda) {
+        botonAbrirAyuda.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                abrirAyuda();
+            }
+        });
+    }
+
+    if (botonCerrarAyuda) {
+        botonCerrarAyuda.addEventListener("click", (evento) => {
+            evento.preventDefault();
+            cerrarAyuda();
+        });
+
+        botonCerrarAyuda.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                cerrarAyuda();
+            }
+        });
+    }
+
+    if (overlayAyuda) {
+        overlayAyuda.addEventListener("click", (evento) => {
+            evento.preventDefault();
+            cerrarAyuda();
+        });
+    }
+
+    /* TEMA CLARO/OSCURO */
+    function aplicarTema(oscuro) {
+        document.body.classList.toggle("ov-dark-mode", oscuro);
+        document.documentElement.style.backgroundColor =
+            oscuro ? "#212121" : "#f4f6f8";
+
+        if (interruptorTema) {
+            interruptorTema.setAttribute("aria-pressed", String(oscuro));
+            interruptorTema.setAttribute(
+                "aria-label",
+                oscuro ? "Cambiar a tema claro" : "Cambiar a tema oscuro"
+            );
+        }
+
+        if (iconoTema) {
+            iconoTema.setAttribute(
+                "name",
+                oscuro ? "sunny-outline" : "moon-outline"
+            );
+        }
+    }
+
+    if (interruptorTema) {
+        interruptorTema.addEventListener("click", () => {
+            const oscuro = !document.body.classList.contains("ov-dark-mode");
+            aplicarTema(oscuro);
+
+            try {
+                localStorage.setItem("ov-tema", oscuro ? "oscuro" : "claro");
+            } catch (error) {}
+        });
+    }
+
+    try {
+        aplicarTema(localStorage.getItem("ov-tema") === "oscuro");
+    } catch (error) {
+        aplicarTema(false);
+    }
+
+    /* MENÚ MÓVIL */
+    function cerrarMenuMovil() {
+        if (!barra || !botonMovil || !overlayMenu) return;
+
+        barra.classList.remove("ov-movil-abierta");
+        overlayMenu.classList.remove("ov-overlay-visible");
+        botonMovil.setAttribute("aria-expanded", "false");
+        botonMovil.setAttribute("aria-label", "Abrir menú");
+        botonMovil.innerHTML = '<ion-icon name="menu-outline"></ion-icon>';
+    }
+
+    function alternarMenuMovil() {
+        if (!barra || !botonMovil || !overlayMenu) return;
+
+        const abierta = barra.classList.toggle("ov-movil-abierta");
+        overlayMenu.classList.toggle("ov-overlay-visible", abierta);
+        botonMovil.setAttribute("aria-expanded", String(abierta));
+        botonMovil.setAttribute("aria-label", abierta ? "Cerrar menú" : "Abrir menú");
+        botonMovil.innerHTML = abierta
+            ? '<ion-icon name="close-outline"></ion-icon>'
+            : '<ion-icon name="menu-outline"></ion-icon>';
+    }
+
+    if (botonMovil) {
+        botonMovil.addEventListener("click", alternarMenuMovil);
+    }
+
+    if (overlayMenu) {
+        overlayMenu.addEventListener("click", cerrarMenuMovil);
+    }
+
+    function alternarBarra() {
+        if (!barra) return;
+
+        if (window.innerWidth <= 768) {
+            alternarMenuMovil();
+        } else {
+            document.body.classList.toggle("ov-sidebar-collapsed");
+            barra.classList.toggle("ov-mini");
+        }
+    }
+
+    if (iconoLogo) {
+        iconoLogo.addEventListener("click", alternarBarra);
+
+        iconoLogo.addEventListener("keydown", (evento) => {
+            if (evento.key === "Enter" || evento.key === " ") {
+                evento.preventDefault();
+                alternarBarra();
+            }
+        });
+    }
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) cerrarMenuMovil();
+    });
+
+    /* CERRAR CON ESCAPE */
+    document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape") {
+            if (toggleAyuda && toggleAyuda.checked) {
+                cerrarAyuda();
+            }
+
+            const modalAbierto = document.getElementById("ovModalCerrarSesion");
+
+            if (modalAbierto && !modalAbierto.hidden) {
+                cerrarModal();
+            }
+        }
+    });
+
+    /* MODAL DE CIERRE DE SESIÓN */
+    const botonAbrirModal = document.getElementById("ovBotonCerrarSesion");
+    const modal = document.getElementById("ovModalCerrarSesion");
+    const botonCancelar = document.getElementById("ovCancelarCerrarSesion");
+    const botonConfirmar = document.getElementById("ovConfirmarCerrarSesion");
+
+    function abrirModal() {
+        if (!modal || !botonCancelar) return;
+        modal.hidden = false;
+        botonCancelar.focus();
+    }
+
+    function cerrarModal() {
+        if (!modal) return;
+        modal.hidden = true;
+
+        if (botonAbrirModal) {
+            botonAbrirModal.focus();
+        }
+    }
+
+    if (botonAbrirModal) {
+        botonAbrirModal.addEventListener("click", abrirModal);
+    }
+
+    if (botonCancelar) {
+        botonCancelar.addEventListener("click", cerrarModal);
+    }
+
+    if (modal) {
+        modal.addEventListener("click", (evento) => {
+            if (evento.target === modal) {
+                cerrarModal();
+            }
+        });
+    }
+
+    if (botonConfirmar && botonCancelar) {
+        botonConfirmar.addEventListener("click", async () => {
+            botonConfirmar.disabled = true;
+            botonCancelar.disabled = true;
+            botonConfirmar.textContent = "Cerrando sesión...";
+
+            try {
+                if (typeof window.ovCerrarSesionFirebase !== "function") {
+                    throw new Error("La función de Firebase no está disponible.");
+                }
+
+                await window.ovCerrarSesionFirebase();
+                window.location.href = "login.html";
+            } catch (error) {
+                console.error("Error al cerrar sesión:", error);
+                botonConfirmar.disabled = false;
+                botonCancelar.disabled = false;
+                botonConfirmar.textContent = "Cerrar sesión";
+                alert("No se pudo cerrar la sesión. Inténtalo nuevamente.");
+            }
+        });
+    }
+
+    /* Sincronizar el estado inicial */
+    actualizarAyuda();
+})();
+</script>
+
+<!-- FIREBASE: PERFIL Y CIERRE DE SESIÓN -->
+<script type="module">
+import {
+    initializeApp,
+    getApps,
+    getApp
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+import {
+    getAuth,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+    authDomain: "observador-virtual.firebaseapp.com",
+    projectId: "observador-virtual",
+    storageBucket: "observador-virtual.firebasestorage.app",
+    messagingSenderId: "168537175075",
+    appId: "1:168537175075:web:fc0df9eb3c7d26f0e2ad96",
+    measurementId: "G-2E21RDST23"
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.ovCerrarSesionFirebase = async function() {
+    await signOut(auth);
+
+    try {
+        localStorage.removeItem("sesionObservadorVirtual");
+    } catch (error) {
+        console.warn("No se pudo limpiar la sesión local.", error);
+    }
+};
+
+const saludo = document.getElementById("val-nombre-principal");
+const nombreElemento = document.getElementById("ovNombreUsuario");
+const rolElemento = document.getElementById("ovRolUsuario");
+const avatarElemento = document.getElementById("ovAvatarUsuario");
+
+const roles = {
+    estudiante: "Estudiante",
+    acudiente: "Acudiente",
+    rector: "Rector",
+    coordinador: "Coordinador",
+    cordinador: "Coordinador",
+    orientador: "Orientador",
+    profesor: "Profesor",
+    docente: "Docente"
+};
+
+function textoValido(...valores) {
+    for (const valor of valores) {
+        if (typeof valor === "string" && valor.trim()) {
+            return valor.trim();
+        }
+    }
+    return "";
+}
+
+function normalizarRol(valor) {
+    const rol = String(valor || "").trim().toLowerCase();
+    return roles[rol] || (rol ? rol.charAt(0).toUpperCase() + rol.slice(1) : "");
+}
+
+function mostrarFoto(url) {
+    if (!url || !avatarElemento) return;
+
+    const imagen = document.createElement("img");
+    imagen.alt = "Foto de perfil";
+    imagen.referrerPolicy = "no-referrer";
+    imagen.onerror = () => imagen.remove();
+    imagen.src = url;
+    avatarElemento.replaceChildren(imagen);
+}
+
+onAuthStateChanged(auth, async (usuario) => {
+    if (!usuario) {
+        if (saludo) saludo.textContent = "Usuario";
+        if (nombreElemento) nombreElemento.textContent = "Sin sesión";
+        if (rolElemento) rolElemento.textContent = "No identificado";
+        return;
+    }
+
+    const nombreInicial =
+        textoValido(usuario.displayName) ||
+        textoValido(usuario.email?.split("@")[0]) ||
+        "Usuario";
+
+    if (saludo) saludo.textContent = nombreInicial;
+    if (nombreElemento) nombreElemento.textContent = nombreInicial;
+    if (rolElemento) rolElemento.textContent = "Consultando rol...";
+
+    try {
+        const referenciaUsuario = doc(db, "usuarios", usuario.uid);
+        const resultado = await getDoc(referenciaUsuario);
+
+        let nombreFinal = nombreInicial;
+        let rolFinal = "Perfil no encontrado";
+
+        if (resultado.exists()) {
+            const datos = resultado.data();
+
+            const nombreCompleto = textoValido(
+                datos.nombreCompleto,
+                datos.nombreYApellido,
+                datos.nombre_completo,
+                datos.nombre
+            );
+
+            const nombres = textoValido(datos.nombres, datos.nombre);
+            const apellidos = textoValido(datos.apellidos, datos.apellido);
+
+            if (nombreCompleto) {
+                nombreFinal = nombreCompleto;
+            } else if (nombres || apellidos) {
+                nombreFinal = [nombres, apellidos].filter(Boolean).join(" ");
+            }
+
+            const rol = normalizarRol(
+                datos.rol || datos.tipoUsuario || datos.tipoCuenta
+            );
+
+            rolFinal = rol || "Rol no definido";
+
+            const foto = textoValido(
+                datos.fotoURL,
+                datos.fotoPerfil,
+                datos.photoURL,
+                usuario.photoURL
+            );
+
+            mostrarFoto(foto);
+        }
+
+        if (saludo) saludo.textContent = nombreFinal;
+        if (nombreElemento) nombreElemento.textContent = nombreFinal;
+        if (rolElemento) rolElemento.textContent = rolFinal;
+
+        try {
+            const sesionAnterior = JSON.parse(
+                localStorage.getItem("sesionObservadorVirtual") || "{}"
+            );
+
+            localStorage.setItem("sesionObservadorVirtual", JSON.stringify({
+                ...sesionAnterior,
+                id: usuario.uid,
+                nombre: nombreFinal,
+                correo: usuario.email || "",
+                rol: rolFinal
+            }));
+        } catch (error) {
+            console.warn("No se pudo actualizar la sesión local.", error);
+        }
+    } catch (error) {
+        console.error("Error consultando el perfil en Firestore:", error);
+        if (rolElemento) rolElemento.textContent = "No disponible";
+    }
+});
+</script>
+
+<!-- PROTECCIÓN DE RUTA -->
+<script type="module" src="js/auth-guard.js"></script>
+
+</body>
+</html>
+
