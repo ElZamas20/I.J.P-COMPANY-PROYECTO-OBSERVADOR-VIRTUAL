@@ -10,1624 +10,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
-        /* =====================================================
-           OBSERVADOR VIRTUAL — ESTILO DEL EXPEDIENTE
-           ===================================================== */
+<style>
+.ob-form-personales { display:grid; gap:12px; margin:16px 0; padding:16px; border:1px solid var(--border-color, #d7dce2); border-radius:12px; }
+.ob-form-personales[hidden] { display:none !important; }
+.ob-form-personales label { display:grid; gap:6px; font-weight:600; }
+.ob-form-personales input { width:100%; min-width:0; box-sizing:border-box; padding:10px 12px; border:1px solid #b8c0cc; border-radius:8px; font:inherit; }
+.ob-form-personales button, .ob-btn-editar-personales { cursor:pointer; padding:10px 14px; border:0; border-radius:8px; font:inherit; font-weight:600; }
+.ob-personales-acciones { display:flex; flex-wrap:wrap; gap:8px; }
+.ob-personales-mensaje { margin:0; }
+.ob-btn-editar-personales { margin:10px 0; }
+@media (min-width: 640px) { .ob-form-personales { grid-template-columns:repeat(2,minmax(0,1fr)); } .ob-form-personales > p, .ob-personales-acciones, .ob-personales-mensaje { grid-column:1 / -1; } }
+</style>
 
-        :root {
-            --ov-azul: #2563eb;
-            --ov-azul-hover: #1d4ed8;
-            --ov-azul-claro: #a8c9e8;
-            --ov-azul-suave: #edf5ff;
-            --ov-fondo: #f3f6fb;
-            --ov-tarjeta: #ffffff;
-            --ov-superficie: #f8fafc;
-            --ov-texto: #1e293b;
-            --ov-secundario: #64748b;
-            --ov-borde: #dbe3ed;
-            --ov-naranja: #ed7d31;
-            --ov-radio: 15px;
-            --ov-sombra: 0 10px 32px rgba(30, 51, 82, .09);
-        }
-
-        body.modo-oscuro {
-            --ov-azul: #e5e5e5;
-            --ov-azul-hover: #ffffff;
-            --ov-azul-claro: #777777;
-            --ov-azul-suave: #303030;
-            --ov-fondo: #171717;
-            --ov-tarjeta: #242424;
-            --ov-superficie: #2e2e2e;
-            --ov-texto: #f5f5f5;
-            --ov-secundario: #c2c2c2;
-            --ov-borde: #484848;
-            --ov-naranja: #bdbdbd;
-            --ov-sombra: 0 12px 34px rgba(0, 0, 0, .3);
-        }
-
-        .students-page,
-        .students-page *,
-        .ob-modal,
-        .ob-modal * {
-            box-sizing: border-box;
-        }
-
-        .students-page {
-            width: 100%;
-            min-height: 70vh;
-            padding: 20px 24px 48px;
-            color: var(--ov-texto);
-            font-family: "Segoe UI", Arial, sans-serif;
-        }
-
-        .ob-wrap {
-            width: min(1220px, 100%);
-            margin: 0 auto;
-        }
-
-        /* BÚSQUEDA Y FILTROS */
-
-        .ob-toolbar {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 28px;
-            padding: 15px;
-            background: var(--ov-tarjeta);
-            border: 1px solid var(--ov-borde);
-            border-radius: var(--ov-radio);
-            box-shadow: var(--ov-sombra);
-        }
-
-        .ob-search {
-            flex: 1 1 240px;
-            min-width: 0;
-        }
-
-        .ob-search input,
-        .ob-select {
-            width: 100%;
-            min-height: 43px;
-            padding: 10px 13px;
-            color: var(--ov-texto);
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 10px;
-            font: inherit;
-            font-size: 13px;
-            outline: none;
-            transition: border-color .2s, box-shadow .2s;
-        }
-
-        .ob-select {
-            flex: 0 1 165px;
-            cursor: pointer;
-        }
-
-        .ob-search input:focus,
-        .ob-select:focus {
-            border-color: var(--ov-azul);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-        }
-
-        .ob-filtros {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            padding: 4px;
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 11px;
-        }
-
-        .ob-filtro {
-            padding: 9px 12px;
-            color: var(--ov-secundario);
-            background: transparent;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 650;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .ob-filtro:hover {
-            color: var(--ov-texto);
-            background: var(--ov-azul-suave);
-        }
-
-        .ob-filtro.activo {
-            color: #fff;
-            background: var(--ov-azul);
-            box-shadow: 0 2px 6px rgba(37, 99, 235, .15);
-        }
-
-        /* TÍTULO */
-
-        .ob-titulo {
-            position: relative;
-            margin: 0 0 25px;
-            padding: 0 0 18px;
-            border-bottom: 1px solid var(--ov-borde);
-        }
-
-        .ob-titulo h1 {
-            margin: 0 0 7px;
-            color: var(--ov-texto);
-            font-size: clamp(25px, 3vw, 34px);
-            font-weight: 800;
-            letter-spacing: -.8px;
-        }
-
-        .ob-titulo p {
-            margin: 0;
-            color: var(--ov-secundario);
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .ob-btn-agregar {
-            margin-top: 18px;
-            padding: 11px 17px;
-            color: #ffffff;
-            
-            border: 1px solid transparent;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .ob-btn-agregar:hover {
-            background: var(--ov-azul-hover);
-            transform: translateY(-1px);
-        }
-
-        /* ESTADÍSTICAS */
-
-        .ob-stats {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 15px;
-            margin-bottom: 27px;
-        }
-
-        .ob-stat {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            min-width: 0;
-            padding: 18px;
-            background: var(--ov-tarjeta);
-            border: 1px solid var(--ov-borde);
-            border-radius: 14px;
-            box-shadow: 0 3px 12px rgba(30, 51, 82, .035);
-        }
-
-        .ob-stat-icono {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 43px;
-            height: 43px;
-            flex: 0 0 43px;
-            border-radius: 12px;
-            font-size: 20px;
-        }
-
-        .ob-stat strong,
-        .ob-stat span {
-            display: block;
-        }
-
-        .ob-stat strong {
-            color: var(--ov-texto);
-            font-size: 23px;
-            line-height: 1.2;
-        }
-
-        .ob-stat span {
-            margin-top: 4px;
-            color: var(--ov-secundario);
-            font-size: 12px;
-        }
-
-        /* TARJETAS DE ESTUDIANTES */
-
-        .ob-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
-            gap: 17px;
-        }
-
-        .ob-card {
-            min-width: 0;
-            padding: 19px;
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border: 1px solid var(--ov-borde);
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(30, 51, 82, .035);
-            transition: transform .2s, box-shadow .2s, border-color .2s;
-        }
-
-        .ob-card:hover {
-            transform: translateY(-3px);
-            border-color: #a9c9f0;
-            box-shadow: var(--ov-sombra);
-        }
-
-        .ob-card-cab {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 0;
-        }
-
-        .ob-avatar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 49px;
-            height: 49px;
-            flex: 0 0 49px;
-            color: #fff;
-            border-radius: 50%;
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .ob-card-cab > div:last-child {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .ob-card-cab strong,
-        .ob-card-cab small {
-            display: block;
-            overflow-wrap: anywhere;
-        }
-
-        .ob-card-cab strong {
-            color: var(--ov-texto);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .ob-card-cab small {
-            margin-top: 4px;
-            color: var(--ov-secundario);
-            font-size: 12px;
-        }
-
-        .ob-badges {
-            margin-top: 17px;
-        }
-
-        .ob-badge,
-        .ob-sin-obs {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 9px;
-            border-radius: 99px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .ob-sin-obs {
-            color: var(--ov-secundario);
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-        }
-
-        .ob-nota {
-            margin-top: 13px;
-            color: var(--ov-secundario);
-            font-size: 12px;
-            line-height: 1.6;
-            overflow-wrap: anywhere;
-        }
-
-        .ob-acciones {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            padding-top: 15px;
-            margin-top: 15px;
-            border-top: 1px solid var(--ov-borde);
-        }
-
-        .ob-acciones button {
-            flex: 1 1 auto;
-            min-height: 34px;
-            padding: 7px 9px;
-            color: var(--ov-azul);
-            background: var(--ov-azul-suave);
-            border: 1px solid transparent;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 750;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .ob-acciones button:hover {
-            border-color: var(--ov-azul);
-        }
-
-        .ob-acciones .ob-eliminar {
-            color: #b42318;
-            background: #fff0ef;
-        }
-
-        body.modo-oscuro .ob-acciones .ob-eliminar {
-            color: #fecaca;
-            background: #42252a;
-        }
-
-        .ob-vacio {
-            grid-column: 1 / -1;
-            padding: 35px 15px;
-            color: var(--ov-secundario);
-            background: var(--ov-tarjeta);
-            border: 1px dashed var(--ov-borde);
-            border-radius: 14px;
-            text-align: center;
-            line-height: 1.7;
-        }
-
-        /* =====================================================
-           VENTANAS MODALES
-           ===================================================== */
-
-        .ob-modal {
-            width: min(680px, 94vw);
-            max-width: 680px;
-            max-height: 90dvh;
-            padding: 25px;
-            overflow-y: auto;
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border: 1px solid var(--ov-borde);
-            border-radius: 18px;
-            box-shadow: 0 24px 75px rgba(0, 0, 0, .22);
-        }
-
-        .ob-modal::backdrop {
-            background: rgba(12, 21, 36, .57);
-            backdrop-filter: blur(3px);
-        }
-
-        .ob-modal-expediente {
-            width: min(760px, 94vw);
-            max-width: 760px;
-            padding: 25px;
-        }
-
-        #modalNuevaObs {
-            width: min(560px, 94vw);
-            max-width: 560px;
-        }
-
-        .ob-modal h2,
-        .ob-modal h3 {
-            color: var(--ov-texto);
-        }
-
-        /* ENCABEZADO DEL EXPEDIENTE */
-
-        .expediente-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 19px;
-            padding: 2px 0 20px;
-            border-bottom: 1px solid var(--ov-borde);
-        }
-
-        .expediente-header h2 {
-            margin: 0;
-            color: var(--ov-texto);
-            font-size: clamp(20px, 3vw, 26px);
-            line-height: 1.3;
-            font-weight: 800;
-            letter-spacing: -.4px;
-            overflow-wrap: anywhere;
-        }
-
-        .student-header-avatar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 58px;
-            height: 58px;
-            flex: 0 0 58px;
-            color: #fff;
-            background: var(--ov-naranja);
-            border-radius: 13px;
-            font-size: 19px;
-            font-weight: 800;
-        }
-
-        .expediente-meta {
-            margin-top: 7px;
-            color: var(--ov-secundario);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .expediente-kicker {
-            display: block;
-            margin-top: 5px;
-            color: var(--ov-secundario);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .expediente-close {
-            align-self: flex-start;
-            margin-left: auto;
-            padding: 5px 10px;
-            color: var(--ov-secundario);
-            background: transparent;
-            border: 0;
-            border-radius: 8px;
-            font-size: 27px;
-            line-height: 1;
-            cursor: pointer;
-        }
-
-        .expediente-close:hover {
-            color: var(--ov-texto);
-            background: var(--ov-superficie);
-        }
-
-        /* BOTÓN ACTUALIZAR INFORMACIÓN */
-
-        .expediente-actualizar {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            min-height: 53px;
-            padding: 12px 16px;
-            color: #183650;
-            background: var(--ov-azul-claro);
-            border: 1px solid color-mix(in srgb, var(--ov-azul-claro), #315c80 15%);
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .expediente-actualizar:hover,
-        .expediente-actualizar.active {
-            filter: brightness(.96);
-            transform: translateY(-1px);
-        }
-
-        body.modo-oscuro .expediente-actualizar {
-            color: #f1f5f9;
-        }
-
-        /* BOTONES INFERIORES: OBSERVACIONES / DOCUMENTOS */
-
-        .expediente-tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            margin-top: 10px;
-            border: 1px solid var(--ov-borde);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .expediente-tab {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            min-height: 51px;
-            padding: 10px;
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border: 0;
-            border-right: 1px solid var(--ov-borde);
-            font-size: 15px;
-            font-weight: 750;
-            cursor: pointer;
-            transition: background .2s, color .2s;
-        }
-
-        .expediente-tab:last-child {
-            border-right: 0;
-        }
-
-        .expediente-tab:hover {
-            background: var(--ov-superficie);
-        }
-
-        .expediente-tab.active {
-            color: var(--ov-azul);
-            background: var(--ov-azul-suave);
-            box-shadow: inset 0 -3px var(--ov-azul);
-        }
-
-        .expediente-contador {
-            min-width: 23px;
-            padding: 3px 7px;
-            color: var(--ov-secundario);
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 99px;
-            font-size: 11px;
-            text-align: center;
-        }
-
-        /* PANELES */
-
-        .expediente-panel {
-            margin-top: 22px;
-        }
-
-        .expediente-panel[hidden] {
-            display: none !important;
-        }
-
-        .expediente-panel h3 {
-            margin: 0 0 12px;
-            color: var(--ov-texto);
-            font-size: 17px;
-            font-weight: 800;
-        }
-
-        .expediente-subtitulo {
-            margin: 0 0 18px;
-            color: var(--ov-secundario);
-            font-size: 13px;
-            line-height: 1.7;
-        }
-
-        /* FORMULARIOS */
-
-        .expediente-form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0 15px;
-        }
-
-        .expediente-fieldset {
-            min-width: 0;
-            margin: 0 0 18px;
-            padding: 17px;
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 12px;
-        }
-
-        .expediente-fieldset legend {
-            padding: 0 8px;
-            color: var(--ov-azul);
-            font-size: 13px;
-            font-weight: 800;
-        }
-
-        .ob-campo {
-            display: block;
-            min-width: 0;
-            margin: 0 0 16px;
-        }
-
-        .ob-campo > label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--ov-texto);
-            font-size: 12px;
-            font-weight: 750;
-            line-height: 1.5;
-        }
-
-        .ob-campo input:not([type="checkbox"]),
-        .ob-campo select,
-        .ob-campo textarea {
-            display: block;
-            width: 100%;
-            min-width: 0;
-            margin-top: 5px;
-            padding: 11px 12px;
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border: 1px solid var(--ov-borde);
-            border-radius: 9px;
-            font: inherit;
-            font-size: 13px;
-            outline: none;
-            transition: border-color .2s, box-shadow .2s;
-        }
-
-        .ob-campo textarea {
-            resize: vertical;
-            line-height: 1.65;
-        }
-
-        .ob-campo input:focus,
-        .ob-campo select:focus,
-        .ob-campo textarea:focus {
-            border-color: var(--ov-azul);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
-        }
-
-        .ob-campo input:disabled,
-        .ob-campo select:disabled,
-        .ob-campo textarea:disabled {
-            cursor: not-allowed;
-            opacity: .75;
-        }
-
-        .ob-campo-ayuda {
-            display: block;
-            margin-top: 7px;
-            color: var(--ov-secundario);
-            font-size: 11px;
-            line-height: 1.65;
-        }
-
-        .ob-falta-ayuda {
-            margin-top: 9px;
-            padding: 12px;
-            color: var(--ov-texto);
-            background: var(--ov-azul-suave);
-            border: 1px solid var(--ov-borde);
-            border-left: 4px solid var(--ov-azul);
-            border-radius: 9px;
-            font-size: 12px;
-            line-height: 1.7;
-        }
-
-        /* BOTONES DE LOS PANELES */
-
-        .expediente-actions {
-            display: flex;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding-top: 17px;
-            margin-top: 17px;
-            border-top: 1px solid var(--ov-borde);
-        }
-
-        .expediente-actions button,
-        .expediente-primary,
-        .expediente-secondary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 40px;
-            padding: 10px 15px;
-            border-radius: 9px;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 750;
-            cursor: pointer;
-            transition: background .2s, transform .2s, border-color .2s;
-        }
-
-        .expediente-primary {
-            color: #fff;
-            background: var(--ov-azul);
-            border: 1px solid var(--ov-azul);
-        }
-
-        .expediente-primary:hover {
-            background: var(--ov-azul-hover);
-            transform: translateY(-1px);
-        }
-
-        .expediente-secondary {
-            color: var(--ov-texto);
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-        }
-
-        .expediente-secondary:hover {
-            border-color: var(--ov-azul);
-            background: var(--ov-azul-suave);
-        }
-
-        button:disabled {
-            opacity: .55;
-            cursor: not-allowed !important;
-            transform: none !important;
-        }
-
-        /* OBSERVACIONES */
-
-        .obs-card-item {
-            margin-bottom: 13px;
-            padding: 16px;
-            color: var(--ov-texto);
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 12px;
-        }
-
-        .obs-card-item p {
-            color: var(--ov-texto);
-            font-size: 13px;
-        }
-
-        .obs-clasificacion {
-            display: inline-flex;
-            align-items: center;
-            margin: 3px 0 8px;
-            padding: 5px 9px;
-            color: #1d4ed8;
-            background: #eaf1ff;
-            border: 1px solid #c7d8ff;
-            border-radius: 99px;
-            font-size: 11px;
-            font-weight: 800;
-        }
-
-        .obs-clasificacion.grave {
-            color: #92400e;
-            background: #fff7df;
-            border-color: #f7df9e;
-        }
-
-        .obs-clasificacion.muy-grave {
-            color: #b42318;
-            background: #fff0ef;
-            border-color: #ffc9c4;
-        }
-
-        .obs-clasificacion.no-presenta {
-            color: #166534;
-            background: #eaf8ee;
-            border-color: #b8e5c5;
-        }
-
-        .obs-clasificacion-desc {
-            margin: 0 0 10px;
-            color: var(--ov-secundario);
-            font-size: 12px !important;
-            line-height: 1.65;
-        }
-
-        .obs-firma {
-            display: flex;
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 7px;
-            margin-top: 14px;
-            padding-top: 12px;
-            border-top: 1px dashed var(--ov-borde);
-        }
-
-        .obs-firma-titulo {
-            color: var(--ov-secundario);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .7px;
-            text-transform: uppercase;
-        }
-
-        .obs-firma img {
-            display: block;
-            max-width: 100%;
-            max-height: 105px;
-            object-fit: contain;
-            object-position: left center;
-            padding: 5px;
-            background: #fff;
-            border: 1px solid var(--ov-borde);
-            border-radius: 7px;
-        }
-
-        .obs-firma-ayuda-legal {
-            color: var(--ov-secundario);
-            font-size: 10px;
-            line-height: 1.5;
-        }
-
-        .ob-firma-preview {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 10px;
-            padding: 12px;
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 10px;
-        }
-
-        .ob-firma-preview[hidden] {
-            display: none !important;
-        }
-
-        .ob-firma-preview img {
-            display: block;
-            width: min(230px, 60%);
-            max-height: 90px;
-            object-fit: contain;
-            background: #fff;
-            border: 1px solid var(--ov-borde);
-            border-radius: 7px;
-        }
-
-        .ob-firma-preview-info {
-            flex: 1;
-            min-width: 0;
-            color: var(--ov-secundario);
-            font-size: 11px;
-            line-height: 1.6;
-        }
-
-        .ob-btn-secundario {
-            margin-top: 9px;
-            padding: 7px 10px;
-            color: var(--ov-texto);
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 7px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        /* DOCUMENTOS */
-
-        .documentos-subir {
-            margin-bottom: 19px;
-            padding: 17px;
-            background: var(--ov-superficie);
-            border: 1px solid var(--ov-borde);
-            border-radius: 12px;
-        }
-
-        .documentos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
-            gap: 12px;
-        }
-
-        .documento-card {
-            min-width: 0;
-            padding: 15px;
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border: 1px solid var(--ov-borde);
-            border-radius: 12px;
-            transition: border-color .2s, box-shadow .2s;
-        }
-
-        .documento-card:hover {
-            border-color: #a7c5ea;
-            box-shadow: 0 5px 17px rgba(30, 51, 82, .06);
-        }
-
-        .documento-card-title {
-            color: var(--ov-texto);
-            font-size: 13px;
-            font-weight: 800;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
-
-        .documento-card-meta {
-            margin-top: 7px;
-            color: var(--ov-secundario);
-            font-size: 11px;
-            line-height: 1.8;
-            overflow-wrap: anywhere;
-        }
-
-        .documento-card-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 7px;
-            margin-top: 13px;
-        }
-
-        .documento-card-actions button {
-            flex: 1 1 auto;
-            padding: 8px 9px;
-            color: var(--ov-azul);
-            background: var(--ov-azul-suave);
-            border: 1px solid var(--ov-borde);
-            border-radius: 7px;
-            font-size: 11px;
-            font-weight: 750;
-            cursor: pointer;
-        }
-
-        .documento-card-actions button:hover {
-            border-color: var(--ov-azul);
-        }
-
-        .documento-vacio {
-            grid-column: 1 / -1;
-            padding: 28px 17px;
-            color: var(--ov-secundario);
-            background: var(--ov-superficie);
-            border: 1px dashed var(--ov-borde);
-            border-radius: 12px;
-            font-size: 12px;
-            line-height: 1.8;
-            text-align: center;
-        }
-
-        /* =============================================
-           LOGO DE LA BARRA SUPERIOR: CENTRADO
-           ============================================= */
-
-        .navbar {
-            justify-content: center;
-        }
-
-        .navbar-brand-container {
-            justify-content: center;
-        }
-
-        .navbar-logo-izquierdo {
-            height: 48px;
-            width: auto;
-            display: block;
-            margin: 0 auto;
-            object-fit: contain;
-        }
-
-        /* Ajuste del contenido para la barra lateral */
-
-        body.ov-tiene-sidebar .students-page {
-            max-width: 1220px;
-            margin: 0 auto;
-        }
-
-        /* MODO OSCURO (integrado con ov-dark-mode) */
-
-        body.ov-dark-mode.modo-oscuro .ob-modal,
-        body.modo-oscuro .ob-modal {
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border-color: var(--ov-borde);
-        }
-
-        body.modo-oscuro .ob-modal h2,
-        body.modo-oscuro .ob-modal h3,
-        body.modo-oscuro .ob-modal p {
-            color: var(--ov-texto);
-        }
-
-        body.ov-dark-mode .ob-card,
-        body.ov-dark-mode .ob-stat,
-        body.modo-oscuro .ob-card,
-        body.modo-oscuro .ob-stat,
-        body.modo-oscuro .documento-card,
-        body.modo-oscuro .obs-card-item {
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border-color: var(--ov-borde);
-        }
-
-        body.ov-dark-mode .ob-card-cab strong,
-        body.ov-dark-mode .ob-stat strong,
-        body.modo-oscuro .ob-card-cab strong,
-        body.modo-oscuro .ob-stat strong,
-        body.modo-oscuro .documento-card-title {
-            color: var(--ov-texto);
-        }
-
-        body.ov-dark-mode .ob-toolbar,
-        body.ov-dark-mode .documentos-subir,
-        body.modo-oscuro .ob-toolbar,
-        body.modo-oscuro .documentos-subir,
-        body.modo-oscuro .expediente-fieldset,
-        body.modo-oscuro .ob-firma-preview {
-            background: var(--ov-superficie);
-            border-color: var(--ov-borde);
-        }
-
-        body.ov-dark-mode .ob-search input,
-        body.ov-dark-mode .ob-select,
-        body.ov-dark-mode .ob-campo input,
-        body.ov-dark-mode .ob-campo select,
-        body.ov-dark-mode .ob-campo textarea,
-        body.modo-oscuro .ob-search input,
-        body.modo-oscuro .ob-select,
-        body.modo-oscuro .ob-campo input,
-        body.modo-oscuro .ob-campo select,
-        body.modo-oscuro .ob-campo textarea {
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border-color: var(--ov-borde);
-        }
-
-        body.ov-dark-mode .expediente-tab,
-        body.modo-oscuro .expediente-tab {
-            color: var(--ov-texto);
-            background: var(--ov-tarjeta);
-            border-color: var(--ov-borde);
-        }
-
-        body.modo-oscuro .expediente-tab.active {
-            color: #f0f0f0;
-            background: var(--ov-azul-suave);
-        }
-
-        body.ov-dark-mode .ob-filtro,
-        body.modo-oscuro .ob-filtro {
-            color: var(--ov-secundario);
-        }
-
-        body.modo-oscuro .ob-filtro.activo {
-            color: #171717;
-            background: #e6e6e6;
-        }
-
-        body.ov-dark-mode .expediente-secondary,
-        body.ov-dark-mode .documento-card-actions button,
-        body.ov-dark-mode .ob-btn-secundario,
-        body.modo-oscuro .expediente-secondary,
-        body.modo-oscuro .documento-card-actions button,
-        body.modo-oscuro .ob-btn-secundario {
-            color: var(--ov-texto);
-            background: var(--ov-superficie);
-            border-color: var(--ov-borde);
-        }
-
-        body.modo-oscuro .expediente-meta,
-        body.modo-oscuro .expediente-kicker,
-        body.modo-oscuro .expediente-subtitulo,
-        body.modo-oscuro .documento-card-meta,
-        body.modo-oscuro .ob-campo-ayuda,
-        body.modo-oscuro .obs-clasificacion-desc,
-        body.modo-oscuro .obs-firma-ayuda-legal {
-            color: var(--ov-secundario);
-        }
-
-        body.modo-oscuro .ob-falta-ayuda {
-            color: var(--ov-texto);
-            background: var(--ov-azul-suave);
-            border-color: var(--ov-borde);
-            border-left-color: var(--ov-azul);
-        }
-
-        body.modo-oscuro .obs-firma {
-            border-top-color: var(--ov-borde);
-        }
-
-        /* RESPONSIVE */
-
-        @media (max-width: 850px) {
-            .students-page {
-                padding: 17px 16px 35px;
-            }
-
-            .ob-toolbar {
-                gap: 10px;
-            }
-
-            .ob-stats {
-                gap: 10px;
-            }
-
-            .ob-stat {
-                padding: 14px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .students-page {
-                padding: 13px 10px 30px;
-            }
-
-            .ob-toolbar {
-                padding: 12px;
-                border-radius: 12px;
-            }
-
-            .ob-search {
-                flex-basis: 100%;
-            }
-
-            .ob-select {
-                flex: 1 1 120px;
-            }
-
-            .ob-filtros {
-                width: 100%;
-            }
-
-            .ob-filtro {
-                flex: 1 1 auto;
-                padding: 9px 7px;
-                font-size: 10px;
-            }
-
-            .ob-stats {
-                grid-template-columns: 1fr;
-            }
-
-            .ob-stat {
-                max-width: none;
-            }
-
-            .ob-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .ob-modal,
-            .ob-modal-expediente {
-                width: 96vw;
-                max-width: 96vw;
-                max-height: 92dvh;
-                padding: 16px;
-                border-radius: 14px;
-            }
-
-            .expediente-header {
-                gap: 10px;
-            }
-
-            .expediente-header .student-header-avatar {
-                width: 46px;
-                height: 46px;
-                flex-basis: 46px;
-                font-size: 15px;
-                border-radius: 10px;
-            }
-
-            .expediente-header h2 {
-                font-size: 19px;
-            }
-
-            .expediente-tab {
-                gap: 5px;
-                min-height: 48px;
-                padding: 8px 5px;
-                font-size: 12px;
-            }
-
-            .expediente-form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .expediente-fieldset {
-                padding: 12px;
-            }
-
-            .expediente-actions {
-                flex-direction: column-reverse;
-            }
-
-            .expediente-actions button {
-                width: 100%;
-            }
-
-            .ob-firma-preview {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .ob-firma-preview img {
-                width: 100%;
-                max-width: 100%;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .students-page *,
-            .ob-modal * {
-                animation-duration: .01ms !important;
-                transition-duration: .01ms !important;
-            }
-        }
-
-
-        /* =====================================================
-           REPARACIÓN VISUAL FINAL: TEMA OSCURO Y EXPEDIENTE
-           Se aplica al nombre de clase que usa el interruptor
-           de la barra lateral: body.ov-dark-mode.
-           ===================================================== */
-
-        body.ov-dark-mode {
-            --ov-azul: #e6e6e6;
-            --ov-azul-hover: #ffffff;
-            --ov-azul-claro: #777777;
-            --ov-azul-suave: #303030;
-            --ov-fondo: #171717;
-            --ov-tarjeta: #242424;
-            --ov-superficie: #2e2e2e;
-            --ov-texto: #f5f5f5;
-            --ov-secundario: #c2c2c2;
-            --ov-borde: #484848;
-            --ov-sombra: 0 12px 34px rgba(0, 0, 0, .30);
-            color-scheme: dark;
-        }
-
-        body.ov-dark-mode .students-page,
-        body.ov-dark-mode .ob-wrap {
-            color: var(--ov-texto) !important;
-        }
-
-        body.ov-dark-mode .ob-toolbar,
-        body.ov-dark-mode .ob-stat,
-        body.ov-dark-mode .ob-card,
-        body.ov-dark-mode .ob-vacio,
-        body.ov-dark-mode .ob-modal,
-        body.ov-dark-mode .documento-card,
-        body.ov-dark-mode .obs-card-item,
-        body.ov-dark-mode .documentos-subir,
-        body.ov-dark-mode .expediente-fieldset,
-        body.ov-dark-mode .ob-firma-preview,
-        body.ov-dark-mode .documento-vacio {
-            color: var(--ov-texto) !important;
-            background-color: var(--ov-tarjeta) !important;
-            border-color: var(--ov-borde) !important;
-        }
-
-        body.ov-dark-mode .ob-filtros,
-        body.ov-dark-mode .ob-nota,
-        body.ov-dark-mode .expediente-secondary,
-        body.ov-dark-mode .documento-card-actions button,
-        body.ov-dark-mode .ob-btn-secundario,
-        body.ov-dark-mode .expediente-contador {
-            color: var(--ov-texto) !important;
-            background-color: var(--ov-superficie) !important;
-            border-color: var(--ov-borde) !important;
-        }
-
-        body.ov-dark-mode .ob-search,
-        body.ov-dark-mode .ob-search input,
-        body.ov-dark-mode .ob-select,
-        body.ov-dark-mode .ob-campo input:not([type="checkbox"]),
-        body.ov-dark-mode .ob-campo select,
-        body.ov-dark-mode .ob-campo textarea,
-        body.ov-dark-mode #docArchivo,
-        body.ov-dark-mode #obsFirmaArchivo {
-            color: var(--ov-texto) !important;
-            background-color: #1d1d1d !important;
-            border-color: var(--ov-borde) !important;
-            color-scheme: dark;
-        }
-
-        body.ov-dark-mode .ob-select option,
-        body.ov-dark-mode .ob-campo select option {
-            color: var(--ov-texto);
-            background: #1d1d1d;
-        }
-
-        body.ov-dark-mode .ob-titulo h1,
-        body.ov-dark-mode .ob-titulo p,
-        body.ov-dark-mode .ob-stat strong,
-        body.ov-dark-mode .ob-stat span,
-        body.ov-dark-mode .ob-card-cab strong,
-        body.ov-dark-mode .ob-card-cab small,
-        body.ov-dark-mode .ob-nota,
-        body.ov-dark-mode .ob-vacio,
-        body.ov-dark-mode .documento-card-title,
-        body.ov-dark-mode .documento-card-meta,
-        body.ov-dark-mode .expediente-header h2,
-        body.ov-dark-mode .expediente-meta,
-        body.ov-dark-mode .expediente-kicker,
-        body.ov-dark-mode .expediente-panel h3,
-        body.ov-dark-mode .expediente-subtitulo,
-        body.ov-dark-mode .expediente-fieldset legend,
-        body.ov-dark-mode .ob-campo > label,
-        body.ov-dark-mode .ob-campo-ayuda,
-        body.ov-dark-mode .obs-card-item,
-        body.ov-dark-mode .obs-card-item p,
-        body.ov-dark-mode .obs-firma-titulo,
-        body.ov-dark-mode .obs-firma-ayuda-legal,
-        body.ov-dark-mode .ob-firma-preview-info,
-        body.ov-dark-mode .documento-vacio {
-            color: var(--ov-texto) !important;
-        }
-
-        body.ov-dark-mode .ob-titulo p,
-        body.ov-dark-mode .ob-stat span,
-        body.ov-dark-mode .ob-card-cab small,
-        body.ov-dark-mode .ob-nota,
-        body.ov-dark-mode .documento-card-meta,
-        body.ov-dark-mode .expediente-meta,
-        body.ov-dark-mode .expediente-kicker,
-        body.ov-dark-mode .expediente-subtitulo,
-        body.ov-dark-mode .ob-campo-ayuda,
-        body.ov-dark-mode .obs-clasificacion-desc,
-        body.ov-dark-mode .obs-firma-ayuda-legal {
-            color: var(--ov-secundario) !important;
-        }
-
-        body.ov-dark-mode .expediente-tabs {
-            background-color: var(--ov-tarjeta) !important;
-            border-color: var(--ov-borde) !important;
-        }
-
-        body.ov-dark-mode .expediente-tab {
-            color: var(--ov-texto) !important;
-            background-color: var(--ov-tarjeta) !important;
-            border-color: var(--ov-borde) !important;
-        }
-
-        body.ov-dark-mode .expediente-tab:hover,
-        body.ov-dark-mode .expediente-secondary:hover,
-        body.ov-dark-mode .documento-card-actions button:hover,
-        body.ov-dark-mode .ob-btn-secundario:hover {
-            background-color: var(--ov-azul-suave) !important;
-            border-color: #777777 !important;
-        }
-
-        body.ov-dark-mode .expediente-tab.active {
-            color: #ffffff !important;
-            background-color: #383838 !important;
-            box-shadow: inset 0 -3px #bdbdbd !important;
-        }
-
-        body.ov-dark-mode .expediente-actualizar {
-            color: #ffffff !important;
-            background-color: #444444 !important;
-            border-color: #707070 !important;
-        }
-
-        body.ov-dark-mode .expediente-actions {
-            border-top-color: var(--ov-borde) !important;
-        }
-
-        body.ov-dark-mode .ob-falta-ayuda {
-            color: #f2f2f2 !important;
-            background-color: #303030 !important;
-            border-color: var(--ov-borde) !important;
-            border-left-color: #888888 !important;
-        }
-
-        body.ov-dark-mode .ob-sin-obs {
-            color: #e5e5e5 !important;
-            background-color: #303030 !important;
-            border-color: var(--ov-borde) !important;
-        }
-
-        body.ov-dark-mode .ob-badge {
-            background-color: #383838 !important;
-            color: #f0f0f0 !important;
-        }
-
-        body.ov-dark-mode .obs-clasificacion {
-            color: #eeeeee !important;
-            background: #333333 !important;
-            border-color: #666666 !important;
-        }
-
-        body.ov-dark-mode .obs-clasificacion.grave {
-            color: #f0f0f0 !important;
-            background: #383838 !important;
-            border-color: #707070 !important;
-        }
-
-        body.ov-dark-mode .obs-clasificacion.muy-grave {
-            color: #f0f0f0 !important;
-            background: #383838 !important;
-            border-color: #707070 !important;
-        }
-
-        body.ov-dark-mode .obs-clasificacion.no-presenta {
-            color: #eeeeee !important;
-            background: #303030 !important;
-            border-color: #666666 !important;
-        }
-
-        /* La zona blanca de la imagen se mantiene adrede para poder
-           distinguir una firma manuscrita clara sobre cualquier tema. */
-        body.ov-dark-mode .obs-firma img,
-        body.ov-dark-mode .ob-firma-preview img {
-            background-color: #fff !important;
-            border-color: #64748b !important;
-        }
-
-        /* El expediente se mantiene centrado, con espaciado consistente,
-           evitando textos comprimidos por estilos globales del sitio. */
-        dialog.ob-modal[open] {
-            display: block;
-            position: fixed;
-            inset: 50% auto auto 50%;
-            transform: translate(-50%, -50%);
-            margin: 0;
-            max-height: min(90dvh, 900px);
-            overflow-x: hidden;
-            overflow-y: auto;
-            line-height: 1.55;
-            isolation: isolate;
-        }
-
-        dialog#obModal[open] {
-            width: min(760px, calc(100vw - 28px));
-            max-width: 760px;
-        }
-
-        dialog#modalNuevaObs[open] {
-            width: min(560px, calc(100vw - 28px));
-            max-width: 560px;
-        }
-
-        .ob-modal,
-        .ob-modal * {
-            box-sizing: border-box;
-        }
-
-        .ob-modal .expediente-header {
-            position: relative;
-            min-width: 0;
-            align-items: flex-start;
-        }
-
-        .ob-modal .expediente-header > div:nth-child(2) {
-            min-width: 0;
-            flex: 1 1 auto;
-        }
-
-        .ob-modal .expediente-header h2 {
-            overflow-wrap: anywhere;
-            word-break: normal;
-            line-height: 1.3;
-        }
-
-        .ob-modal .expediente-meta,
-        .ob-modal .expediente-kicker,
-        .ob-modal .expediente-subtitulo,
-        .ob-modal .ob-campo-ayuda {
-            overflow-wrap: anywhere;
-            line-height: 1.6;
-        }
-
-        .ob-modal .expediente-panel,
-        .ob-modal .expediente-fieldset,
-        .ob-modal .expediente-form-grid,
-        .ob-modal .ob-campo,
-        .ob-modal .obs-card-item,
-        .ob-modal .documento-card {
-            min-width: 0;
-        }
-
-        .ob-modal .expediente-fieldset {
-            display: block;
-        }
-
-        .ob-modal .expediente-form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            align-items: start;
-            gap: 0 15px;
-        }
-
-        .ob-modal .ob-campo > label {
-            display: block;
-            line-height: 1.45;
-            overflow-wrap: anywhere;
-        }
-
-        .ob-modal .ob-campo input,
-        .ob-modal .ob-campo select,
-        .ob-modal .ob-campo textarea {
-            min-height: 42px;
-            line-height: 1.45;
-        }
-
-        .ob-modal .ob-campo textarea {
-            min-height: 75px;
-        }
-
-        .ob-modal .expediente-actions {
-            position: relative;
-            clear: both;
-            align-items: center;
-        }
-
-        .ob-modal .expediente-actions button,
-        .ob-modal .expediente-tab,
-        .ob-modal .expediente-actualizar {
-            line-height: 1.35;
-            white-space: normal;
-            overflow-wrap: anywhere;
-        }
-
-        .ob-modal .obs-card-item p {
-            margin-top: 8px;
-            margin-bottom: 8px;
-            line-height: 1.7;
-            overflow-wrap: anywhere;
-        }
-
-        .ob-modal .obs-card-item strong {
-            color: inherit;
-        }
-
-        .ob-modal .documento-vacio {
-            border: 1px dashed var(--ov-borde);
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        body.ov-dark-mode .ob-modal,
-        body.ov-dark-mode .ob-modal h1,
-        body.ov-dark-mode .ob-modal h2,
-        body.ov-dark-mode .ob-modal h3,
-        body.ov-dark-mode .ob-modal p,
-        body.ov-dark-mode .ob-modal label,
-        body.ov-dark-mode .ob-modal legend,
-        body.ov-dark-mode .ob-modal small,
-        body.ov-dark-mode .ob-modal strong,
-        body.ov-dark-mode .ob-modal span,
-        body.ov-dark-mode .ob-modal div {
-            text-shadow: none !important;
-        }
-
-        body.ov-dark-mode .ob-modal h2,
-        body.ov-dark-mode .ob-modal h3,
-        body.ov-dark-mode .ob-modal .expediente-fieldset legend {
-            color: var(--ov-texto) !important;
-        }
-
-        body.ov-dark-mode .ob-modal .expediente-close {
-            color: var(--ov-secundario) !important;
-            background: transparent !important;
-        }
-
-        body.ov-dark-mode .ob-modal .expediente-primary {
-            color: #fff !important;
-            background: #3479d4 !important;
-            border-color: #3479d4 !important;
-        }
-
-        body.ov-dark-mode .ob-modal .expediente-primary:hover {
-            background: #2868bc !important;
-        }
-
-        @media (max-width: 600px) {
-            dialog#obModal[open],
-            dialog#modalNuevaObs[open] {
-                width: calc(100vw - 16px);
-                max-width: calc(100vw - 16px);
-                max-height: 92dvh;
-                padding: 15px;
-            }
-
-            .ob-modal .expediente-form-grid {
-                grid-template-columns: minmax(0, 1fr);
-            }
-
-            .ob-modal .expediente-header {
-                gap: 9px;
-                padding-bottom: 14px;
-            }
-
-            .ob-modal .expediente-close {
-                padding: 2px 5px;
-                font-size: 24px;
-            }
-
-            .ob-modal .expediente-tabs {
-                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            }
-
-            .ob-modal .expediente-tab {
-                gap: 4px;
-                padding: 8px 4px;
-                font-size: 12px;
-            }
-        }
-
-    </style>
 </head>
 
 <body class="ov-tiene-sidebar">
 
-<!-- BARRA LATERAL PRINCIPAL -->
 <aside class="ov-barra-lateral" id="ovBarraLateral">
     <div class="ov-cabecera">
         <div class="ov-nombre-pagina">
@@ -1718,7 +116,6 @@
                 </a>
             </li>
 
-            <!-- CERRAR SESIÓN -->
             <li>
                 <button type="button" id="ovBotonCerrarSesion" class="ov-enlace-cerrar-sesion">
                     <svg class="ov-icono-menu" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1742,9 +139,7 @@
             </div>
 
             <button class="ov-switch" id="ovInterruptorTema" type="button" aria-label="Cambiar modo claro u oscuro" aria-pressed="false">
-                <span class="ov-base">
-                    <span class="ov-circulo"></span>
-                </span>
+                <span class="ov-base"><span class="ov-circulo"></span></span>
             </button>
         </div>
 
@@ -1764,7 +159,6 @@
     </div>
 </aside>
 
-<!-- BOTÓN DEL MENÚ MÓVIL -->
 <button class="ov-menu-movil" id="ovBotonMovil" type="button" aria-label="Abrir menú" aria-expanded="false">
     <ion-icon name="menu-outline"></ion-icon>
 </button>
@@ -1772,10 +166,7 @@
 
 <nav class="navbar">
     <div class="navbar-brand-container">
-        <img src="logo empresa I.J.P COMPANY.png"
-             alt="Logo IJP"
-             class="navbar-logo-izquierdo">
-
+        <img src="logo empresa I.J.P COMPANY.png" alt="Logo IJP" class="navbar-logo-izquierdo">
         <span class="navbar-brand">I.J.P. Company</span>
     </div>
 </nav>
@@ -1783,18 +174,20 @@
 <main>
     <div class="dashboard-actions">
         <label for="toggle-sidebar" style="cursor:pointer;">
-            <button class="btn-help" type="button"
-                    style="pointer-events:none;">Ayuda</button>
+            <button class="btn-help" type="button" style="pointer-events:none;">Ayuda</button>
         </label>
     </div>
 
-    <div class="students-page">
+    <div id="obCargandoRol" class="ob-estado-carga">
+        <p>Verificando permisos de la cuenta...</p>
+    </div>
+
+    <div class="students-page" id="obVistaAdministrativa" style="display:none;">
         <div class="ob-wrap">
 
             <div class="ob-toolbar">
                 <label class="ob-search">
-                    <input type="search" id="obBuscar"
-                           placeholder="Buscar estudiante...">
+                    <input type="search" id="obBuscar" placeholder="Buscar estudiante...">
                 </label>
 
                 <select class="ob-select" id="obCurso"></select>
@@ -1814,72 +207,47 @@
             <div class="ob-titulo">
                 <h1 id="obTitulo"></h1>
                 <p id="obSub"></p>
-                <button type="button" class="ob-btn-agregar" id="obAgregar">
-                    + Agregar estudiante
-                </button>
+                <button type="button" class="ob-btn-agregar" id="obAgregar">+ Agregar estudiante</button>
             </div>
 
             <div class="ob-stats" id="obStats"></div>
             <div class="ob-grid" id="obGrid"></div>
         </div>
 
-        <!-- EXPEDIENTE DEL ESTUDIANTE -->
-
-        <dialog class="ob-modal ob-modal-expediente" id="obModal"
-                aria-labelledby="modalNombreVista">
-
+        <dialog class="ob-modal ob-modal-expediente" id="obModal" aria-labelledby="modalNombreVista">
             <div class="expediente-header">
                 <div class="student-header-avatar" id="modalAvatar">JP</div>
 
                 <div style="flex:1;min-width:0;">
                     <h2 id="modalNombreVista">Nombre del estudiante</h2>
-                    <div class="expediente-meta" id="modalCursoJornadaTxt">
-                        Curso 2 · Jornada Mañana
-                    </div>
+                    <div class="expediente-meta" id="modalCursoJornadaTxt">Curso 2 · Jornada Mañana</div>
                     <span class="expediente-kicker">Expediente del estudiante</span>
                 </div>
 
-                <button type="button" class="expediente-close"
-                        id="obCerrarPrincipal"
-                        aria-label="Cerrar expediente">&times;</button>
+                <button type="button" class="expediente-close" id="obCerrarPrincipal" aria-label="Cerrar expediente">&times;</button>
             </div>
 
             <div class="expediente-nav">
-                <button type="button" id="tabActualizar"
-                        class="expediente-actualizar">
-                    Actualizar Información Personal 
-                </button>
+                <button type="button" id="tabActualizar" class="expediente-actualizar">Actualizar Información Personal</button>
 
-                <div class="expediente-tabs" role="tablist"
-                     aria-label="Secciones del expediente">
-
-                    <button type="button" id="tabObservaciones"
-                            class="expediente-tab active"
-                            role="tab" aria-selected="true">
-                        Observaciones
-                        <span class="expediente-contador"
-                              id="contadorObservaciones">0</span>
+                <div class="expediente-tabs" role="tablist" aria-label="Secciones del expediente">
+                    <button type="button" id="tabObservaciones" class="expediente-tab active" role="tab" aria-selected="true">
+                        Observaciones <span class="expediente-contador" id="contadorObservaciones">0</span>
                     </button>
 
-                    <button type="button" id="tabDocumentos"
-                            class="expediente-tab"
-                            role="tab" aria-selected="false">
-                        Documentos
-                        <span class="expediente-contador"
-                              id="contadorDocumentos">0</span>
+                    <button type="button" id="tabDocumentos" class="expediente-tab" role="tab" aria-selected="false">
+                        Documentos <span class="expediente-contador" id="contadorDocumentos">0</span>
+                    </button>
+
+                    <button type="button" id="tabObservadorAcudientes" class="expediente-tab ob-tab-observador" role="tab" aria-selected="false">
+                        Observador
                     </button>
                 </div>
             </div>
 
-            <!-- PANEL ACTUALIZAR INFORMACIÓN -->
-
             <section class="expediente-panel" id="panelActualizar" hidden>
                 <h3>Información general</h3>
-
-                <p class="expediente-subtitulo">
-                    Actualiza los datos personales, el curso, la jornada
-                    y la información de contacto del acudiente.
-                </p>
+                <p class="expediente-subtitulo">Actualiza los datos personales, el curso, la jornada y la información de contacto del acudiente.</p>
 
                 <fieldset class="expediente-fieldset">
                     <legend>Datos del estudiante</legend>
@@ -1887,16 +255,12 @@
                     <div class="expediente-form-grid">
                         <div class="ob-campo">
                             <label for="fNombre">Nombre completo *</label>
-                            <input type="text" id="fNombre"
-                                   required maxlength="100">
+                            <input type="text" id="fNombre" required maxlength="100">
                         </div>
 
                         <div class="ob-campo">
-                            <label for="fDocumentoEstudiante">
-                                Documento / tarjeta de identidad
-                            </label>
-                            <input type="text" id="fDocumentoEstudiante"
-                                   maxlength="40">
+                            <label for="fDocumentoEstudiante">Documento / tarjeta de identidad</label>
+                            <input type="text" id="fDocumentoEstudiante" maxlength="40">
                         </div>
 
                         <div class="ob-campo">
@@ -1914,20 +278,18 @@
 
                         <div class="ob-campo" style="grid-column:1/-1;">
                             <label for="fDireccionEstudiante">Dirección de residencia</label>
-                            <input type="text" id="fDireccionEstudiante"
-                                   maxlength="180">
+                            <input type="text" id="fDireccionEstudiante" maxlength="180">
                         </div>
                     </div>
                 </fieldset>
 
                 <fieldset class="expediente-fieldset">
-                    <legend>Información del acudiente</legend>
+                    <legend>Información del acudiente de referencia</legend>
 
                     <div class="expediente-form-grid">
                         <div class="ob-campo">
                             <label for="fAcudienteNombre">Nombre completo</label>
-                            <input type="text" id="fAcudienteNombre"
-                                   maxlength="100">
+                            <input type="text" id="fAcudienteNombre" maxlength="100">
                         </div>
 
                         <div class="ob-campo">
@@ -1968,74 +330,43 @@
                         </div>
 
                         <div class="ob-campo" style="grid-column:1/-1;">
-                            <label for="fAcudienteDireccion">
-                                Dirección del acudiente (si es diferente)
-                            </label>
-                            <input type="text" id="fAcudienteDireccion"
-                                   maxlength="180">
+                            <label for="fAcudienteDireccion">Dirección del acudiente (si es diferente)</label>
+                            <input type="text" id="fAcudienteDireccion" maxlength="180">
                         </div>
 
                         <div class="ob-campo" style="grid-column:1/-1;">
-                            <label for="fAcudienteTelefonoTrabajo">
-                                Teléfono del trabajo (opcional)
-                            </label>
-                            <input type="tel" id="fAcudienteTelefonoTrabajo"
-                                   maxlength="30">
+                            <label for="fAcudienteTelefonoTrabajo">Teléfono del trabajo (opcional)</label>
+                            <input type="tel" id="fAcudienteTelefonoTrabajo" maxlength="30">
                         </div>
                     </div>
                 </fieldset>
 
                 <div class="expediente-actions">
-                    <button type="button" class="expediente-secondary"
-                            id="btnCancelarInformacion">
-                        Cancelar
-                    </button>
-
-                    <button type="button" class="expediente-primary"
-                            id="btnGuardarInformacion">
-                        Guardar información
-                    </button>
+                    <button type="button" class="expediente-secondary" id="btnCancelarInformacion">Cancelar</button>
+                    <button type="button" class="expediente-primary" id="btnGuardarInformacion">Guardar información</button>
                 </div>
             </section>
 
-            <!-- PANEL OBSERVACIONES -->
-
-            <section class="expediente-panel" id="panelObservaciones"
-                     role="tabpanel">
-
+            <section class="expediente-panel" id="panelObservaciones" role="tabpanel">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
                     <div>
                         <h3 style="margin-bottom:5px;">Observaciones</h3>
-                        <p class="expediente-subtitulo" style="margin:0;">
-                            Consulta el historial registrado para este estudiante.
-                        </p>
+                        <p class="expediente-subtitulo" style="margin:0;">Consulta el historial registrado para este estudiante.</p>
                     </div>
 
-                    <button type="button" id="btnAbrirNuevaObs"
-                            class="expediente-primary">
-                        + Agregar observación
-                    </button>
+                    <button type="button" id="btnAbrirNuevaObs" class="expediente-primary">+ Agregar observación</button>
                 </div>
 
                 <div id="modalListaObs"></div>
             </section>
 
-            <!-- PANEL DOCUMENTOS -->
-
-            <section class="expediente-panel" id="panelDocumentos"
-                     role="tabpanel" hidden>
-
+            <section class="expediente-panel" id="panelDocumentos" role="tabpanel" hidden>
                 <h3>Documentos del estudiante</h3>
-
-                <p class="expediente-subtitulo">
-                    Adjunta y consulta documentos relacionados con la matrícula
-                    y el seguimiento del estudiante.
-                </p>
+                <p class="expediente-subtitulo">Adjunta y consulta documentos relacionados con la matrícula y el seguimiento del estudiante.</p>
 
                 <div class="documentos-subir" id="bloqueSubirDocumento">
                     <form id="formSubirDocumento">
                         <div class="expediente-form-grid">
-
                             <div class="ob-campo">
                                 <label for="docTipo">Tipo de documento *</label>
                                 <select id="docTipo" required>
@@ -2052,57 +383,70 @@
 
                             <div class="ob-campo">
                                 <label for="docArchivo">Seleccionar archivo *</label>
-                                <input type="file" id="docArchivo" required
-                                       accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
+                                <input type="file" id="docArchivo" required accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
                             </div>
                         </div>
 
-                        <div class="ob-campo"
-                             id="campoNombreOtroDocumento" hidden>
+                        <div class="ob-campo" id="campoNombreOtroDocumento" hidden>
                             <label for="docNombreOtro">Nombre del documento</label>
-                            <input type="text" id="docNombreOtro"
-                                   maxlength="100"
-                                   placeholder="Ej. Autorización firmada">
+                            <input type="text" id="docNombreOtro" maxlength="100" placeholder="Ej. Autorización firmada">
                         </div>
 
-                        <small class="ob-campo-ayuda">
-                            Formatos admitidos: PDF, PNG, JPG/JPEG y WebP.
-                            Tamaño máximo por archivo: 10 MB.
-                        </small>
+                        <small class="ob-campo-ayuda">Formatos admitidos: PDF, PNG, JPG/JPEG y WebP. Tamaño máximo por archivo: 10 MB.</small>
 
                         <div style="display:flex;justify-content:flex-end;margin-top:14px;">
-                            <button type="submit"
-                                    class="expediente-primary"
-                                    id="btnSubirDocumento">
-                                Guardar documento
-                            </button>
+                            <button type="submit" class="expediente-primary" id="btnSubirDocumento">Guardar documento</button>
                         </div>
                     </form>
                 </div>
 
-                <div id="documentosLista" class="documentos-grid"
-                     aria-live="polite">
-                    <div class="documento-vacio">
-                        No hay documentos cargados todavía.
+                <div id="documentosLista" class="documentos-grid" aria-live="polite">
+                    <div class="documento-vacio">No hay documentos cargados todavía.</div>
+                </div>
+            </section>
+
+            <section class="expediente-panel" id="panelObservadorAcudientes" role="tabpanel" hidden>
+                <h3>Observador del estudiante</h3>
+
+                <p class="expediente-subtitulo">
+                    Vincula cuentas de acudientes registradas en Observador Virtual para que puedan consultar a este estudiante.
+                </p>
+
+                <div class="ob-panel-acudientes">
+                    <h3>Vincular un acudiente</h3>
+
+                    <form id="formVincularAcudiente" class="ob-vincular-form">
+                        <div class="ob-campo">
+                            <label for="correoVincularAcudiente">Correo electrónico del acudiente *</label>
+                            <input type="email" id="correoVincularAcudiente" maxlength="150" required placeholder="acudiente@gmail.com">
+                        </div>
+
+                        <button type="submit" id="btnVincularAcudiente">Vincular acudiente</button>
+                    </form>
+
+                    <div id="mensajeVincularAcudiente" class="ob-mensaje-vinculo" role="status" aria-live="polite"></div>
+                </div>
+
+                <div class="ob-panel-acudientes">
+                    <h3>Acudientes vinculados</h3>
+                    <div id="listaAcudientesVinculados">
+                        <p>Cargando vinculaciones...</p>
                     </div>
+                </div>
+
+                <div class="ob-observador-aviso">
+                    Las vinculaciones se guardan en Firebase. Los estudiantes, observaciones y documentos de esta versión todavía se almacenan localmente en el navegador.
                 </div>
             </section>
 
             <div class="expediente-actions">
-                <button type="button" class="expediente-secondary"
-                        id="btnCerrarExpediente">
-                    Cerrar
-                </button>
+                <button type="button" class="expediente-secondary" id="btnCerrarExpediente">Cerrar</button>
             </div>
         </dialog>
 
-        <!-- MODAL CREAR / EDITAR OBSERVACIÓN -->
-
         <dialog class="ob-modal" id="modalNuevaObs">
             <form id="formNuevaObs" method="dialog">
-                <h3 style="margin-top:0;margin-bottom:20px;">
-                    Nueva observación
-                </h3>
+                <h3 style="margin-top:0;margin-bottom:20px;">Nueva observación</h3>
 
                 <div class="expediente-form-grid">
                     <div class="ob-campo">
@@ -2122,95 +466,79 @@
 
                 <div class="ob-campo">
                     <label for="obsDesc">Descripción</label>
-                    <textarea id="obsDesc" rows="4"
-                              placeholder="Describe los hechos de forma clara y objetiva..."></textarea>
+                    <textarea id="obsDesc" rows="4" placeholder="Describe los hechos de forma clara y objetiva..."></textarea>
                 </div>
 
                 <div class="ob-campo">
                     <label for="obsCompromiso">Compromiso del estudiante</label>
-                    <textarea id="obsCompromiso" rows="2"
-                              placeholder="Compromiso adquirido..."></textarea>
+                    <textarea id="obsCompromiso" rows="2" placeholder="Compromiso adquirido..."></textarea>
                 </div>
 
                 <div class="ob-campo">
                     <label for="obsFalta">Clasificación de la falta *</label>
                     <select id="obsFalta" required>
                         <option value="">Seleccione una clasificación...</option>
-
                         <optgroup label="Situaciones de convivencia escolar">
                             <option value="tipo1">Situación Tipo I</option>
                             <option value="tipo2">Situación Tipo II</option>
                             <option value="tipo3">Situación Tipo III</option>
                         </optgroup>
-
                         <optgroup label="Escala del manual institucional">
                             <option value="leve">Leve</option>
                             <option value="grave">Grave</option>
                             <option value="muy_grave">Muy grave</option>
                         </optgroup>
-
                         <option value="no_presenta">No presenta falta</option>
                     </select>
 
-                    <div id="obsFaltaAyuda" class="ob-falta-ayuda"
-                         role="status" aria-live="polite">
-                        Selecciona una categoría para ver su descripción.
-                    </div>
-
-                    <small class="ob-campo-ayuda">
-                        Tipo I, II y III no equivalen automáticamente a leve,
-                        grave y muy grave. Verifica el Manual de Convivencia.
-                    </small>
+                    <div id="obsFaltaAyuda" class="ob-falta-ayuda" role="status" aria-live="polite">Selecciona una categoría para ver su descripción.</div>
+                    <small class="ob-campo-ayuda">Tipo I, II y III no equivalen automáticamente a leve, grave y muy grave. Verifica el Manual de Convivencia.</small>
                 </div>
 
                 <div class="ob-campo">
-                    <label for="obsFirmaArchivo">
-                        Imagen de firma del docente o rector (opcional)
-                    </label>
-
-                    <input type="file" id="obsFirmaArchivo"
-                           accept="image/png,image/jpeg,image/webp">
-
-                    <small class="ob-campo-ayuda">
-                        PNG, JPG/JPEG o WebP. Máximo 5 MB antes de procesar.
-                    </small>
+                    <label for="obsFirmaArchivo">Imagen de firma del docente o rector (opcional)</label>
+                    <input type="file" id="obsFirmaArchivo" accept="image/png,image/jpeg,image/webp">
+                    <small class="ob-campo-ayuda">PNG, JPG/JPEG o WebP. Máximo 5 MB antes de procesar.</small>
 
                     <div id="obsFirmaPreview" class="ob-firma-preview" hidden>
-                        <img id="obsFirmaPreviewImg"
-                             alt="Vista previa de la firma">
-
+                        <img id="obsFirmaPreviewImg" alt="Vista previa de la firma">
                         <div class="ob-firma-preview-info">
                             <strong id="obsFirmaNombre">Firma adjunta</strong>
-
                             <div id="obsFirmaEstado"></div>
-
-                            <button type="button" id="btnQuitarFirma"
-                                    class="ob-btn-secundario">
-                                Quitar imagen adjunta
-                            </button>
+                            <button type="button" id="btnQuitarFirma" class="ob-btn-secundario">Quitar imagen adjunta</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="expediente-actions">
-                    <button type="button" id="btnCancelarObs"
-                            class="expediente-secondary">
-                        Cancelar
-                    </button>
-
-                    <button type="submit" class="expediente-primary">
-                        Guardar observación
-                    </button>
+                    <button type="button" id="btnCancelarObs" class="expediente-secondary">Cancelar</button>
+                    <button type="submit" class="expediente-primary">Guardar observación</button>
                 </div>
             </form>
         </dialog>
     </div>
+
+    <section class="ob-vista-acudiente" id="obVistaAcudiente" style="display:none;">
+        <div class="ob-observador-intro">
+            <h1>OBSERVADOR</h1>
+            <p>Aquí encontrarás los observadores de los estudiantes vinculados a tu cuenta.</p>
+            <p>Los estudiantes que aparecen vinculados a tu cuenta han sido asociados por un docente de la institución educativa.</p>
+            <p>Si no aparece alguno de tus estudiantes o consideras que falta una vinculación, comunícate con el docente correspondiente para que revise tu caso.</p>
+        </div>
+
+        <h2 class="ob-vinculados-titulo">Estudiantes vinculados</h2>
+
+        <div class="ob-vinculados-grid" id="obEstudiantesAcudiente">
+            <p>Cargando estudiantes vinculados...</p>
+        </div>
+
+        <div class="ob-observador-aviso">
+            Puedes actualizar los datos personales y de contacto de tus estudiantes. El curso, la jornada, las observaciones y el correo de vinculación son administrados por la institución.
+        </div>
+    </section>
 </main>
 
-<!-- AYUDA LATERAL -->
-
-<input type="checkbox" id="toggle-sidebar"
-       class="sidebar-checkbox" style="display:none;">
+<input type="checkbox" id="toggle-sidebar" class="sidebar-checkbox" style="display:none;">
 
 <div class="sidebar">
     <label for="toggle-sidebar" class="closeBtn">&times;</label>
@@ -2222,27 +550,24 @@
         <p>Bienvenido al centro de ayuda de <strong>I.J.P. Company</strong>.</p>
 
         <h3>¿Cómo consultar un estudiante?</h3>
-        <p>Utiliza el buscador y los filtros para localizar al estudiante.
-           Haz clic en su tarjeta para abrir el expediente.</p>
+        <p>Utiliza el buscador y los filtros para localizar al estudiante. Haz clic en su tarjeta para abrir el expediente.</p>
 
         <h3>¿Cómo actualizar información?</h3>
-        <p>Abre el expediente, selecciona Actualizar Información y guarda
-           los cambios cuando termines.</p>
+        <p>Abre el expediente, selecciona Actualizar Información y guarda los cambios cuando termines.</p>
 
         <h3>¿Cómo adjuntar documentos?</h3>
-        <p>Abre la sección Documentos, selecciona el tipo de documento
-           y el archivo que deseas guardar.</p>
+        <p>Abre la sección Documentos, selecciona el tipo de documento y el archivo que deseas guardar.</p>
+
+        <h3>¿Cómo vincular un acudiente?</h3>
+        <p>Abre el expediente del estudiante, selecciona Observador e introduce el correo electrónico de una cuenta registrada con el rol Acudiente.</p>
 
         <h3>¿La información es privada?</h3>
-        <p>Los documentos contienen datos personales. Esta versión guarda
-           archivos en el navegador y debe conectarse a Firebase con permisos
-           antes de utilizarse como expediente institucional compartido.</p>
+        <p>Esta versión guarda estudiantes y observaciones en el navegador. Las vinculaciones de acudientes se guardan en Firebase y requieren reglas de seguridad adecuadas para proteger la información institucional.</p>
     </div>
 </div>
 
 <label for="toggle-sidebar" class="overlay" id="ovOverlayAyuda"></label>
 
-<!-- MODAL DE CIERRE DE SESIÓN -->
 <div id="ovModalCerrarSesion" role="dialog" aria-modal="true" aria-labelledby="ovTituloCerrarSesion" aria-describedby="ovTextoCerrarSesion" hidden>
     <div class="ov-modal-caja">
         <h2 id="ovTituloCerrarSesion">¿Cerrar sesión?</h2>
@@ -2255,10 +580,8 @@
     </div>
 </div>
 
-<!-- ICONOS -->
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
 
 <script>
 (function () {
@@ -2282,43 +605,26 @@
     var editId = null;
     var editObsIndex = null;
     var modoSoloLectura = false;
-
     var firmaActual = '';
     var firmaProcesando = false;
     var firmaSolicitud = 0;
     var objectUrls = [];
 
+    var usuarioActual = null;
+    var rolActual = '';
+    var estudianteAbierto = null;
+    var permisosInicializados = false;
+    var estudiantesFirebaseListos = false;
+    var guardadoFirebaseEnCurso = Promise.resolve();
+
     var AYUDAS_FALTAS = {
-        tipo1:
-            'Conflicto manejado inadecuadamente o situación esporádica ' +
-            'que afecta la convivencia, sin daño al cuerpo o a la salud. ' +
-            'Debe aplicarse el protocolo institucional para Tipo I.',
-
-        tipo2:
-            'Situación de agresión, acoso o ciberacoso repetido o con daño ' +
-            'al cuerpo o a la salud sin incapacidad, que no reúna ' +
-            'características de delito. Aplicar el protocolo para Tipo II.',
-
-        tipo3:
-            'Situación de agresión que presuntamente puede constituir un ' +
-            'delito. Aplicar la ruta institucional y avisar a las autoridades ' +
-            'competentes según el protocolo.',
-
-        leve:
-            'Incumplimiento de menor impacto conforme a la definición del ' +
-            'Manual de Convivencia institucional.',
-
-        grave:
-            'Conducta que el Manual de Convivencia define como grave por ' +
-            'su impacto, circunstancias o reiteración.',
-
-        muy_grave:
-            'Conducta que el Manual de Convivencia define como muy grave ' +
-            'por su impacto o riesgo.',
-
-        no_presenta:
-            'No se identifica una falta disciplinaria. Esta opción puede ' +
-            'utilizarse para seguimiento académico, informativo o positivo.'
+        tipo1: 'Conflicto manejado inadecuadamente o situación esporádica que afecta la convivencia, sin daño al cuerpo o a la salud. Debe aplicarse el protocolo institucional para Tipo I.',
+        tipo2: 'Situación de agresión, acoso o ciberacoso repetido o con daño al cuerpo o a la salud sin incapacidad, que no reúna características de delito. Aplicar el protocolo para Tipo II.',
+        tipo3: 'Situación de agresión que presuntamente puede constituir un delito. Aplicar la ruta institucional y avisar a las autoridades competentes según el protocolo.',
+        leve: 'Incumplimiento de menor impacto conforme a la definición del Manual de Convivencia institucional.',
+        grave: 'Conducta que el Manual de Convivencia define como grave por su impacto, circunstancias o reiteración.',
+        muy_grave: 'Conducta que el Manual de Convivencia define como muy grave por su impacto o riesgo.',
+        no_presenta: 'No se identifica una falta disciplinaria. Esta opción puede utilizarse para seguimiento académico, informativo o positivo.'
     };
 
     var ETIQUETAS_FALTAS = {
@@ -2331,130 +637,115 @@
         no_presenta: 'No presenta falta'
     };
 
-    function semilla() {
-        return [
-            {
-                id: 1,
-                nombre: 'Juan Pablo Pérez',
-                curso: 2,
-                jornada: 'Mañana',
-                documentoEstudiante: '',
-                direccionEstudiante: '',
-                acudienteNombre: 'Marta Pérez',
-                acudienteParentesco: 'Madre',
-                acudienteFijo: '6012345',
-                acudienteCel: '3101234567',
-                acudienteCorreo: 'marta@mail.com',
-                acudienteDireccion: '',
-                acudienteTrabajo: '',
-                acudienteTelefonoTrabajo: '',
-                observaciones: [
-                    {
-                        tipo: 'Académica',
-                        fecha: '2026-09-12',
-                        desc: 'No entregó la tarea de matemáticas.',
-                        compromiso: 'Entregar el lunes.',
-                        clasificacion: '',
-                        firma: ''
-                    },
-                    {
-                        tipo: 'Comportamiento',
-                        fecha: '2026-09-13',
-                        desc: 'Interrumpió la clase en dos ocasiones.',
-                        compromiso: 'Mejorar actitud.',
-                        clasificacion: '',
-                        firma: ''
-                    }
-                ]
-            },
-            {
-                id: 2,
-                nombre: 'Lucas González',
-                curso: 2,
-                jornada: 'Mañana',
-                documentoEstudiante: '',
-                direccionEstudiante: '',
-                acudienteNombre: 'Carlos González',
-                acudienteParentesco: 'Padre',
-                acudienteFijo: '',
-                acudienteCel: '3209876543',
-                acudienteCorreo: 'carlos@mail.com',
-                acudienteDireccion: '',
-                acudienteTrabajo: '',
-                acudienteTelefonoTrabajo: '',
-                observaciones: []
-            }
-        ];
+    var ROLES_ADMINISTRATIVOS = [
+        'ADMINISTRADOR',
+        'RECTOR',
+        'DOCENTE',
+        'ORIENTADOR',
+        'COORDINADOR',
+        'PROFESOR'
+    ];
+
+    function tienePermisoAdministrativo() {
+        return permisosInicializados &&
+            !!usuarioActual &&
+            ROLES_ADMINISTRATIVOS.includes(rolActual);
     }
 
+    function exigirPermisoAdministrativo(accion) {
+        if (tienePermisoAdministrativo()) return true;
+
+        console.warn('Acceso bloqueado. No tienes permiso para: ' + accion);
+        return false;
+    }
+
+    function puedeEliminarEstudiantes() {
+        return permisosInicializados && !!usuarioActual &&
+            ['ADMINISTRADOR', 'RECTOR'].includes(rolActual);
+    }
+
+    // Los expedientes reales se cargan desde Firestore. No se importan
+    // automáticamente los datos ficticios antiguos de localStorage.
     function cargar() {
-        try {
-            var guardados = localStorage.getItem(KEY);
-
-            if (guardados) {
-                var parsed = JSON.parse(guardados);
-
-                if (Array.isArray(parsed)) {
-                    parsed.forEach(function (estudiante) {
-                        if (!Array.isArray(estudiante.observaciones)) {
-                            estudiante.observaciones = [];
-                        }
-                    });
-
-                    return parsed;
-                }
-            }
-        } catch (error) {
-            console.error('Error al cargar estudiantes:', error);
-        }
-
-        return semilla();
+        return [];
     }
 
     var datos = cargar();
 
+    async function cargarEstudiantesFirebase() {
+        if (!window.ovFirebase || !window.ovFirebase.firestore || !window.ovFirebase.db) {
+            throw new Error('FIREBASE_NO_DISPONIBLE');
+        }
+
+        var firestore = window.ovFirebase.firestore;
+        var consulta = firestore.query(
+            firestore.collection(window.ovFirebase.db, 'estudiantes')
+        );
+        var resultado = await firestore.getDocs(consulta);
+
+        datos = resultado.docs.map(function (documento) {
+            var info = documento.data() || {};
+            var idNumerico = Number(info.id || documento.id);
+            return Object.assign({}, info, {
+                id: Number.isFinite(idNumerico) && idNumerico > 0 ? idNumerico : documento.id,
+                observaciones: Array.isArray(info.observaciones) ? info.observaciones : []
+            });
+        });
+
+        estudiantesFirebaseListos = true;
+        localStorage.setItem('totalEstudiantes', String(datos.length));
+        localStorage.setItem('totalObservaciones', String(datos.reduce(function (total, estudiante) {
+            return total + estudiante.observaciones.length;
+        }, 0)));
+        return datos;
+    }
+
     function guardar() {
-        try {
-            localStorage.setItem(KEY, JSON.stringify(datos));
-
-            localStorage.setItem(
-                'totalEstudiantes',
-                String(datos.length)
-            );
-
-            localStorage.setItem(
-                'totalObservaciones',
-                String(datos.reduce(function (total, estudiante) {
-                    return total + estudiante.observaciones.length;
-                }, 0))
-            );
-
-            return true;
-        } catch (error) {
-            console.error('Error al guardar:', error);
-
-            alert(
-                'No fue posible guardar los cambios. ' +
-                'Comprueba el espacio disponible en el navegador.'
-            );
-
+        if (!exigirPermisoAdministrativo('guardar información de estudiantes')) {
             return false;
         }
+        if (!estudiantesFirebaseListos || !window.ovFirebase) {
+            alert('Espera a que los estudiantes terminen de cargarse desde Firebase antes de guardar.');
+            return false;
+        }
+
+        localStorage.setItem('totalEstudiantes', String(datos.length));
+        localStorage.setItem('totalObservaciones', String(datos.reduce(function (total, estudiante) {
+            return total + (Array.isArray(estudiante.observaciones) ? estudiante.observaciones.length : 0);
+        }, 0)));
+
+        var firestore = window.ovFirebase.firestore;
+        guardadoFirebaseEnCurso = Promise.all(datos.map(function (estudiante) {
+            var id = String(estudiante.id);
+            var registro = Object.assign({}, estudiante, {
+                id: id,
+                observaciones: Array.isArray(estudiante.observaciones) ? estudiante.observaciones : [],
+                actualizadoEn: firestore.serverTimestamp()
+            });
+            return firestore.setDoc(
+                firestore.doc(window.ovFirebase.db, 'estudiantes', id),
+                registro,
+                { merge: true }
+            );
+        })).catch(function (error) {
+            console.error('Error guardando estudiantes en Firestore:', error);
+            alert('No se pudieron guardar los cambios en Firebase. Revisa las reglas de Firestore y vuelve a intentarlo.');
+            throw error;
+        });
+        guardadoFirebaseEnCurso.catch(function () {});
+        return true;
     }
 
     function esc(valor) {
-        return String(valor == null ? '' : valor).replace(
-            /[&<>"']/g,
-            function (c) {
-                return {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#39;'
-                }[c];
-            }
-        );
+        return String(valor == null ? '' : valor).replace(/[&<>"']/g, function (c) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c];
+        });
     }
 
     function norm(valor) {
@@ -2492,8 +783,15 @@
             /^data:image\/(png|jpeg|webp);base64,/i.test(valor);
     }
 
+    function normalizarCorreo(correo) {
+        return String(correo || '').trim().toLowerCase();
+    }
 
-    /* DOCUMENTOS LOCALES: INDEXEDDB */
+    function mostrarMensajeVinculo(mensaje, tipo) {
+        var elemento = $('mensajeVincularAcudiente');
+        elemento.textContent = mensaje || '';
+        elemento.className = 'ob-mensaje-vinculo' + (tipo ? ' ' + tipo : '');
+    }
 
     function abrirBDDocumentos() {
         return new Promise(function (resolve, reject) {
@@ -2508,16 +806,8 @@
                 var db = solicitud.result;
 
                 if (!db.objectStoreNames.contains(DB_STORE)) {
-                    var almacen = db.createObjectStore(
-                        DB_STORE,
-                        { keyPath: 'id' }
-                    );
-
-                    almacen.createIndex(
-                        'estudianteId',
-                        'estudianteId',
-                        { unique: false }
-                    );
+                    var almacen = db.createObjectStore(DB_STORE, { keyPath: 'id' });
+                    almacen.createIndex('estudianteId', 'estudianteId', { unique: false });
                 }
             };
 
@@ -2535,7 +825,6 @@
         return abrirBDDocumentos().then(function (db) {
             return new Promise(function (resolve, reject) {
                 var tx = db.transaction(DB_STORE, 'readwrite');
-
                 tx.objectStore(DB_STORE).put(documento);
 
                 tx.oncomplete = function () {
@@ -2556,17 +845,13 @@
             return new Promise(function (resolve, reject) {
                 var tx = db.transaction(DB_STORE, 'readonly');
                 var indice = tx.objectStore(DB_STORE).index('estudianteId');
-                var solicitud = indice.getAll(
-                    IDBKeyRange.only(Number(estudianteId))
-                );
+                var solicitud = indice.getAll(IDBKeyRange.only(Number(estudianteId)));
 
                 solicitud.onsuccess = function () {
                     var documentos = solicitud.result || [];
-
                     documentos.sort(function (a, b) {
                         return (b.creado || 0) - (a.creado || 0);
                     });
-
                     resolve(documentos);
                 };
 
@@ -2610,7 +895,6 @@
         return abrirBDDocumentos().then(function (db) {
             return new Promise(function (resolve, reject) {
                 var tx = db.transaction(DB_STORE, 'readwrite');
-
                 tx.objectStore(DB_STORE).delete(id);
 
                 tx.oncomplete = function () {
@@ -2636,11 +920,7 @@
 
     function formatoTamano(bytes) {
         if (bytes < 1024) return bytes + ' B';
-
-        if (bytes < 1024 * 1024) {
-            return (bytes / 1024).toFixed(1) + ' KB';
-        }
-
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
         return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
     }
 
@@ -2648,49 +928,40 @@
         return new Date(timestamp).toLocaleDateString('es-CO');
     }
 
-
-    /* LISTADO DE ESTUDIANTES */
-
     function render() {
+        if (!tienePermisoAdministrativo()) return;
+
         var curso = +$('obCurso').value;
         var jornada = $('obJornada').value;
         var busqueda = norm($('obBuscar').value);
 
         var base = datos.filter(function (estudiante) {
-            return +estudiante.curso === curso &&
-                estudiante.jornada === jornada;
+            return +estudiante.curso === curso && estudiante.jornada === jornada;
         });
 
         $('obTitulo').textContent = 'Jornada ' + jornada.toLowerCase();
-
         $('obSub').textContent =
-            'Estudiantes del curso ' + curso +
-            ' - jornada ' + jornada.toLowerCase() + '.';
+            'Estudiantes del curso ' + curso + ' - jornada ' + jornada.toLowerCase() + '.';
 
         var totalObs = base.reduce(function (total, estudiante) {
             return total + estudiante.observaciones.length;
         }, 0);
 
         var conAcudiente = base.filter(function (estudiante) {
-            return estudiante.acudienteNombre &&
-                estudiante.acudienteNombre.trim() !== '';
+            return estudiante.acudienteNombre && estudiante.acudienteNombre.trim() !== '';
         }).length;
 
         var estadisticas = [
-            [base.length, 'Estudiantes', '👥', '#eaf2ff'],
-            [totalObs, 'Observaciones totales', '📘', '#e9f6ef'],
-            [conAcudiente, 'Con acudiente', '👤', '#fff1e7']
+            [base.length, 'Estudiantes', '🧑🏻‍🎓', '#eaf2ff'],
+            [totalObs, 'Observaciones totales', '📝', '#e9f6ef'],
+            [conAcudiente, 'Con acudiente', '👩‍🍼', '#fff1e7']
         ];
 
         $('obStats').innerHTML = estadisticas.map(function (item) {
-            return (
-                '<div class="ob-stat">' +
-                    '<div class="ob-stat-icono" style="background:' +
-                    item[3] + '">' + item[2] + '</div>' +
-                    '<div><strong>' + item[0] + '</strong>' +
-                    '<span>' + item[1] + '</span></div>' +
-                '</div>'
-            );
+            return '<div class="ob-stat">' +
+                '<div class="ob-stat-icono" style="background:' + item[3] + '">' + item[2] + '</div>' +
+                '<div><strong>' + item[0] + '</strong><span>' + item[1] + '</span></div>' +
+                '</div>';
         }).join('');
 
         var lista = base.filter(function (estudiante) {
@@ -2710,50 +981,41 @@
                 var insignia = total === 0
                     ? '<span class="ob-sin-obs">Sin observaciones</span>'
                     : '<span class="ob-badge" style="background:#e8f0fe;color:#1a73e8;">' +
-                      total + ' observación(es)</span>';
+                        total + ' observación(es)</span>';
 
-                return (
-                    '<article class="ob-card" data-student-id="' +
-                    Number(estudiante.id) + '" tabindex="0">' +
-
-                        '<div class="ob-card-cab">' +
-                            '<div class="ob-avatar" style="background:' +
-                            COLORES[Math.abs(Number(estudiante.id)) % COLORES.length] +
-                            '">' + esc(iniciales(estudiante.nombre)) + '</div>' +
-
-                            '<div><strong>' + esc(estudiante.nombre) +
-                            '</strong><small>Curso ' + esc(estudiante.curso) +
-                            ' · ' + esc(estudiante.jornada) + '</small></div>' +
+                return '<article class="ob-card" data-student-id="' + Number(estudiante.id) + '" tabindex="0">' +
+                    '<div class="ob-card-cab">' +
+                        '<div class="ob-avatar" style="background:' +
+                            COLORES[Math.abs(Number(estudiante.id)) % COLORES.length] + '">' +
+                            esc(iniciales(estudiante.nombre)) +
                         '</div>' +
-
-                        '<div class="ob-badges">' + insignia + '</div>' +
-
-                        '<div class="ob-nota">Acudiente: ' +
-                        esc(estudiante.acudienteNombre || 'No registrado') +
-                        '</div>' +
-
-                        '<div class="ob-acciones">' +
-                            '<button type="button" data-act="editar" data-id="' +
-                            Number(estudiante.id) + '">Abrir expediente</button>' +
-
-                            '<button type="button" class="ob-eliminar" data-act="eliminar" data-id="' +
-                            Number(estudiante.id) + '">Eliminar</button>' +
-                        '</div>' +
-                    '</article>'
-                );
+                        '<div><strong>' + esc(estudiante.nombre) + '</strong>' +
+                            '<small>Curso ' + esc(estudiante.curso) + ' · ' + esc(estudiante.jornada) + '</small></div>' +
+                    '</div>' +
+                    '<div class="ob-badges">' + insignia + '</div>' +
+                    '<div class="ob-nota">Acudiente: ' + esc(estudiante.acudienteNombre || 'No registrado') + '</div>' +
+                    '<div class="ob-acciones">' +
+                        '<button type="button" data-act="editar" data-id="' + Number(estudiante.id) + '">Abrir expediente</button>' +
+                        '<button type="button" class="ob-eliminar" data-act="eliminar" data-id="' + Number(estudiante.id) + '">Eliminar</button>' +
+                    '</div>' +
+                '</article>';
             }).join('')
             : '<p class="ob-vacio">No hay estudiantes que coincidan con la búsqueda.</p>';
     }
 
-
-    /* ABRIR Y CERRAR SECCIONES DEL EXPEDIENTE */
-
     function cambiarPanel(nombre) {
+        if (!tienePermisoAdministrativo()) return;
+
         var paneles = {
             actualizar: 'panelActualizar',
             observaciones: 'panelObservaciones',
-            documentos: 'panelDocumentos'
+            documentos: 'panelDocumentos',
+            observador: 'panelObservadorAcudientes'
         };
+
+        if (nombre === 'actualizar' || nombre === 'observador') {
+            if (!exigirPermisoAdministrativo('modificar estudiantes o gestionar acudientes')) return;
+        }
 
         Object.keys(paneles).forEach(function (clave) {
             $(paneles[clave]).hidden = clave !== nombre;
@@ -2762,21 +1024,19 @@
         $('tabActualizar').classList.toggle('active', nombre === 'actualizar');
         $('tabObservaciones').classList.toggle('active', nombre === 'observaciones');
         $('tabDocumentos').classList.toggle('active', nombre === 'documentos');
+        $('tabObservadorAcudientes').classList.toggle('active', nombre === 'observador');
 
-        $('tabObservaciones').setAttribute(
-            'aria-selected',
-            String(nombre === 'observaciones')
-        );
-
-        $('tabDocumentos').setAttribute(
-            'aria-selected',
-            String(nombre === 'documentos')
-        );
+        $('tabObservaciones').setAttribute('aria-selected', String(nombre === 'observaciones'));
+        $('tabDocumentos').setAttribute('aria-selected', String(nombre === 'documentos'));
+        $('tabObservadorAcudientes').setAttribute('aria-selected', String(nombre === 'observador'));
 
         if (nombre === 'documentos') renderDocumentos();
+        if (nombre === 'observador') cargarAcudientesVinculados();
     }
 
     function cargarCamposInformacion(estudiante) {
+        if (!estudiante || !tienePermisoAdministrativo()) return;
+
         $('fNombre').value = estudiante.nombre || '';
         $('fDocumentoEstudiante').value = estudiante.documentoEstudiante || '';
         $('fDireccionEstudiante').value = estudiante.direccionEstudiante || '';
@@ -2790,25 +1050,15 @@
         $('fAcudienteCorreo').value = estudiante.acudienteCorreo || '';
         $('fAcudienteDireccion').value = estudiante.acudienteDireccion || '';
         $('fAcudienteTrabajo').value = estudiante.acudienteTrabajo || '';
-        $('fAcudienteTelefonoTrabajo').value =
-            estudiante.acudienteTelefonoTrabajo || '';
+        $('fAcudienteTelefonoTrabajo').value = estudiante.acudienteTelefonoTrabajo || '';
     }
 
     function establecerModoLectura() {
         [
-            'fNombre',
-            'fDocumentoEstudiante',
-            'fDireccionEstudiante',
-            'fCurso',
-            'fJornada',
-            'fAcudienteNombre',
-            'fAcudienteParentesco',
-            'fAcudienteFijo',
-            'fAcudienteCel',
-            'fAcudienteCorreo',
-            'fAcudienteDireccion',
-            'fAcudienteTrabajo',
-            'fAcudienteTelefonoTrabajo'
+            'fNombre', 'fDocumentoEstudiante', 'fDireccionEstudiante', 'fCurso',
+            'fJornada', 'fAcudienteNombre', 'fAcudienteParentesco', 'fAcudienteFijo',
+            'fAcudienteCel', 'fAcudienteCorreo', 'fAcudienteDireccion',
+            'fAcudienteTrabajo', 'fAcudienteTelefonoTrabajo'
         ].forEach(function (id) {
             $(id).disabled = modoSoloLectura;
         });
@@ -2818,31 +1068,31 @@
         $('tabActualizar').hidden = modoSoloLectura;
         $('btnAbrirNuevaObs').hidden = modoSoloLectura;
         $('bloqueSubirDocumento').hidden = modoSoloLectura;
+        $('tabObservadorAcudientes').hidden = modoSoloLectura;
     }
 
     function abrirModalEstudiante(estudiante, lectura) {
+        if (!exigirPermisoAdministrativo('consultar expedientes de estudiantes')) return;
+        if (!estudiante) return;
+
         editId = estudiante.id;
+        estudianteAbierto = estudiante;
         modoSoloLectura = !!lectura;
 
-        $('modalNombreVista').textContent =
-            estudiante.nombre || 'Estudiante';
-
+        $('modalNombreVista').textContent = estudiante.nombre || 'Estudiante';
         $('modalAvatar').textContent = iniciales(estudiante.nombre);
 
         $('modalAvatar').style.background =
             COLORES[Math.abs(Number(estudiante.id)) % COLORES.length];
 
         $('modalCursoJornadaTxt').textContent =
-            'Curso ' + estudiante.curso +
-            ' · Jornada ' + estudiante.jornada;
+            'Curso ' + estudiante.curso + ' · Jornada ' + estudiante.jornada;
 
         cargarCamposInformacion(estudiante);
         establecerModoLectura();
         pintarObsModal(estudiante);
 
-        $('contadorObservaciones').textContent =
-            String(estudiante.observaciones.length);
-
+        $('contadorObservaciones').textContent = String(estudiante.observaciones.length);
         $('docTipo').value = '';
         $('docArchivo').value = '';
         $('docNombreOtro').value = '';
@@ -2853,22 +1103,16 @@
         $('obModal').showModal();
     }
 
-
-    /* MOSTRAR OBSERVACIONES */
-
     function pintarObsModal(estudiante) {
+        if (!tienePermisoAdministrativo()) return;
+
         var contenedor = $('modalListaObs');
         var observaciones = estudiante.observaciones || [];
 
-        $('contadorObservaciones').textContent =
-            String(observaciones.length);
+        $('contadorObservaciones').textContent = String(observaciones.length);
 
         if (!observaciones.length) {
-            contenedor.innerHTML =
-                '<div class="documento-vacio">' +
-                'Este estudiante todavía no tiene observaciones registradas.' +
-                '</div>';
-
+            contenedor.innerHTML = '<div class="documento-vacio">Este estudiante todavía no tiene observaciones registradas.</div>';
             return;
         }
 
@@ -2882,72 +1126,37 @@
             var clasificacion = obs.clasificacion || obs.falta || '';
 
             var firmaHTML = esImagenFirmaValida(obs.firma)
-                ? (
-                    '<div class="obs-firma">' +
-                        '<span class="obs-firma-titulo">Firma adjunta</span>' +
-                        '<img src="' + esc(obs.firma) +
-                        '" alt="Imagen de firma adjunta" loading="lazy">' +
-                        '<span class="obs-firma-ayuda-legal">' +
-                        'Imagen gráfica adjunta. La identidad del firmante ' +
-                        'debe verificarse mediante el procedimiento institucional.' +
-                        '</span>' +
-                    '</div>'
-                )
+                ? '<div class="obs-firma">' +
+                    '<span class="obs-firma-titulo">Firma adjunta</span>' +
+                    '<img src="' + esc(obs.firma) + '" alt="Imagen de firma adjunta" loading="lazy">' +
+                    '<span class="obs-firma-ayuda-legal">Imagen gráfica adjunta. La identidad del firmante debe verificarse mediante el procedimiento institucional.</span>' +
+                  '</div>'
                 : '';
 
             var acciones = modoSoloLectura
                 ? ''
-                : (
-                    '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">' +
-                        '<button type="button" class="expediente-secondary" onclick="editarObs(' +
-                        indice + ')">Editar</button>' +
+                : '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;">' +
+                    '<button type="button" class="expediente-secondary" onclick="editarObs(' + indice + ')">Editar</button>' +
+                    '<button type="button" onclick="eliminarObs(' + indice + ')" style="padding:8px 10px;color:#b42318;background:#fff0ef;border:1px solid #ffc9c4;border-radius:8px;font-size:12px;cursor:pointer;">Eliminar</button>' +
+                  '</div>';
 
-                        '<button type="button" onclick="eliminarObs(' +
-                        indice + ')" style="padding:8px 10px;color:#b42318;background:#fff0ef;border:1px solid #ffc9c4;border-radius:8px;font-size:12px;cursor:pointer;">Eliminar</button>' +
-                    '</div>'
-                );
-
-            return (
-                '<div class="obs-card-item">' +
-
-                    '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
-                        '<span style="padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800;' +
-                        colorTipo + '">' + esc(tipo) + '</span>' +
-
-                        '<small style="color:var(--ov-secundario);">' +
-                        esc(obs.fecha || 'Sin fecha') + '</small>' +
-                    '</div>' +
-
-                    (
-                        clasificacion
-                            ? '<span class="obs-clasificacion ' +
-                                claseFalta(clasificacion) + '">' +
-                                esc(etiquetaFalta(clasificacion)) + '</span>' +
-                                '<p class="obs-clasificacion-desc">' +
-                                esc(AYUDAS_FALTAS[clasificacion] || '') + '</p>'
-                            : '<p class="obs-clasificacion-desc">Esta observación no tiene clasificación guardada.</p>'
-                    ) +
-
-                    '<p style="margin:8px 0;line-height:1.7;white-space:pre-wrap;">' +
-                    esc(obs.desc || 'Sin descripción.') + '</p>' +
-
-                    (
-                        obs.compromiso
-                            ? '<p style="margin:8px 0;line-height:1.6;"><strong>Compromiso:</strong> ' +
-                                esc(obs.compromiso) + '</p>'
-                            : ''
-                    ) +
-
-                    firmaHTML +
-                    acciones +
-
-                '</div>'
-            );
+            return '<div class="obs-card-item">' +
+                '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">' +
+                    '<span style="padding:5px 9px;border-radius:99px;font-size:11px;font-weight:800;' + colorTipo + '">' + esc(tipo) + '</span>' +
+                    '<small style="color:var(--ov-secundario);">' + esc(obs.fecha || 'Sin fecha') + '</small>' +
+                '</div>' +
+                (
+                    clasificacion
+                        ? '<span class="obs-clasificacion ' + claseFalta(clasificacion) + '">' + esc(etiquetaFalta(clasificacion)) + '</span>' +
+                            '<p class="obs-clasificacion-desc">' + esc(AYUDAS_FALTAS[clasificacion] || '') + '</p>'
+                        : '<p class="obs-clasificacion-desc">Esta observación no tiene clasificación guardada.</p>'
+                ) +
+                '<p style="margin:8px 0;line-height:1.7;white-space:pre-wrap;">' + esc(obs.desc || 'Sin descripción.') + '</p>' +
+                (obs.compromiso ? '<p style="margin:8px 0;line-height:1.6;"><strong>Compromiso:</strong> ' + esc(obs.compromiso) + '</p>' : '') +
+                firmaHTML + acciones +
+            '</div>';
         }).join('');
     }
-
-
-    /* EDITAR OBSERVACIONES */
 
     function actualizarAyudaFalta() {
         $('obsFaltaAyuda').textContent =
@@ -2960,8 +1169,7 @@
             $('obsFirmaPreviewImg').src = firmaActual;
             $('obsFirmaPreview').hidden = false;
             $('obsFirmaNombre').textContent = 'Firma adjunta';
-            $('obsFirmaEstado').textContent =
-                'Esta imagen aparecerá debajo de la observación guardada.';
+            $('obsFirmaEstado').textContent = 'Esta imagen aparecerá debajo de la observación guardada.';
         } else {
             $('obsFirmaPreviewImg').removeAttribute('src');
             $('obsFirmaPreview').hidden = true;
@@ -2981,15 +1189,14 @@
         firmaSolicitud++;
         firmaProcesando = false;
 
-        $('formNuevaObs')
-            .querySelector('button[type="submit"]').disabled = false;
+        $('formNuevaObs').querySelector('button[type="submit"]').disabled = false;
 
         actualizarAyudaFalta();
         actualizarVistaFirma();
     }
 
     function abrirEditorObservacion(obs, indice) {
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('crear o editar observaciones')) return;
 
         editObsIndex = indice;
         limpiarFormularioObservacion();
@@ -3000,39 +1207,33 @@
             $('obsDesc').value = obs.desc || '';
             $('obsCompromiso').value = obs.compromiso || '';
             $('obsFalta').value = obs.clasificacion || obs.falta || '';
-
-            firmaActual = esImagenFirmaValida(obs.firma)
-                ? obs.firma
-                : '';
+            firmaActual = esImagenFirmaValida(obs.firma) ? obs.firma : '';
         }
 
-        $('formNuevaObs')
-            .querySelector('button[type="submit"]').textContent =
+        $('formNuevaObs').querySelector('button[type="submit"]').textContent =
             obs ? 'Guardar cambios' : 'Guardar observación';
 
         actualizarAyudaFalta();
         actualizarVistaFirma();
-
         $('modalNuevaObs').showModal();
     }
 
     window.editarObs = function (indice) {
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('editar observaciones')) return;
 
         var estudiante = datos.find(function (item) {
-            return item.id === editId;
+            return Number(item.id) === Number(editId);
         });
 
         if (!estudiante || !estudiante.observaciones[indice]) return;
-
         abrirEditorObservacion(estudiante.observaciones[indice], indice);
     };
 
     window.eliminarObs = function (indice) {
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('eliminar observaciones')) return;
 
         var estudiante = datos.find(function (item) {
-            return item.id === editId;
+            return Number(item.id) === Number(editId);
         });
 
         if (!estudiante) return;
@@ -3051,7 +1252,7 @@
     };
 
     $('btnAbrirNuevaObs').addEventListener('click', function () {
-        if (!modoSoloLectura) {
+        if (tienePermisoAdministrativo() && !modoSoloLectura) {
             abrirEditorObservacion(null, null);
         }
     });
@@ -3065,7 +1266,7 @@
     $('formNuevaObs').addEventListener('submit', function (evento) {
         evento.preventDefault();
 
-        if (modoSoloLectura || firmaProcesando) return;
+        if (!exigirPermisoAdministrativo('guardar observaciones') || modoSoloLectura || firmaProcesando) return;
 
         var tipo = $('obsTipo').value;
         var fecha = $('obsFecha').value;
@@ -3077,7 +1278,7 @@
         }
 
         var estudiante = datos.find(function (item) {
-            return item.id === editId;
+            return Number(item.id) === Number(editId);
         });
 
         if (!estudiante) return;
@@ -3106,7 +1307,6 @@
             } else {
                 estudiante.observaciones.pop();
             }
-
             return;
         }
 
@@ -3116,12 +1316,10 @@
         limpiarFormularioObservacion();
     });
 
-
-    /* CARGAR IMAGEN DE FIRMA */
-
     $('obsFirmaArchivo').addEventListener('change', function (evento) {
-        var archivo = evento.target.files && evento.target.files[0];
+        if (!exigirPermisoAdministrativo('adjuntar firmas')) return;
 
+        var archivo = evento.target.files && evento.target.files[0];
         if (!archivo) return;
 
         var solicitudActual = ++firmaSolicitud;
@@ -3140,9 +1338,7 @@
 
         firmaProcesando = true;
 
-        var botonGuardar = $('formNuevaObs')
-            .querySelector('button[type="submit"]');
-
+        var botonGuardar = $('formNuevaObs').querySelector('button[type="submit"]');
         botonGuardar.disabled = true;
         $('obsFirmaPreview').hidden = false;
         $('obsFirmaEstado').textContent = 'Preparando imagen…';
@@ -3151,11 +1347,9 @@
 
         lector.onerror = function () {
             if (solicitudActual !== firmaSolicitud) return;
-
             firmaProcesando = false;
             botonGuardar.disabled = false;
             actualizarVistaFirma();
-
             alert('No se pudo leer la imagen.');
         };
 
@@ -3166,11 +1360,9 @@
 
             imagen.onerror = function () {
                 if (solicitudActual !== firmaSolicitud) return;
-
                 firmaProcesando = false;
                 botonGuardar.disabled = false;
                 actualizarVistaFirma();
-
                 alert('No se pudo procesar la imagen seleccionada.');
             };
 
@@ -3178,64 +1370,39 @@
                 if (solicitudActual !== firmaSolicitud) return;
 
                 try {
-                    var proporcion = Math.min(
-                        1,
-                        1200 / imagen.naturalWidth,
-                        420 / imagen.naturalHeight
-                    );
-
+                    var proporcion = Math.min(1, 1200 / imagen.naturalWidth, 420 / imagen.naturalHeight);
                     var canvas = document.createElement('canvas');
 
-                    canvas.width = Math.max(
-                        1,
-                        Math.round(imagen.naturalWidth * proporcion)
-                    );
+                    canvas.width = Math.max(1, Math.round(imagen.naturalWidth * proporcion));
+                    canvas.height = Math.max(1, Math.round(imagen.naturalHeight * proporcion));
 
-                    canvas.height = Math.max(
-                        1,
-                        Math.round(imagen.naturalHeight * proporcion)
-                    );
-
-                    canvas.getContext('2d').drawImage(
-                        imagen, 0, 0, canvas.width, canvas.height
-                    );
+                    canvas.getContext('2d').drawImage(imagen, 0, 0, canvas.width, canvas.height);
 
                     var resultado = canvas.toDataURL('image/png');
 
                     if (resultado.length > 300000) {
                         var webp = canvas.toDataURL('image/webp', .84);
-
-                        if (webp.indexOf('data:image/webp;base64,') === 0) {
-                            resultado = webp;
-                        }
+                        if (webp.indexOf('data:image/webp;base64,') === 0) resultado = webp;
                     }
 
                     if (resultado.length > 450000) {
                         firmaProcesando = false;
                         botonGuardar.disabled = false;
                         actualizarVistaFirma();
-
                         alert('La imagen sigue siendo muy grande. Reduce su tamaño.');
-
                         return;
                     }
 
                     firmaActual = resultado;
                     firmaProcesando = false;
                     botonGuardar.disabled = false;
-
                     actualizarVistaFirma();
-
-                    $('obsFirmaEstado').textContent =
-                        'Imagen lista para adjuntar.';
-
+                    $('obsFirmaEstado').textContent = 'Imagen lista para adjuntar.';
                 } catch (error) {
                     console.error(error);
-
                     firmaProcesando = false;
                     botonGuardar.disabled = false;
                     actualizarVistaFirma();
-
                     alert('No fue posible preparar la imagen.');
                 }
             };
@@ -3247,28 +1414,21 @@
     });
 
     $('btnQuitarFirma').addEventListener('click', function () {
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('quitar firmas') || modoSoloLectura) return;
 
         firmaSolicitud++;
         firmaActual = '';
         firmaProcesando = false;
-
         $('obsFirmaArchivo').value = '';
-
-        $('formNuevaObs')
-            .querySelector('button[type="submit"]').disabled = false;
-
+        $('formNuevaObs').querySelector('button[type="submit"]').disabled = false;
         actualizarVistaFirma();
     });
 
-
-    /* ACTUALIZAR INFORMACIÓN DEL ESTUDIANTE */
-
     $('btnGuardarInformacion').addEventListener('click', function () {
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('modificar estudiantes') || modoSoloLectura) return;
 
         var estudiante = datos.find(function (item) {
-            return item.id === editId;
+            return Number(item.id) === Number(editId);
         });
 
         if (!estudiante) return;
@@ -3285,12 +1445,11 @@
             direccionEstudiante: $('fDireccionEstudiante').value.trim(),
             curso: +$('fCurso').value,
             jornada: $('fJornada').value,
-
             acudienteNombre: $('fAcudienteNombre').value.trim(),
             acudienteParentesco: $('fAcudienteParentesco').value,
             acudienteFijo: $('fAcudienteFijo').value.trim(),
             acudienteCel: $('fAcudienteCel').value.trim(),
-            acudienteCorreo: $('fAcudienteCorreo').value.trim(),
+            acudienteCorreo: normalizarCorreo($('fAcudienteCorreo').value),
             acudienteDireccion: $('fAcudienteDireccion').value.trim(),
             acudienteTrabajo: $('fAcudienteTrabajo').value.trim(),
             acudienteTelefonoTrabajo: $('fAcudienteTelefonoTrabajo').value.trim()
@@ -3305,46 +1464,38 @@
 
         if (!guardar()) {
             Object.keys(anteriores).forEach(function (campo) {
-                if (anteriores[campo] === undefined) {
-                    delete estudiante[campo];
-                } else {
-                    estudiante[campo] = anteriores[campo];
-                }
+                if (anteriores[campo] === undefined) delete estudiante[campo];
+                else estudiante[campo] = anteriores[campo];
             });
-
             return;
         }
 
         $('modalNombreVista').textContent = estudiante.nombre;
         $('modalAvatar').textContent = iniciales(estudiante.nombre);
-
-        $('modalCursoJornadaTxt').textContent =
-            'Curso ' + estudiante.curso + ' · Jornada ' + estudiante.jornada;
+        $('modalCursoJornadaTxt').textContent = 'Curso ' + estudiante.curso + ' · Jornada ' + estudiante.jornada;
 
         render();
         cambiarPanel('observaciones');
-
-        alert('La información se actualizó en este navegador.');
+        guardadoFirebaseEnCurso.then(function () {
+            alert('La información se guardó en Firebase correctamente.');
+        }).catch(function () {});
     });
 
     $('btnCancelarInformacion').addEventListener('click', function () {
+        if (!tienePermisoAdministrativo()) return;
+
         var estudiante = datos.find(function (item) {
-            return item.id === editId;
+            return Number(item.id) === Number(editId);
         });
 
-        if (estudiante) {
-            cargarCamposInformacion(estudiante);
-        }
-
+        if (estudiante) cargarCamposInformacion(estudiante);
         cambiarPanel('observaciones');
     });
 
-
-    /* DOCUMENTOS: SUBIR, LISTAR, DESCARGAR Y ELIMINAR */
-
     $('docTipo').addEventListener('change', function () {
-        var esOtro = $('docTipo').value === 'otro';
+        if (!tienePermisoAdministrativo()) return;
 
+        var esOtro = $('docTipo').value === 'otro';
         $('campoNombreOtroDocumento').hidden = !esOtro;
         $('docNombreOtro').required = esOtro;
     });
@@ -3364,77 +1515,53 @@
     }
 
     function renderDocumentos() {
+        if (!exigirPermisoAdministrativo('consultar documentos')) return;
+
         var estudianteId = editId;
 
-        $('documentosLista').innerHTML =
-            '<div class="documento-vacio">Cargando documentos...</div>';
+        $('documentosLista').innerHTML = '<div class="documento-vacio">Cargando documentos...</div>';
 
         listarDocumentosDB(estudianteId)
             .then(function (documentos) {
-                if (Number(editId) !== Number(estudianteId)) return;
+                if (!tienePermisoAdministrativo() || Number(editId) !== Number(estudianteId)) return;
 
                 $('contadorDocumentos').textContent = String(documentos.length);
 
                 if (!documentos.length) {
-                    $('documentosLista').innerHTML =
-                        '<div class="documento-vacio">' +
-                        'Todavía no hay documentos guardados para este estudiante.' +
-                        '</div>';
-
+                    $('documentosLista').innerHTML = '<div class="documento-vacio">Todavía no hay documentos guardados para este estudiante.</div>';
                     return;
                 }
 
                 $('documentosLista').innerHTML = documentos.map(function (doc) {
-                    var nombre = nombreTipoDocumento(
-                        doc.tipo,
-                        doc.nombrePersonalizado
-                    );
+                    var nombre = nombreTipoDocumento(doc.tipo, doc.nombrePersonalizado);
 
-                    var botones =
-                        '<button type="button" data-doc-act="descargar" data-doc-id="' +
-                        esc(doc.id) + '">Descargar</button>';
+                    var botones = '<button type="button" data-doc-act="descargar" data-doc-id="' + esc(doc.id) + '">Descargar</button>';
 
                     if (!modoSoloLectura) {
-                        botones +=
-                            '<button type="button" data-doc-act="eliminar" data-doc-id="' +
-                            esc(doc.id) + '">Eliminar</button>';
+                        botones += '<button type="button" data-doc-act="eliminar" data-doc-id="' + esc(doc.id) + '">Eliminar</button>';
                     }
 
-                    return (
-                        '<article class="documento-card">' +
-                            '<div class="documento-card-title">' +
-                            esc(nombre) + '</div>' +
-
-                            '<div class="documento-card-meta">' +
-                            esc(doc.nombreArchivo) + '<br>' +
-                            esc(formatoTamano(doc.size || 0)) +
-                            ' · ' + esc(fechaLegible(doc.creado)) +
-                            '</div>' +
-
-                            '<div class="documento-card-actions">' +
-                            botones + '</div>' +
-                        '</article>'
-                    );
+                    return '<article class="documento-card">' +
+                        '<div class="documento-card-title">' + esc(nombre) + '</div>' +
+                        '<div class="documento-card-meta">' + esc(doc.nombreArchivo) + '<br>' +
+                            esc(formatoTamano(doc.size || 0)) + ' · ' + esc(fechaLegible(doc.creado)) +
+                        '</div>' +
+                        '<div class="documento-card-actions">' + botones + '</div>' +
+                    '</article>';
                 }).join('');
             })
             .catch(function (error) {
                 console.error(error);
-
-                $('documentosLista').innerHTML =
-                    '<div class="documento-vacio">' +
-                    'No se pudieron cargar los documentos en este navegador.' +
-                    '</div>';
+                $('documentosLista').innerHTML = '<div class="documento-vacio">No se pudieron cargar los documentos en este navegador.</div>';
             });
     }
 
     $('formSubirDocumento').addEventListener('submit', function (evento) {
         evento.preventDefault();
 
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('subir documentos') || modoSoloLectura) return;
 
-        var archivo = $('docArchivo').files &&
-            $('docArchivo').files[0];
-
+        var archivo = $('docArchivo').files && $('docArchivo').files[0];
         var tipo = $('docTipo').value;
         var otro = $('docNombreOtro').value.trim();
 
@@ -3449,17 +1576,9 @@
         }
 
         var extensiones = /\.(pdf|png|jpe?g|webp)$/i;
-        var tiposPermitidos = [
-            'application/pdf',
-            'image/png',
-            'image/jpeg',
-            'image/webp'
-        ];
+        var tiposPermitidos = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp'];
 
-        if (
-            tiposPermitidos.indexOf(archivo.type) === -1 &&
-            !extensiones.test(archivo.name)
-        ) {
+        if (tiposPermitidos.indexOf(archivo.type) === -1 && !extensiones.test(archivo.name)) {
             alert('Formato no admitido. Selecciona un PDF o una imagen compatible.');
             return;
         }
@@ -3470,14 +1589,11 @@
         }
 
         var boton = $('btnSubirDocumento');
-
         boton.disabled = true;
         boton.textContent = 'Guardando…';
 
         var documento = {
-            id: 'doc_' + Date.now() + '_' +
-                Math.random().toString(36).slice(2, 9),
-
+            id: 'doc_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9),
             estudianteId: Number(editId),
             tipo: tipo,
             nombrePersonalizado: otro,
@@ -3490,19 +1606,16 @@
 
         guardarDocumentoDB(documento)
             .then(function () {
+                if (!tienePermisoAdministrativo()) return;
+
                 $('formSubirDocumento').reset();
                 $('campoNombreOtroDocumento').hidden = true;
                 $('docNombreOtro').required = false;
-
                 renderDocumentos();
             })
             .catch(function (error) {
                 console.error(error);
-
-                alert(
-                    'No se pudo guardar el documento. Revisa el espacio ' +
-                    'disponible del navegador e inténtalo de nuevo.'
-                );
+                alert('No se pudo guardar el documento. Revisa el espacio disponible del navegador e inténtalo de nuevo.');
             })
             .finally(function () {
                 boton.disabled = false;
@@ -3511,8 +1624,9 @@
     });
 
     $('documentosLista').addEventListener('click', function (evento) {
-        var boton = evento.target.closest('button[data-doc-act]');
+        if (!exigirPermisoAdministrativo('gestionar documentos')) return;
 
+        var boton = evento.target.closest('button[data-doc-act]');
         if (!boton) return;
 
         var id = boton.dataset.docId;
@@ -3520,6 +1634,8 @@
         if (boton.dataset.docAct === 'descargar') {
             obtenerDocumentoDB(id)
                 .then(function (doc) {
+                    if (!tienePermisoAdministrativo()) return;
+
                     if (!doc || !doc.blob) {
                         alert('No se encontró el archivo.');
                         return;
@@ -3529,7 +1645,6 @@
                     objectUrls.push(url);
 
                     var enlace = document.createElement('a');
-
                     enlace.href = url;
                     enlace.download = doc.nombreArchivo || 'documento';
 
@@ -3539,7 +1654,6 @@
 
                     setTimeout(function () {
                         URL.revokeObjectURL(url);
-
                         objectUrls = objectUrls.filter(function (item) {
                             return item !== url;
                         });
@@ -3549,7 +1663,6 @@
                     console.error(error);
                     alert('No fue posible descargar el documento.');
                 });
-
         } else if (boton.dataset.docAct === 'eliminar') {
             if (modoSoloLectura) return;
 
@@ -3564,18 +1677,14 @@
         }
     });
 
-
-    /* BOTONES DEL EXPEDIENTE */
-
     $('tabActualizar').addEventListener('click', function () {
-        if (modoSoloLectura) return;
+        if (!exigirPermisoAdministrativo('modificar estudiantes') || modoSoloLectura) return;
 
-        cargarCamposInformacion(
-            datos.find(function (item) {
-                return item.id === editId;
-            })
-        );
+        var estudiante = datos.find(function (item) {
+            return Number(item.id) === Number(editId);
+        });
 
+        if (estudiante) cargarCamposInformacion(estudiante);
         cambiarPanel('actualizar');
     });
 
@@ -3587,6 +1696,12 @@
         cambiarPanel('documentos');
     });
 
+    $('tabObservadorAcudientes').addEventListener('click', function () {
+        if (!modoSoloLectura && tienePermisoAdministrativo()) {
+            cambiarPanel('observador');
+        }
+    });
+
     $('obCerrarPrincipal').addEventListener('click', function () {
         $('obModal').close();
     });
@@ -3595,41 +1710,35 @@
         $('obModal').close();
     });
 
-
-    /* FILTROS Y BÚSQUEDA */
-
     $('obBuscar').addEventListener('input', render);
     $('obCurso').addEventListener('change', render);
     $('obJornada').addEventListener('change', render);
 
     $('obFiltros').addEventListener('click', function (evento) {
-        var boton = evento.target.closest('.ob-filtro');
+        if (!exigirPermisoAdministrativo('filtrar estudiantes')) return;
 
+        var boton = evento.target.closest('.ob-filtro');
         if (!boton) return;
 
         filtro = boton.dataset.f;
 
-        document.querySelectorAll('#obFiltros .ob-filtro')
-            .forEach(function (item) {
-                item.classList.toggle('activo', item === boton);
-            });
+        document.querySelectorAll('#obFiltros .ob-filtro').forEach(function (item) {
+            item.classList.toggle('activo', item === boton);
+        });
 
         render();
     });
 
-
-    /* CREAR ESTUDIANTE */
-
     $('obAgregar').addEventListener('click', function () {
+        if (!exigirPermisoAdministrativo('agregar estudiantes')) return;
+
         var nuevo = {
             id: Date.now(),
             nombre: '',
             curso: +$('obCurso').value,
             jornada: $('obJornada').value,
-
             documentoEstudiante: '',
             direccionEstudiante: '',
-
             acudienteNombre: '',
             acudienteParentesco: '',
             acudienteFijo: '',
@@ -3638,7 +1747,6 @@
             acudienteDireccion: '',
             acudienteTrabajo: '',
             acudienteTelefonoTrabajo: '',
-
             observaciones: []
         };
 
@@ -3655,10 +1763,9 @@
         $('fNombre').focus();
     });
 
-
-    /* ACCIONES DE TARJETA */
-
     $('obGrid').addEventListener('click', function (evento) {
+        if (!exigirPermisoAdministrativo('abrir o gestionar estudiantes')) return;
+
         var boton = evento.target.closest('button[data-act]');
         var tarjeta = evento.target.closest('.ob-card');
 
@@ -3677,12 +1784,12 @@
         if (!estudiante) return;
 
         if (boton && boton.dataset.act === 'eliminar') {
-            if (
-                confirm(
-                    '¿Eliminar a ' +
-                    (estudiante.nombre || 'este estudiante') + '?'
-                )
-            ) {
+            if (!puedeEliminarEstudiantes()) {
+                alert('Solo rectoría o administración pueden eliminar expedientes de estudiantes.');
+                return;
+            }
+
+            if (confirm('¿Eliminar a ' + (estudiante.nombre || 'este estudiante') + '?')) {
                 var anteriores = datos;
 
                 datos = datos.filter(function (item) {
@@ -3696,26 +1803,30 @@
 
                 render();
 
+                if (window.ovFirebase && window.ovFirebase.firestore && window.ovFirebase.db) {
+                    window.ovFirebase.firestore.deleteDoc(
+                        window.ovFirebase.firestore.doc(window.ovFirebase.db, 'estudiantes', String(id))
+                    ).catch(function (error) {
+                        console.error('No se pudo eliminar el expediente de Firestore:', error);
+                        alert('El estudiante se quitó de la vista, pero no se pudo eliminar de Firebase. Revisa los permisos de rectoría o administración.');
+                    });
+                }
+
                 eliminarDocumentosEstudianteDB(id).catch(function (error) {
                     console.warn('No se pudieron eliminar documentos locales:', error);
                 });
             }
-
-        } else if (boton && boton.dataset.act === 'ver') {
-            abrirModalEstudiante(estudiante, true);
-
         } else {
             abrirModalEstudiante(estudiante, false);
         }
     });
 
     $('obGrid').addEventListener('keydown', function (evento) {
+        if (!exigirPermisoAdministrativo('abrir expedientes')) return;
         if (evento.target.closest('button')) return;
-
         if (evento.key !== 'Enter' && evento.key !== ' ') return;
 
         var tarjeta = evento.target.closest('.ob-card');
-
         if (!tarjeta) return;
 
         evento.preventDefault();
@@ -3724,20 +1835,382 @@
             return Number(item.id) === Number(tarjeta.dataset.studentId);
         });
 
-        if (estudiante) {
-            abrirModalEstudiante(estudiante, false);
+        if (estudiante) abrirModalEstudiante(estudiante, false);
+    });
+
+    function idVinculo(estudianteId, acudienteUid) {
+        return String(estudianteId) + '_' + String(acudienteUid);
+    }
+
+    async function buscarUsuarioPorCorreo(correo) {
+        if (!tienePermisoAdministrativo()) {
+            throw new Error('PERMISO_DENEGADO');
+        }
+
+        if (!window.ovFirebase) throw new Error('Firebase aún no está listo.');
+
+        var db = window.ovFirebase.db;
+        var firestore = window.ovFirebase.firestore;
+
+        var usuariosRef = firestore.collection(db, 'usuarios');
+        var consultas = [
+            firestore.query(usuariosRef, firestore.where('correo', '==', correo)),
+            firestore.query(usuariosRef, firestore.where('email', '==', correo)),
+            firestore.query(usuariosRef, firestore.where('correoElectronico', '==', correo))
+        ];
+
+        for (var i = 0; i < consultas.length; i++) {
+            var resultado = await firestore.getDocs(consultas[i]);
+
+            if (!tienePermisoAdministrativo()) {
+                throw new Error('PERMISO_DENEGADO');
+            }
+
+            if (!resultado.empty) {
+                var encontrados = resultado.docs.filter(function (documento) {
+                    var info = documento.data();
+                    var rol = String(info.rol || info.tipoUsuario || info.tipoCuenta || '').trim().toUpperCase();
+                    return rol === 'ACUDIENTE';
+                });
+
+                if (encontrados.length) {
+                    return encontrados[0];
+                }
+
+                throw new Error('ROL_INCORRECTO');
+            }
+        }
+
+        throw new Error('NO_ENCONTRADO');
+    }
+
+    async function obtenerVinculo(estudianteId, acudienteUid) {
+        if (!tienePermisoAdministrativo()) {
+            throw new Error('PERMISO_DENEGADO');
+        }
+
+        var firestore = window.ovFirebase.firestore;
+        var referencia = firestore.doc(
+            window.ovFirebase.db,
+            'vinculosEstudiantes',
+            idVinculo(estudianteId, acudienteUid)
+        );
+
+        return firestore.getDoc(referencia);
+    }
+
+    async function vincularAcudiente(estudiante, correo) {
+        if (!exigirPermisoAdministrativo('vincular acudientes')) {
+            throw new Error('PERMISO_DENEGADO');
+        }
+
+        var firestore = window.ovFirebase.firestore;
+        var usuario = await buscarUsuarioPorCorreo(correo);
+        var datosUsuario = usuario.data();
+
+        var yaVinculado = await obtenerVinculo(estudiante.id, usuario.id);
+
+        if (yaVinculado.exists()) {
+            throw new Error('YA_VINCULADO');
+        }
+
+        var referencia = firestore.doc(
+            window.ovFirebase.db,
+            'vinculosEstudiantes',
+            idVinculo(estudiante.id, usuario.id)
+        );
+
+        var nombreAcudiente = [
+            datosUsuario.nombreCompleto,
+            datosUsuario.nombreYApellido,
+            datosUsuario.nombre,
+            datosUsuario.nombres,
+            datosUsuario.apellidos
+        ].filter(function (valor) {
+            return typeof valor === 'string' && valor.trim();
+        })[0] || correo;
+
+        await firestore.setDoc(referencia, {
+            estudianteId: String(estudiante.id),
+            estudianteNombre: estudiante.nombre || 'Estudiante',
+            curso: Number(estudiante.curso || 0),
+            jornada: estudiante.jornada || '',
+            acudienteUid: usuario.id,
+            acudienteCorreo: correo,
+            acudienteNombre: nombreAcudiente,
+            creadoPorUid: usuarioActual.uid,
+            creadoPorCorreo: usuarioActual.email || '',
+            creadoEn: firestore.serverTimestamp()
+        });
+
+        return {
+            uid: usuario.id,
+            correo: correo,
+            nombre: nombreAcudiente
+        };
+    }
+
+    async function cargarAcudientesVinculados() {
+        if (!tienePermisoAdministrativo() || !estudianteAbierto || !window.ovFirebase) return;
+
+        var contenedor = $('listaAcudientesVinculados');
+        contenedor.innerHTML = '<p>Cargando vinculaciones...</p>';
+
+        try {
+            var firestore = window.ovFirebase.firestore;
+            var consulta = firestore.query(
+                firestore.collection(window.ovFirebase.db, 'vinculosEstudiantes'),
+                firestore.where('estudianteId', '==', String(estudianteAbierto.id))
+            );
+
+            var resultado = await firestore.getDocs(consulta);
+
+            if (!tienePermisoAdministrativo() || !estudianteAbierto) return;
+
+            if (!resultado.size) {
+                contenedor.innerHTML = '<p>No hay acudientes vinculados a este estudiante.</p>';
+                return;
+            }
+
+            contenedor.innerHTML = resultado.docs.map(function (documento) {
+                var vinculo = documento.data();
+
+                return '<div class="ob-acudiente-vinculado">' +
+                    '<div>' +
+                        '<strong>' + esc(vinculo.acudienteNombre || 'Acudiente') + '</strong>' +
+                        '<p>' + esc(vinculo.acudienteCorreo || '') + '</p>' +
+                    '</div>' +
+                    '<button type="button" data-quitar-vinculo="' + esc(documento.id) + '">Desvincular</button>' +
+                '</div>';
+            }).join('');
+        } catch (error) {
+            console.error('Error consultando acudientes vinculados:', error);
+            contenedor.innerHTML = '<p>No fue posible cargar los acudientes vinculados. Revisa las reglas de seguridad de Firestore.</p>';
+        }
+    }
+
+    $('formVincularAcudiente').addEventListener('submit', async function (evento) {
+        evento.preventDefault();
+
+        if (!exigirPermisoAdministrativo('vincular acudientes') || !estudianteAbierto) return;
+
+        var correo = normalizarCorreo($('correoVincularAcudiente').value);
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+            mostrarMensajeVinculo('Ingresa un correo electrónico válido.', 'error');
+            return;
+        }
+
+        var boton = $('btnVincularAcudiente');
+        boton.disabled = true;
+        boton.textContent = 'Vinculando…';
+        mostrarMensajeVinculo('', '');
+
+        try {
+            await vincularAcudiente(estudianteAbierto, correo);
+
+            if (!tienePermisoAdministrativo()) return;
+
+            $('correoVincularAcudiente').value = '';
+            mostrarMensajeVinculo('El acudiente se ha vinculado correctamente a este estudiante.', 'exito');
+            await cargarAcudientesVinculados();
+        } catch (error) {
+            console.error('Error al vincular acudiente:', error);
+
+            if (error.message === 'NO_ENCONTRADO') {
+                mostrarMensajeVinculo('No existe una cuenta registrada con ese correo electrónico.', 'error');
+            } else if (error.message === 'YA_VINCULADO') {
+                mostrarMensajeVinculo('Este acudiente ya está vinculado a este estudiante.', 'error');
+            } else if (error.message === 'ROL_INCORRECTO') {
+                mostrarMensajeVinculo('La cuenta encontrada no tiene el rol Acudiente.', 'error');
+            } else if (error.message === 'PERMISO_DENEGADO') {
+                mostrarMensajeVinculo('Tu cuenta no tiene permiso para realizar esta operación.', 'error');
+            } else {
+                mostrarMensajeVinculo('No se pudo completar la vinculación. Comprueba los permisos de Firestore e inténtalo de nuevo.', 'error');
+            }
+        } finally {
+            boton.disabled = false;
+            boton.textContent = 'Vincular acudiente';
         }
     });
 
+    $('listaAcudientesVinculados').addEventListener('click', async function (evento) {
+        if (!exigirPermisoAdministrativo('desvincular acudientes')) return;
 
-    /* INICIALIZACIÓN */
+        var boton = evento.target.closest('button[data-quitar-vinculo]');
+        if (!boton) return;
+
+        if (!confirm('¿Desvincular esta cuenta del estudiante?')) return;
+
+        try {
+            await window.ovFirebase.firestore.deleteDoc(
+                window.ovFirebase.firestore.doc(
+                    window.ovFirebase.db,
+                    'vinculosEstudiantes',
+                    boton.dataset.quitarVinculo
+                )
+            );
+
+            if (!tienePermisoAdministrativo()) return;
+
+            mostrarMensajeVinculo('La vinculación se eliminó correctamente.', 'exito');
+            await cargarAcudientesVinculados();
+        } catch (error) {
+            console.error(error);
+            mostrarMensajeVinculo('No se pudo eliminar la vinculación. Comprueba las reglas de Firestore.', 'error');
+        }
+    });
+
+    async function cargarEstudiantesAcudiente() {
+        if (!usuarioActual || rolActual !== 'ACUDIENTE' || !window.ovFirebase) return;
+
+        var contenedor = $('obEstudiantesAcudiente');
+        contenedor.innerHTML = '<p>Cargando tus estudiantes...</p>';
+
+        try {
+            var firestore = window.ovFirebase.firestore;
+            var correo = String(usuarioActual.email || '').trim().toLowerCase();
+            if (!correo) {
+                contenedor.innerHTML = '<p>Tu cuenta no tiene un correo verificado para consultar los estudiantes. Contacta a la institución.</p>';
+                return;
+            }
+
+            // La consulta por correo coincide con la condición de lectura de las reglas de Firestore.
+            var consulta = firestore.query(
+                firestore.collection(window.ovFirebase.db, 'estudiantes'),
+                firestore.where('acudienteCorreo', '==', correo)
+            );
+            var resultado = await firestore.getDocs(consulta);
+
+            if (!usuarioActual || rolActual !== 'ACUDIENTE') return;
+            if (resultado.empty) {
+                contenedor.innerHTML = '<p>Aún no hay estudiantes asociados al correo de tu cuenta. Verifica con la institución que el campo acudienteCorreo esté registrado correctamente.</p>';
+                return;
+            }
+
+            contenedor.innerHTML = resultado.docs.map(function (documento) {
+                var estudiante = documento.data() || {};
+                var observaciones = Array.isArray(estudiante.observaciones) ? estudiante.observaciones : [];
+                var listaObs = observaciones.length
+                    ? '<div class="ob-observaciones-acudiente"><h4>Observaciones (' + observaciones.length + ')</h4>' + observaciones.map(function (obs) {
+                        return '<div class="ob-observador-aviso"><strong>' + esc(obs.tipo || 'Observación') + ' · ' + esc(obs.fecha || 'Sin fecha') + '</strong><p>' + esc(obs.desc || 'Sin descripción.') + '</p>' + (obs.compromiso ? '<p><strong>Compromiso:</strong> ' + esc(obs.compromiso) + '</p>' : '') + '</div>';
+                    }).join('') + '</div>'
+                    : '<p class="ob-observador-aviso">Este estudiante todavía no tiene observaciones registradas.</p>';
+                var idDocumento = documento.id;
+                return '<article class="ob-vinculado-card" data-estudiante-doc="' + esc(idDocumento) + '">' +
+                    '<h3>' + esc(estudiante.nombre || 'Estudiante') + '</h3>' +
+                    '<p><strong>Curso:</strong> ' + esc(estudiante.curso || 'No indicado') + '</p>' +
+                    '<p><strong>Jornada:</strong> ' + esc(estudiante.jornada || 'No indicada') + '</p>' +
+                    '<button type="button" class="ob-btn-editar-personales" data-accion="editar-personales">Actualizar datos personales</button>' +
+                    '<form class="ob-form-personales" data-form-personales hidden>' +
+                      '<p>Actualiza los datos personales y de contacto. El curso, la jornada, las observaciones y el correo de vinculación solo pueden modificarse desde la institución.</p>' +
+                      '<label>Nombre completo del estudiante<input name="nombre" type="text" maxlength="100" required value="' + esc(estudiante.nombre || '') + '"></label>' +
+                      '<label>Documento del estudiante<input name="documentoEstudiante" type="text" maxlength="40" value="' + esc(estudiante.documentoEstudiante || '') + '"></label>' +
+                      '<label>Dirección del estudiante<input name="direccionEstudiante" type="text" maxlength="200" value="' + esc(estudiante.direccionEstudiante || '') + '"></label>' +
+                      '<label>Nombre del acudiente<input name="acudienteNombre" type="text" maxlength="100" value="' + esc(estudiante.acudienteNombre || '') + '"></label>' +
+                      '<label>Parentesco<input name="acudienteParentesco" type="text" maxlength="60" value="' + esc(estudiante.acudienteParentesco || '') + '"></label>' +
+                      '<label>Teléfono de contacto<input name="acudienteCel" type="tel" maxlength="40" value="' + esc(estudiante.acudienteCel || '') + '"></label>' +
+                      '<label>Teléfono fijo<input name="acudienteFijo" type="tel" maxlength="40" value="' + esc(estudiante.acudienteFijo || '') + '"></label>' +
+                      '<label>Dirección del acudiente<input name="acudienteDireccion" type="text" maxlength="200" value="' + esc(estudiante.acudienteDireccion || '') + '"></label>' +
+                      '<label>Lugar de trabajo<input name="acudienteTrabajo" type="text" maxlength="120" value="' + esc(estudiante.acudienteTrabajo || '') + '"></label>' +
+                      '<label>Teléfono laboral<input name="acudienteTelefonoTrabajo" type="tel" maxlength="40" value="' + esc(estudiante.acudienteTelefonoTrabajo || '') + '"></label>' +
+                      '<div class="ob-personales-acciones"><button type="submit">Guardar cambios</button><button type="button" data-accion="cancelar-personales">Cancelar</button></div>' +
+                      '<p class="ob-personales-mensaje" aria-live="polite"></p>' +
+                    '</form>' +
+                    listaObs +
+                '</article>';
+            }).join('');
+        } catch (error) {
+            console.error('Error cargando estudiantes del acudiente:', error);
+            contenedor.innerHTML = '<p>No se pudieron consultar tus estudiantes. Comprueba las reglas de Firestore y que acudienteCorreo coincida con el correo de tu cuenta.</p>';
+        }
+    }
+
+    // Los acudientes pueden actualizar únicamente datos personales permitidos.
+    $('obEstudiantesAcudiente').addEventListener('click', function (evento) {
+        var boton = evento.target.closest('button[data-accion]');
+        if (!boton) return;
+        var tarjeta = boton.closest('[data-estudiante-doc]');
+        if (!tarjeta) return;
+        var formulario = tarjeta.querySelector('[data-form-personales]');
+        if (boton.dataset.accion === 'editar-personales') {
+            formulario.hidden = false;
+            boton.hidden = true;
+        } else if (boton.dataset.accion === 'cancelar-personales') {
+            formulario.reset();
+            formulario.hidden = true;
+            tarjeta.querySelector('[data-accion="editar-personales"]').hidden = false;
+            var mensaje = formulario.querySelector('.ob-personales-mensaje');
+            if (mensaje) mensaje.textContent = '';
+        }
+    });
+
+    $('obEstudiantesAcudiente').addEventListener('submit', async function (evento) {
+        var formulario = evento.target.closest('[data-form-personales]');
+        if (!formulario) return;
+        evento.preventDefault();
+
+        if (!usuarioActual || rolActual !== 'ACUDIENTE' || !window.ovFirebase) {
+            alert('No se pudo verificar tu cuenta. Vuelve a iniciar sesión.');
+            return;
+        }
+
+        var tarjeta = formulario.closest('[data-estudiante-doc]');
+        var idDocumento = tarjeta && tarjeta.dataset.estudianteDoc;
+        var mensaje = formulario.querySelector('.ob-personales-mensaje');
+        var botonGuardar = formulario.querySelector('button[type="submit"]');
+        var correoCuenta = String(usuarioActual.email || '').trim().toLowerCase();
+        if (!idDocumento || !correoCuenta) {
+            if (mensaje) mensaje.textContent = 'No se pudo identificar el estudiante o el correo de la cuenta.';
+            return;
+        }
+
+        var formularioDatos = new FormData(formulario);
+        var camposPermitidos = [
+            'nombre', 'documentoEstudiante', 'direccionEstudiante',
+            'acudienteNombre', 'acudienteParentesco', 'acudienteCel',
+            'acudienteFijo', 'acudienteDireccion', 'acudienteTrabajo',
+            'acudienteTelefonoTrabajo'
+        ];
+        var cambios = {};
+        camposPermitidos.forEach(function (campo) {
+            cambios[campo] = String(formularioDatos.get(campo) || '').trim();
+        });
+
+        if (!cambios.nombre) {
+            if (mensaje) mensaje.textContent = 'El nombre del estudiante es obligatorio.';
+            return;
+        }
+
+        botonGuardar.disabled = true;
+        if (mensaje) mensaje.textContent = 'Guardando cambios...';
+        try {
+            var firestore = window.ovFirebase.firestore;
+            var referencia = firestore.doc(window.ovFirebase.db, 'estudiantes', idDocumento);
+            var actual = await firestore.getDoc(referencia);
+            if (!actual.exists() || String(actual.data().acudienteCorreo || '').trim().toLowerCase() !== correoCuenta) {
+                throw new Error('VINCULO_NO_VALIDO');
+            }
+
+            await firestore.setDoc(referencia, Object.assign({}, cambios, {
+                actualizadoEn: firestore.serverTimestamp()
+            }), { merge: true });
+
+            if (mensaje) mensaje.textContent = '¡Información actualizada correctamente!';
+            await cargarEstudiantesAcudiente();
+        } catch (error) {
+            console.error('No se pudieron guardar los datos personales del estudiante:', error);
+            if (mensaje) mensaje.textContent = error && error.code === 'permission-denied'
+                ? 'Firebase rechazó el cambio. Revisa las reglas de actualización para acudientes.'
+                : 'No se pudieron guardar los cambios. Comprueba la conexión y vuelve a intentarlo.';
+        } finally {
+            botonGuardar.disabled = false;
+        }
+    });
 
     ['obCurso', 'fCurso'].forEach(function (id) {
         for (var i = 1; i <= 11; i++) {
-            $(id).insertAdjacentHTML(
-                'beforeend',
-                '<option value="' + i + '">Curso ' + i + '</option>'
-            );
+            $(id).insertAdjacentHTML('beforeend', '<option value="' + i + '">Curso ' + i + '</option>');
         }
     });
 
@@ -3746,9 +2219,7 @@
     $('modalNuevaObs').addEventListener('close', function () {
         firmaSolicitud++;
         firmaProcesando = false;
-
-        $('formNuevaObs')
-            .querySelector('button[type="submit"]').disabled = false;
+        $('formNuevaObs').querySelector('button[type="submit"]').disabled = false;
     });
 
     $('obModal').addEventListener('close', function () {
@@ -3757,33 +2228,74 @@
         });
 
         objectUrls = [];
+        estudianteAbierto = null;
+        editId = null;
     });
 
-    guardar();
-    render();
+    window.ovInicializarVistaPorRol = async function (usuario, rol, firebase) {
+        usuarioActual = usuario;
+        rolActual = String(rol || '').trim().toUpperCase();
+        window.ovFirebase = firebase;
+
+        permisosInicializados = false;
+
+        $('obCargandoRol').style.display = 'block';
+        $('obCargandoRol').textContent = 'Verificando permisos de la cuenta...';
+        $('obVistaAdministrativa').style.display = 'none';
+        $('obVistaAcudiente').style.display = 'none';
+
+        if (!usuarioActual || !usuarioActual.uid) {
+            $('obCargandoRol').textContent = 'No se pudo verificar la sesión.';
+            return;
+        }
+
+        if (rolActual === 'ACUDIENTE') {
+            document.body.classList.add('ov-rol-acudiente');
+
+            $('obVistaAdministrativa').style.display = 'none';
+            $('obVistaAcudiente').style.display = 'block';
+            $('obCargandoRol').style.display = 'none';
+
+            permisosInicializados = true;
+            await cargarEstudiantesAcudiente();
+            return;
+        }
+
+        if (ROLES_ADMINISTRATIVOS.includes(rolActual)) {
+            document.body.classList.remove('ov-rol-acudiente');
+
+            $('obVistaAcudiente').style.display = 'none';
+            $('obVistaAdministrativa').style.display = 'block';
+            $('obCargandoRol').style.display = 'none';
+
+            permisosInicializados = true;
+            $('obCargandoRol').style.display = 'block';
+            $('obCargandoRol').textContent = 'Cargando estudiantes desde Firebase...';
+            $('obVistaAdministrativa').style.display = 'none';
+            try {
+                await cargarEstudiantesFirebase();
+                $('obVistaAdministrativa').style.display = 'block';
+                $('obCargandoRol').style.display = 'none';
+                render();
+            } catch (error) {
+                console.error('No se pudieron cargar los estudiantes de Firestore:', error);
+                $('obCargandoRol').style.display = 'block';
+                $('obCargandoRol').textContent = 'No se pudieron cargar los estudiantes desde Firebase. Comprueba las reglas de Firestore y vuelve a cargar la página.';
+            }
+            return;
+        }
+
+        document.body.classList.remove('ov-rol-acudiente');
+        $('obVistaAdministrativa').style.display = 'none';
+        $('obVistaAcudiente').style.display = 'none';
+        $('obCargandoRol').style.display = 'block';
+        $('obCargandoRol').textContent =
+            'Tu cuenta no tiene un rol autorizado para consultar esta página.';
+    };
 
 })();
-
-
-/* MENÚ SUPERIOR DE CUENTA */
-
-function toggleAccountMenu() {
-    document.getElementById('accountCard')?.classList.toggle('active');
-}
-
-function toggleAccountOptions(evento) {
-    evento.stopPropagation();
-
-    var caja = document.getElementById('optionsBox');
-
-    if (!caja) return;
-
-    caja.style.display =
-        caja.style.display === 'block' ? 'none' : 'block';
-}
 </script>
 
-<!-- FUNCIONES DE LA BARRA LATERAL, TEMA Y CENTRO DE AYUDA -->
 <script>
     const ovBarra = document.getElementById('ovBarraLateral');
     const ovIconoLogo = document.getElementById('ovIconoLogo');
@@ -3800,10 +2312,7 @@ function toggleAccountOptions(evento) {
 
         ovInterruptorTema.setAttribute('aria-pressed', String(oscuro));
         ovIconoTema.setAttribute('name', oscuro ? 'sunny-outline' : 'moon-outline');
-        ovInterruptorTema.setAttribute(
-            'aria-label',
-            oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'
-        );
+        ovInterruptorTema.setAttribute('aria-label', oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
     }
 
     function ovCerrarMenuMovil() {
@@ -3851,9 +2360,7 @@ function toggleAccountOptions(evento) {
     ovOverlay.addEventListener('click', ovCerrarMenuMovil);
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            ovCerrarMenuMovil();
-        }
+        if (window.innerWidth > 768) ovCerrarMenuMovil();
     });
 
     ovInterruptorTema.addEventListener('click', () => {
@@ -3862,19 +2369,15 @@ function toggleAccountOptions(evento) {
 
         try {
             localStorage.setItem('ov-tema', oscuro ? 'oscuro' : 'claro');
-        } catch (error) {
-            // El tema sigue funcionando si el navegador bloquea el almacenamiento.
-        }
+        } catch (error) {}
     });
 
     try {
-        const temaGuardado = localStorage.getItem('ov-tema');
-        ovAplicarTema(temaGuardado === 'oscuro');
+        ovAplicarTema(localStorage.getItem('ov-tema') === 'oscuro');
     } catch (error) {
         ovAplicarTema(false);
     }
 
-    // CENTRO DE AYUDA
     (() => {
         const toggle = document.getElementById('toggle-sidebar');
         const panel = document.querySelector('.sidebar');
@@ -3915,16 +2418,13 @@ function toggleAccountOptions(evento) {
         actualizarAyuda();
     })();
 
-    // CONFIRMACIÓN DE CIERRE DE SESIÓN
     (() => {
         const botonAbrir = document.getElementById('ovBotonCerrarSesion');
         const modal = document.getElementById('ovModalCerrarSesion');
         const botonCancelar = document.getElementById('ovCancelarCerrarSesion');
         const botonConfirmar = document.getElementById('ovConfirmarCerrarSesion');
 
-        if (!botonAbrir || !modal || !botonCancelar || !botonConfirmar) {
-            return;
-        }
+        if (!botonAbrir || !modal || !botonCancelar || !botonConfirmar) return;
 
         function abrirModal() {
             modal.hidden = false;
@@ -3940,15 +2440,11 @@ function toggleAccountOptions(evento) {
         botonCancelar.addEventListener('click', cerrarModal);
 
         modal.addEventListener('click', (evento) => {
-            if (evento.target === modal) {
-                cerrarModal();
-            }
+            if (evento.target === modal) cerrarModal();
         });
 
         document.addEventListener('keydown', (evento) => {
-            if (evento.key === 'Escape' && !modal.hidden) {
-                cerrarModal();
-            }
+            if (evento.key === 'Escape' && !modal.hidden) cerrarModal();
         });
 
         botonConfirmar.addEventListener('click', async () => {
@@ -3974,7 +2470,6 @@ function toggleAccountOptions(evento) {
     })();
 </script>
 
-<!-- FIREBASE: PERFIL Y CIERRE DE SESIÓN -->
 <script type="module">
     import {
         initializeApp,
@@ -3991,7 +2486,14 @@ function toggleAccountOptions(evento) {
     import {
         getFirestore,
         doc,
-        getDoc
+        getDoc,
+        collection,
+        query,
+        where,
+        getDocs,
+        setDoc,
+        deleteDoc,
+        serverTimestamp
     } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -4008,7 +2510,7 @@ function toggleAccountOptions(evento) {
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    window.ovCerrarSesionFirebase = async function() {
+    window.ovCerrarSesionFirebase = async function () {
         await signOut(auth);
     };
 
@@ -4017,28 +2519,27 @@ function toggleAccountOptions(evento) {
     const avatarElemento = document.getElementById('ovAvatarUsuario');
 
     const roles = {
-        estudiante: 'Estudiante',
-        acudiente: 'Acudiente',
-        rector: 'Rector',
-        coordinador: 'Coordinador',
-        cordinador: 'Coordinador',
-        orientador: 'Orientador',
-        profesor: 'Profesor',
-        docente: 'Docente'
+        estudiante: 'ESTUDIANTE',
+        acudiente: 'ACUDIENTE',
+        rector: 'RECTOR',
+        administrador: 'ADMINISTRADOR',
+        coordinador: 'COORDINADOR',
+        cordinador: 'COORDINADOR',
+        orientador: 'ORIENTADOR',
+        profesor: 'PROFESOR',
+        docente: 'DOCENTE'
     };
 
     function textoValido(...valores) {
         for (const valor of valores) {
-            if (typeof valor === 'string' && valor.trim()) {
-                return valor.trim();
-            }
+            if (typeof valor === 'string' && valor.trim()) return valor.trim();
         }
         return '';
     }
 
     function normalizarRol(valor) {
         const rol = String(valor || '').trim().toLowerCase();
-        return roles[rol] || (rol ? rol.charAt(0).toUpperCase() + rol.slice(1) : '');
+        return roles[rol] || rol.toUpperCase();
     }
 
     function mostrarFoto(url) {
@@ -4048,10 +2549,7 @@ function toggleAccountOptions(evento) {
         imagen.alt = 'Foto de perfil';
         imagen.referrerPolicy = 'no-referrer';
 
-        imagen.onerror = () => {
-            imagen.remove();
-        };
-
+        imagen.onerror = () => imagen.remove();
         imagen.src = url;
         avatarElemento.replaceChildren(imagen);
     }
@@ -4060,6 +2558,9 @@ function toggleAccountOptions(evento) {
         if (!usuario) {
             nombreElemento.textContent = 'Sin sesión';
             rolElemento.textContent = 'No identificado';
+            document.getElementById('obCargandoRol').textContent =
+                'No hay una sesión activa. Redirigiendo al inicio de sesión...';
+            window.location.replace('login.html');
             return;
         }
 
@@ -4074,73 +2575,91 @@ function toggleAccountOptions(evento) {
             const referenciaUsuario = doc(db, 'usuarios', usuario.uid);
             const resultado = await getDoc(referenciaUsuario);
 
-            if (resultado.exists()) {
-                const datos = resultado.data();
-
-                const nombreCompleto = textoValido(
-                    datos.nombreCompleto,
-                    datos.nombreYApellido,
-                    datos.nombre_completo,
-                    datos.nombre,
-                    datos.nombres
-                );
-
-                const apellidos = textoValido(
-                    datos.apellidos,
-                    datos.apellido
-                );
-
-                if (nombreCompleto) {
-                    nombreElemento.textContent = nombreCompleto;
-                } else if (datos.nombre || datos.nombres) {
-                    nombreElemento.textContent =
-                        [textoValido(datos.nombre, datos.nombres), apellidos]
-                            .filter(Boolean)
-                            .join(' ');
-                } else if (apellidos && usuario.displayName) {
-                    nombreElemento.textContent =
-                        `${usuario.displayName.trim()} ${apellidos}`.trim();
-                }
-
-                const rol = normalizarRol(
-                    datos.rol || datos.tipoUsuario || datos.tipoCuenta
-                );
-
-                rolElemento.textContent = rol || 'Rol no definido';
-
-                const foto = textoValido(
-                    datos.fotoURL,
-                    datos.fotoPerfil,
-                    datos.photoURL,
-                    usuario.photoURL
-                );
-
-                mostrarFoto(foto);
-            } else {
+            if (!resultado.exists()) {
                 rolElemento.textContent = 'Perfil no encontrado';
+                document.getElementById('obCargandoRol').textContent =
+                    'No se encontró el perfil de esta cuenta en Firestore.';
+                document.getElementById('obVistaAdministrativa').style.display = 'none';
+                document.getElementById('obVistaAcudiente').style.display = 'none';
+                return;
             }
+
+            const datosUsuario = resultado.data();
+
+            const nombreCompleto = textoValido(
+                datosUsuario.nombreCompleto,
+                datosUsuario.nombreYApellido,
+                datosUsuario.nombre_completo,
+                datosUsuario.nombre,
+                datosUsuario.nombres
+            );
+
+            const apellidos = textoValido(datosUsuario.apellidos, datosUsuario.apellido);
+
+            if (nombreCompleto) {
+                nombreElemento.textContent = nombreCompleto;
+            } else if (datosUsuario.nombre || datosUsuario.nombres) {
+                nombreElemento.textContent =
+                    [textoValido(datosUsuario.nombre, datosUsuario.nombres), apellidos]
+                        .filter(Boolean)
+                        .join(' ');
+            } else if (apellidos && usuario.displayName) {
+                nombreElemento.textContent = `${usuario.displayName.trim()} ${apellidos}`.trim();
+            }
+
+            const rol = normalizarRol(
+                datosUsuario.rol || datosUsuario.tipoUsuario || datosUsuario.tipoCuenta
+            );
+
+            rolElemento.textContent = rol;
+
+            mostrarFoto(textoValido(
+                datosUsuario.fotoURL,
+                datosUsuario.fotoPerfil,
+                datosUsuario.photoURL,
+                usuario.photoURL
+            ));
 
             try {
                 const sesionAnterior = JSON.parse(
                     localStorage.getItem('sesionObservadorVirtual') || '{}'
                 );
 
-                localStorage.setItem(
-                    'sesionObservadorVirtual',
-                    JSON.stringify({
-                        ...sesionAnterior,
-                        id: usuario.uid,
-                        nombre: nombreElemento.textContent,
-                        correo: usuario.email || '',
-                        rol: rolElemento.textContent
-                    })
-                );
+                localStorage.setItem('sesionObservadorVirtual', JSON.stringify({
+                    ...sesionAnterior,
+                    id: usuario.uid,
+                    nombre: nombreElemento.textContent,
+                    correo: usuario.email || '',
+                    rol: rol
+                }));
             } catch (error) {
                 console.warn('No se pudo actualizar la sesión local.', error);
             }
+
+            const firestoreHelpers = {
+                collection,
+                query,
+                where,
+                getDocs,
+                doc,
+                getDoc,
+                setDoc,
+                deleteDoc,
+                serverTimestamp
+            };
+
+            await window.ovInicializarVistaPorRol(usuario, rol, {
+                db: db,
+                firestore: firestoreHelpers
+            });
         } catch (error) {
             console.error('Error consultando el perfil en Firestore:', error);
             rolElemento.textContent = 'No disponible';
+            document.getElementById('obVistaAdministrativa').style.display = 'none';
+            document.getElementById('obVistaAcudiente').style.display = 'none';
+            document.getElementById('obCargandoRol').style.display = 'block';
+            document.getElementById('obCargandoRol').textContent =
+                'No fue posible verificar tu rol. Comprueba tu conexión y los permisos de Firestore.';
         }
     });
 </script>
