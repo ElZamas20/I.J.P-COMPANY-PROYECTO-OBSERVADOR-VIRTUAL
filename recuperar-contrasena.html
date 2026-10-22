@@ -1,0 +1,464 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recuperar contraseña - Observador Virtual</title>
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png"
+          href="logo circular IJP COMPANY-.png">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6fb;
+            color: #243247;
+        }
+
+        .navbar-recuperacion {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 6%;
+            background: #ffffff;
+            border-bottom: 1px solid #e3e8f0;
+        }
+
+        .navbar-recuperacion img {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .navbar-recuperacion span {
+            font-size: 19px;
+            font-weight: 700;
+            color: #243b64;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 35px 16px;
+        }
+
+        .recuperacion-contenedor {
+            width: 100%;
+            max-width: 460px;
+            padding: 36px 30px;
+            background: #ffffff;
+            border: 1px solid #e5eaf2;
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(30, 55, 90, 0.09);
+            text-align: center;
+        }
+
+        .logo-principal {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 14px;
+        }
+
+        .recuperacion-contenedor h1 {
+            margin: 0 0 12px;
+            font-size: 25px;
+            color: #243b64;
+        }
+
+        .descripcion {
+            margin: 0 0 25px;
+            color: #65748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .campo-grupo {
+            text-align: left;
+            margin-bottom: 18px;
+        }
+
+        .campo-grupo label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            color: #34445c;
+        }
+
+        .campo-grupo input {
+            width: 100%;
+            min-height: 47px;
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            background: #ffffff;
+            color: #243247;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .campo-grupo input:focus {
+            border-color: #3768b1;
+            box-shadow: 0 0 0 3px rgba(55, 104, 177, 0.13);
+        }
+
+        .btn-recuperar {
+            width: 100%;
+            min-height: 47px;
+            border: none;
+            border-radius: 9px;
+            background: #244d85;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn-recuperar:hover {
+            background: #193a68;
+        }
+
+        .btn-recuperar:active {
+            transform: scale(0.99);
+        }
+
+        .btn-recuperar:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .mensaje {
+            display: none;
+            margin: 17px 0 0;
+            padding: 13px;
+            border-radius: 9px;
+            font-size: 13px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+            text-align: left;
+        }
+
+        .mensaje.exito {
+            display: block;
+            background: #eaf7ee;
+            border: 1px solid #b8e2c4;
+            color: #205d35;
+        }
+
+        .mensaje.error {
+            display: block;
+            background: #fff0f0;
+            border: 1px solid #f1c2c2;
+            color: #922f2f;
+        }
+
+        .enlace-volver {
+            display: inline-block;
+            margin-top: 24px;
+            color: #244d85;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .enlace-volver:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            padding: 18px 15px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.8;
+            color: #69778a;
+            background: #ffffff;
+            border-top: 1px solid #e3e8f0;
+        }
+
+        @media (max-width: 480px) {
+            .navbar-recuperacion {
+                padding: 13px 18px;
+            }
+
+            .navbar-recuperacion span {
+                font-size: 17px;
+            }
+
+            .recuperacion-contenedor {
+                padding: 28px 20px;
+                border-radius: 14px;
+            }
+
+            .recuperacion-contenedor h1 {
+                font-size: 22px;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #111827;
+                color: #e5e7eb;
+            }
+
+            .navbar-recuperacion,
+            .recuperacion-contenedor,
+            footer {
+                background: #1f2937;
+                border-color: #374151;
+            }
+
+            .navbar-recuperacion span,
+            .recuperacion-contenedor h1 {
+                color: #e5edff;
+            }
+
+            .descripcion,
+            footer {
+                color: #c0cada;
+            }
+
+            .campo-grupo label {
+                color: #e5e7eb;
+            }
+
+            .campo-grupo input {
+                background: #111827;
+                color: #f9fafb;
+                border-color: #4b5563;
+            }
+
+            .enlace-volver {
+                color: #a9c9ff;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <nav class="navbar-recuperacion">
+        <img src="logo empresa I.J.P COMPANY.png"
+             alt="Logo I.J.P. Company">
+
+        <span>I.J.P. Company</span>
+    </nav>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main>
+        <section class="recuperacion-contenedor">
+
+            <img
+                class="logo-principal"
+                src="logo IJP COMPANY.png"
+                alt="Logo de Observador Virtual"
+            >
+
+            <h1>Recuperar contraseña</h1>
+
+            <p class="descripcion">
+                ¿Olvidaste tu contraseña? No te preocupes.
+                Escribe el correo electrónico con el que te registraste
+                y te enviaremos las instrucciones para crear una nueva.
+            </p>
+
+            <form id="formularioRecuperacion">
+
+                <div class="campo-grupo">
+                    <label for="correo">
+                        CORREO ELECTRÓNICO
+                    </label>
+
+                    <input
+                        type="email"
+                        id="correo"
+                        name="correo"
+                        placeholder="ejemplo@correo.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-recuperar"
+                    id="botonRecuperar"
+                >
+                    Enviar enlace de recuperación
+                </button>
+
+            </form>
+
+            <div
+                id="mensaje"
+                class="mensaje"
+                role="status"
+                aria-live="polite"
+            ></div>
+
+            <a href="index.html" class="enlace-volver">
+                ← Volver al inicio de sesión
+            </a>
+
+        </section>
+    </main>
+
+    <!-- PIE DE PÁGINA -->
+    <footer>
+        &copy; 2025-2026 Observador Virtual - Sistema de Seguimiento Escolar
+        <br>
+        I.J.P. Company
+    </footer>
+
+    <!-- FIREBASE AUTHENTICATION -->
+    <script type="module">
+        import { initializeApp }
+            from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+        import {
+            getAuth,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+        // Mismo proyecto de Firebase de Observador Virtual.
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvImqStihYvhWGFEdCzBnWr4HiI_49BIc",
+            authDomain: "observador-virtual.firebaseapp.com",
+            projectId: "observador-virtual",
+            storageBucket: "observador-virtual.firebasestorage.app",
+            messagingSenderId: "168537175075",
+            appId: "1:537175075075:web:fc0df9eb3c7d26f0e2ad96",
+            measurementId: "G-2E21RDST23"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const formulario = document.getElementById(
+            "formularioRecuperacion"
+        );
+
+        const campoCorreo = document.getElementById("correo");
+        const botonRecuperar = document.getElementById("botonRecuperar");
+        const mensaje = document.getElementById("mensaje");
+
+        function mostrarMensaje(texto, tipo) {
+            mensaje.textContent = texto;
+            mensaje.className = "mensaje " + tipo;
+        }
+
+        function limpiarMensaje() {
+            mensaje.textContent = "";
+            mensaje.className = "mensaje";
+        }
+
+        formulario.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+            limpiarMensaje();
+
+            const correo = campoCorreo.value.trim();
+
+            if (!correo) {
+                mostrarMensaje(
+                    "Escribe el correo electrónico de tu cuenta.",
+                    "error"
+                );
+                return;
+            }
+
+            botonRecuperar.disabled = true;
+            botonRecuperar.textContent = "Enviando enlace...";
+
+            try {
+                await sendPasswordResetEmail(auth, correo, {
+                    url: new URL("index.html", window.location.href).href,
+                    handleCodeInApp: false
+                });
+
+                formulario.hidden = true;
+
+                mostrarMensaje(
+                    "Si existe una cuenta asociada a ese correo, recibirás un mensaje con las instrucciones para restablecer tu contraseña. Revisa también las carpetas de spam o correo no deseado.",
+                    "exito"
+                );
+
+            } catch (error) {
+                console.error(
+                    "Error al solicitar la recuperación:",
+                    error
+                );
+
+                switch (error.code) {
+                    case "auth/invalid-email":
+                        mostrarMensaje(
+                            "El formato del correo electrónico no es válido.",
+                            "error"
+                        );
+                        break;
+
+                    case "auth/too-many-requests":
+                        mostrarMensaje(
+                            "Se han realizado demasiadas solicitudes. Espera un momento e inténtalo de nuevo.",
+                            "error"
+                        );
+                        break;
+
+                    case "auth/network-request-failed":
+                        mostrarMensaje(
+                            "No hay conexión con Firebase. Comprueba tu internet e inténtalo de nuevo.",
+                            "error"
+                        );
+                        break;
+
+                    case "auth/operation-not-allowed":
+                        mostrarMensaje(
+                            "La recuperación no está disponible porque el acceso con correo y contraseña no está habilitado en Firebase Authentication.",
+                            "error"
+                        );
+                        break;
+
+                    case "auth/unauthorized-continue-uri":
+                    case "auth/invalid-continue-uri":
+                        mostrarMensaje(
+                            "Firebase no autoriza la dirección de retorno. Revisa la configuración del proyecto.",
+                            "error"
+                        );
+                        break;
+
+                    default:
+                        mostrarMensaje(
+                            "No se pudo enviar el correo. Comprueba la configuración de Firebase e inténtalo de nuevo.",
+                            "error"
+                        );
+                }
+
+            } finally {
+                botonRecuperar.disabled = false;
+                botonRecuperar.textContent =
+                    "Enviar enlace de recuperación";
+            }
+        });
+
+        campoCorreo.addEventListener("input", limpiarMensaje);
+    </script>
+
+</body>
+</html>
+```
