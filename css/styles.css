@@ -4289,3 +4289,987 @@ body.ov-dark-mode .cuenta-panel-principal {
         border-radius: 14px;
     }
 }
+
+
+/* ==========================================================================
+   LISTA DE ESTUDIANTES - EXPEDIENTE, DOCUMENTOS Y VISTA DE ACUDIENTE
+   (estilos que faltaban en la hoja original)
+   ========================================================================== */
+
+:root {
+    --ov-secundario: #5f6368;          /* la usa el JS en la fecha de cada observación */
+    --exp-superficie: #ffffff;
+    --exp-superficie-2: #f6f8fb;
+    --exp-borde: #dadce0;
+    --exp-texto: #1f1f1f;
+    --exp-suave: #5f6368;
+    --exp-azul: #1a73e8;
+    --exp-azul-oscuro: #1557b0;
+}
+
+body.ov-dark-mode {
+    --ov-secundario: #cbd5e1;
+    --exp-superficie: #27272a;
+    --exp-superficie-2: #333338;
+    --exp-borde: #484850;
+    --exp-texto: #f1f5f9;
+    --exp-suave: #cbd5e1;
+    --exp-azul: #8ecbff;
+    --exp-azul-oscuro: #6bb6f5;
+}
+
+/* Atributo hidden siempre respetado */
+.expediente-panel[hidden],
+.ob-campo[hidden],
+.ob-firma-preview[hidden],
+.ob-form-personales[hidden] {
+    display: none !important;
+}
+
+/* ---------- Mensaje de carga de permisos ---------- */
+.ob-estado-carga {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 18px 20px;
+    text-align: center;
+    background: var(--exp-superficie);
+    border: 1px solid var(--exp-borde);
+    border-radius: 12px;
+    color: var(--exp-suave);
+}
+
+.ob-estado-carga p { margin: 0; }
+
+/* ---------- Ventana del expediente ---------- */
+.ob-modal.ob-modal-expediente {
+    width: min(940px, 94vw);
+    max-height: 90vh;
+    padding: 0;
+    overflow: hidden;
+    color: var(--exp-texto);
+    background: var(--exp-superficie);
+    border: 1px solid var(--exp-borde);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .28);
+}
+
+.ob-modal.ob-modal-expediente[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Modal de nueva observación */
+#modalNuevaObs {
+    width: min(640px, 94vw);
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 24px;
+    color: var(--exp-texto);
+    background: var(--exp-superficie);
+    border-radius: 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .28);
+}
+
+/* Cabecera */
+.expediente-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%);
+    color: #fff;
+    flex: none;
+}
+
+.expediente-header h2 {
+    margin: 0 0 4px;
+    font-size: 22px;
+    line-height: 1.2;
+    color: #fff;
+    overflow-wrap: anywhere;
+}
+
+.student-header-avatar {
+    width: 56px;
+    height: 56px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .22);
+    border: 2px solid rgba(255, 255, 255, .55);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.expediente-meta {
+    font-size: 14px;
+    opacity: .92;
+}
+
+.expediente-kicker {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: rgba(255, 255, 255, .18);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+}
+
+.expediente-close {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .16);
+    color: #fff;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.expediente-close:hover,
+.expediente-close:focus-visible {
+    background: rgba(255, 255, 255, .32);
+}
+
+/* Navegación y pestañas */
+.expediente-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 24px;
+    background: var(--exp-superficie-2);
+    border-bottom: 1px solid var(--exp-borde);
+    flex: none;
+}
+
+.expediente-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.expediente-tab,
+.expediente-actualizar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 99px;
+    background: var(--exp-superficie);
+    color: var(--exp-suave);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s;
+}
+
+.expediente-tab:hover,
+.expediente-actualizar:hover {
+    border-color: var(--exp-azul);
+    color: var(--exp-azul);
+}
+
+.expediente-tab.active {
+    background: var(--exp-azul);
+    border-color: var(--exp-azul);
+    color: #fff;
+}
+
+body.ov-dark-mode .expediente-tab.active {
+    color: #0b1b2b;
+}
+
+.expediente-actualizar {
+    color: var(--exp-azul);
+    border-color: var(--exp-azul);
+}
+
+.expediente-contador {
+    min-width: 22px;
+    padding: 1px 7px;
+    border-radius: 99px;
+    background: rgba(26, 115, 232, .12);
+    color: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.expediente-tab.active .expediente-contador {
+    background: rgba(255, 255, 255, .28);
+}
+
+/* Paneles */
+.expediente-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 22px 24px;
+}
+
+.expediente-panel h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: var(--exp-texto);
+}
+
+.expediente-subtitulo {
+    margin: 0 0 18px;
+    color: var(--exp-suave);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Formularios del expediente */
+.expediente-fieldset {
+    margin: 0 0 18px;
+    padding: 16px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 12px;
+    background: var(--exp-superficie-2);
+}
+
+.expediente-fieldset legend {
+    padding: 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--exp-azul);
+}
+
+.expediente-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.ob-campo {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 14px;
+    min-width: 0;
+}
+
+.expediente-form-grid .ob-campo { margin-bottom: 0; }
+
+.ob-campo label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--exp-suave);
+}
+
+.ob-campo input,
+.ob-campo select,
+.ob-campo textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 9px 11px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 8px;
+    background: var(--exp-superficie);
+    color: var(--exp-texto);
+    font: inherit;
+    font-size: 14px;
+}
+
+.ob-campo textarea {
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.5;
+}
+
+.ob-campo input:focus,
+.ob-campo select:focus,
+.ob-campo textarea:focus,
+.ob-vincular-form input:focus {
+    outline: 2px solid var(--exp-azul);
+    outline-offset: 1px;
+    border-color: var(--exp-azul);
+}
+
+.ob-campo input[type="file"] {
+    padding: 7px;
+    background: var(--exp-superficie-2);
+}
+
+.ob-campo-ayuda {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--exp-suave);
+}
+
+.ob-falta-ayuda {
+    margin-top: 8px;
+    padding: 9px 12px;
+    border-left: 4px solid var(--exp-azul);
+    border-radius: 8px;
+    background: rgba(26, 115, 232, .09);
+    color: var(--exp-texto);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Botones de acción */
+.expediente-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 24px;
+    border-top: 1px solid var(--exp-borde);
+    background: var(--exp-superficie);
+    flex: none;
+}
+
+#modalNuevaObs .expediente-actions {
+    padding: 14px 0 0;
+    margin-top: 12px;
+}
+
+.expediente-panel .expediente-actions {
+    padding: 4px 0 0;
+    border-top: 0;
+    background: transparent;
+}
+
+.expediente-primary,
+.expediente-secondary {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, transform .1s;
+}
+
+.expediente-primary {
+    border: 1px solid var(--exp-azul);
+    background: var(--exp-azul);
+    color: #fff;
+}
+
+.expediente-primary:hover { background: var(--exp-azul-oscuro); border-color: var(--exp-azul-oscuro); }
+.expediente-primary:active { transform: translateY(1px); }
+body.ov-dark-mode .expediente-primary { color: #0b1b2b; }
+
+.expediente-secondary {
+    border: 1px solid var(--exp-borde);
+    background: var(--exp-superficie);
+    color: var(--exp-texto);
+}
+
+.expediente-secondary:hover { background: var(--exp-superficie-2); }
+
+.expediente-primary:disabled,
+.expediente-secondary:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
+/* ---------- Observaciones ---------- */
+.obs-card-item {
+    margin-bottom: 14px;
+    padding: 16px;
+    border: 1px solid var(--exp-borde);
+    border-left: 4px solid var(--exp-azul);
+    border-radius: 12px;
+    background: var(--exp-superficie);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+    color: var(--exp-texto);
+}
+
+.obs-card-item p { overflow-wrap: anywhere; }
+
+.obs-clasificacion {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 99px;
+    background: #fff4d6;
+    color: #8a5a00;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.obs-clasificacion.grave       { background: #ffe2cc; color: #b34700; }
+.obs-clasificacion.muy-grave   { background: #fde0de; color: #b42318; }
+.obs-clasificacion.no-presenta { background: #e6f4ea; color: #137333; }
+
+body.ov-dark-mode .obs-clasificacion            { background: rgba(250, 204, 21, .18); color: #fde68a; }
+body.ov-dark-mode .obs-clasificacion.grave      { background: rgba(249, 115, 22, .22); color: #fdba74; }
+body.ov-dark-mode .obs-clasificacion.muy-grave  { background: rgba(239, 68, 68, .24);  color: #fca5a5; }
+body.ov-dark-mode .obs-clasificacion.no-presenta{ background: rgba(34, 197, 94, .2);   color: #86efac; }
+
+.obs-clasificacion-desc {
+    margin: 8px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--exp-suave);
+}
+
+.obs-firma {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px dashed var(--exp-borde);
+    border-radius: 10px;
+    background: var(--exp-superficie-2);
+}
+
+.obs-firma img {
+    max-width: 240px;
+    max-height: 110px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+.obs-firma-titulo {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    color: var(--exp-suave);
+}
+
+.obs-firma-ayuda-legal {
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--exp-suave);
+}
+
+/* ---------- Documentos ---------- */
+.documentos-subir {
+    margin-bottom: 20px;
+    padding: 16px;
+    border: 2px dashed var(--exp-borde);
+    border-radius: 12px;
+    background: var(--exp-superficie-2);
+}
+
+.documentos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 14px;
+}
+
+.documento-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 12px;
+    background: var(--exp-superficie);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+.documento-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--exp-texto);
+}
+
+.documento-card-meta {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--exp-suave);
+    overflow-wrap: anywhere;
+}
+
+.documento-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.documento-card-actions button {
+    padding: 7px 12px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 8px;
+    background: var(--exp-superficie);
+    color: var(--exp-texto);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.documento-card-actions button:hover { background: var(--exp-superficie-2); }
+
+.documento-card-actions button[data-doc-act="eliminar"] {
+    color: #b42318;
+    border-color: #ffc9c4;
+    background: #fff0ef;
+}
+
+body.ov-dark-mode .documento-card-actions button[data-doc-act="eliminar"] {
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, .4);
+    background: rgba(239, 68, 68, .14);
+}
+
+.documento-vacio {
+    grid-column: 1 / -1;
+    padding: 28px 16px;
+    border: 1px dashed var(--exp-borde);
+    border-radius: 12px;
+    text-align: center;
+    color: var(--exp-suave);
+    font-size: 14px;
+}
+
+/* ---------- Firma en el modal de nueva observación ---------- */
+.ob-firma-preview {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 10px;
+    background: var(--exp-superficie-2);
+}
+
+.ob-firma-preview img {
+    width: 110px;
+    max-height: 70px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+.ob-firma-preview-info {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+    font-size: 13px;
+    color: var(--exp-suave);
+}
+
+.ob-btn-secundario {
+    justify-self: start;
+    padding: 6px 12px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 8px;
+    background: var(--exp-superficie);
+    color: var(--exp-texto);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.ob-btn-secundario:hover { background: var(--exp-superficie-2); }
+
+/* ---------- Pestaña Observador / vinculación de acudientes ---------- */
+.ob-panel-acudientes {
+    margin-bottom: 16px;
+    padding: 16px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 12px;
+    background: var(--exp-superficie-2);
+}
+
+.ob-panel-acudientes h3 { margin: 0 0 12px; font-size: 16px; }
+.ob-panel-acudientes p  { margin: 0; color: var(--exp-suave); font-size: 14px; }
+
+.ob-vincular-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.ob-vincular-form .ob-campo {
+    flex: 1 1 260px;
+    margin-bottom: 0;
+}
+
+.ob-vincular-form button {
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--exp-azul);
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.ob-vincular-form button:hover { background: var(--exp-azul-oscuro); }
+body.ov-dark-mode .ob-vincular-form button { color: #0b1b2b; }
+
+.ob-mensaje-vinculo {
+    margin-top: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.ob-mensaje-vinculo:empty { display: none; }
+.ob-mensaje-vinculo.exito { background: #e6f4ea; color: #137333; }
+.ob-mensaje-vinculo.error { background: #fde0de; color: #b42318; }
+
+body.ov-dark-mode .ob-mensaje-vinculo.exito { background: rgba(34, 197, 94, .18); color: #86efac; }
+body.ov-dark-mode .ob-mensaje-vinculo.error { background: rgba(239, 68, 68, .2);  color: #fca5a5; }
+
+.ob-acudiente-vinculado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 10px;
+    background: var(--exp-superficie);
+}
+
+.ob-acudiente-vinculado p { margin-top: 2px; font-size: 13px; overflow-wrap: anywhere; }
+
+.ob-acudiente-vinculado button {
+    padding: 7px 12px;
+    border: 1px solid #ffc9c4;
+    border-radius: 8px;
+    background: #fff0ef;
+    color: #b42318;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+body.ov-dark-mode .ob-acudiente-vinculado button {
+    border-color: rgba(239, 68, 68, .4);
+    background: rgba(239, 68, 68, .14);
+    color: #fca5a5;
+}
+
+.ob-observador-aviso {
+    margin: 12px 0;
+    padding: 12px 14px;
+    border: 1px solid #ffe08a;
+    border-radius: 10px;
+    background: #fff8e1;
+    color: #6b4e00;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.ob-observador-aviso p { margin: 6px 0 0; }
+
+body.ov-dark-mode .ob-observador-aviso {
+    border-color: rgba(250, 204, 21, .35);
+    background: rgba(250, 204, 21, .1);
+    color: #fde68a;
+}
+
+/* ---------- Vista del acudiente ---------- */
+.ob-vista-acudiente {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 16px 32px;
+    box-sizing: border-box;
+}
+
+.ob-observador-intro {
+    margin-bottom: 24px;
+    padding: 24px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 14px;
+    background: var(--exp-superficie);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+}
+
+.ob-observador-intro h1 {
+    margin: 0 0 12px;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: var(--exp-texto);
+}
+
+.ob-observador-intro p {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--exp-suave);
+}
+
+.ob-vinculados-titulo {
+    margin: 0 0 14px;
+    font-size: 20px;
+    color: var(--exp-texto);
+}
+
+.ob-vinculados-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.ob-vinculado-card {
+    padding: 18px;
+    border: 1px solid var(--exp-borde);
+    border-radius: 14px;
+    background: var(--exp-superficie);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .06);
+    color: var(--exp-texto);
+}
+
+.ob-vinculado-card h3 { margin: 0 0 10px; font-size: 18px; }
+.ob-vinculado-card p  { margin: 4px 0; font-size: 14px; color: var(--exp-suave); }
+.ob-vinculado-card p strong { color: var(--exp-texto); }
+
+.ob-observaciones-acudiente h4 {
+    margin: 14px 0 8px;
+    font-size: 15px;
+    color: var(--exp-texto);
+}
+
+/* Botón y formulario "Actualizar datos personales" (complementa el <style> del HTML) */
+.ob-btn-editar-personales {
+    background: var(--exp-azul);
+    color: #fff;
+}
+
+.ob-btn-editar-personales:hover { background: var(--exp-azul-oscuro); }
+body.ov-dark-mode .ob-btn-editar-personales { color: #0b1b2b; }
+
+.ob-form-personales {
+    background: var(--exp-superficie-2);
+    border-color: var(--exp-borde);
+}
+
+.ob-form-personales label { color: var(--exp-suave); font-size: 13px; }
+
+.ob-form-personales input {
+    background: var(--exp-superficie);
+    color: var(--exp-texto);
+    border-color: var(--exp-borde);
+}
+
+.ob-form-personales button[type="submit"] { background: var(--exp-azul); color: #fff; }
+body.ov-dark-mode .ob-form-personales button[type="submit"] { color: #0b1b2b; }
+
+.ob-form-personales button[type="button"] {
+    background: var(--exp-superficie);
+    color: var(--exp-texto);
+    border: 1px solid var(--exp-borde);
+}
+
+.ob-personales-mensaje:empty { display: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
+    .ob-modal.ob-modal-expediente { width: 100vw; max-width: 100vw; max-height: 100vh; border-radius: 0; }
+    .expediente-header { padding: 16px; gap: 12px; }
+    .expediente-header h2 { font-size: 18px; }
+    .student-header-avatar { width: 46px; height: 46px; font-size: 16px; }
+    .expediente-nav { padding: 10px 16px; }
+    .expediente-panel { padding: 16px; }
+    .expediente-actions { padding: 12px 16px; }
+    .expediente-form-grid { grid-template-columns: 1fr; }
+    .expediente-form-grid .ob-campo[style*="grid-column"] { grid-column: auto !important; }
+    .ob-firma-preview { flex-direction: column; align-items: flex-start; }
+}
+
+
+/* ==========================================================================
+   AJUSTES: VENTANAS CENTRADAS Y SECCIÓN "SUBIR DOCUMENTO"
+   ========================================================================== */
+
+/* El reset global (* { margin: 0 }) anulaba el centrado automático de <dialog>.
+   Se vuelve a centrar en el medio de la pantalla (crear, editar y ver estudiante). */
+dialog.ob-modal {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    max-width: 94vw;
+}
+
+dialog.ob-modal.ob-modal-expediente {
+    height: fit-content;
+}
+
+.ob-modal-titulo {
+    margin: 0 0 6px;
+    font-size: 20px;
+    color: var(--exp-texto);
+}
+
+#modalNuevaObs .expediente-subtitulo { margin-bottom: 16px; }
+
+@media (max-width: 720px) {
+    dialog.ob-modal.ob-modal-expediente { inset: 0; margin: 0; max-width: 100vw; height: 100%; }
+}
+
+/* ---------- Sección para subir documentos ---------- */
+.documentos-subir {
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--exp-azul);
+    background: var(--exp-superficie-2);
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.documentos-subir-cab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--exp-borde);
+}
+
+.documentos-subir-icono {
+    width: 44px;
+    height: 44px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: rgba(26, 115, 232, .14);
+    font-size: 22px;
+}
+
+.documentos-subir-cab h4 {
+    margin: 0 0 2px;
+    font-size: 16px;
+    color: var(--exp-texto);
+}
+
+.documentos-subir-cab p {
+    margin: 0;
+    font-size: 13px;
+    color: var(--exp-suave);
+}
+
+.documentos-paso {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.documentos-paso:last-child { margin-bottom: 0; }
+
+.documentos-paso-num {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    margin-top: 2px;
+    border-radius: 50%;
+    background: var(--exp-azul);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+body.ov-dark-mode .documentos-paso-num { color: #0b1b2b; }
+
+.documentos-paso-cuerpo {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.documentos-paso-cuerpo .ob-campo { margin-bottom: 0; }
+
+.documentos-paso-titulo {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--exp-suave);
+}
+
+.documentos-selector {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border: 2px dashed var(--exp-azul);
+    border-radius: 12px;
+    background: var(--exp-superficie);
+}
+
+/* El campo real se oculta visualmente pero sigue funcionando (y validando) */
+.ob-modal .documentos-input-oculto {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ob-modal .documentos-btn-archivo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background: var(--exp-azul);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.ob-modal .documentos-btn-archivo:hover { background: var(--exp-azul-oscuro); }
+
+body.ov-dark-mode .ob-modal .documentos-btn-archivo { color: #0b1b2b; }
+
+.documentos-input-oculto:focus-visible + .documentos-btn-archivo {
+    outline: 3px solid rgba(26, 115, 232, .45);
+    outline-offset: 2px;
+}
+
+.documentos-archivo-nombre {
+    flex: 1 1 180px;
+    min-width: 0;
+    font-size: 13px;
+    color: var(--exp-suave);
+    overflow-wrap: anywhere;
+}
+
+.documentos-archivo-nombre.seleccionado {
+    color: var(--exp-texto);
+    font-weight: 600;
+}
+
+@media (max-width: 720px) {
+    .documentos-subir { padding: 14px; }
+    .documentos-btn-archivo { width: 100%; justify-content: center; }
+}
