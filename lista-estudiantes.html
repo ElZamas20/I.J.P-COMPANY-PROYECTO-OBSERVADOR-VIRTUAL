@@ -228,7 +228,7 @@
             </div>
 
             <div class="expediente-nav">
-                <button type="button" id="tabActualizar" class="expediente-actualizar">Actualizar Información Personal</button>
+                <button type="button" id="tabActualizar" class="expediente-actualizar">✎ Actualizar información personal</button>
 
                 <div class="expediente-tabs" role="tablist" aria-label="Secciones del expediente">
                     <button type="button" id="tabObservaciones" class="expediente-tab active" role="tab" aria-selected="true">
@@ -246,21 +246,21 @@
             </div>
 
             <section class="expediente-panel" id="panelActualizar" hidden>
-                <h3>Información general</h3>
-                <p class="expediente-subtitulo">Actualiza los datos personales, el curso, la jornada y la información de contacto del acudiente.</p>
+                <h3>Actualizar información personal</h3>
+                <p class="expediente-subtitulo">Modifica los datos del estudiante y de su acudiente. Los campos marcados con * son obligatorios.</p>
 
                 <fieldset class="expediente-fieldset">
                     <legend>Datos del estudiante</legend>
 
                     <div class="expediente-form-grid">
                         <div class="ob-campo">
-                            <label for="fNombre">Nombre completo *</label>
-                            <input type="text" id="fNombre" required maxlength="100">
+                            <label for="fNombre">Nombre completo del estudiante *</label>
+                            <input type="text" id="fNombre" required maxlength="100" placeholder="Nombres y apellidos">
                         </div>
 
                         <div class="ob-campo">
-                            <label for="fDocumentoEstudiante">Documento / tarjeta de identidad</label>
-                            <input type="text" id="fDocumentoEstudiante" maxlength="40">
+                            <label for="fDocumentoEstudiante">Documento de identidad</label>
+                            <input type="text" id="fDocumentoEstudiante" maxlength="40" placeholder="Número de tarjeta de identidad">
                         </div>
 
                         <div class="ob-campo">
@@ -277,18 +277,18 @@
                         </div>
 
                         <div class="ob-campo" style="grid-column:1/-1;">
-                            <label for="fDireccionEstudiante">Dirección de residencia</label>
+                            <label for="fDireccionEstudiante">Dirección de residencia del estudiante</label>
                             <input type="text" id="fDireccionEstudiante" maxlength="180">
                         </div>
                     </div>
                 </fieldset>
 
                 <fieldset class="expediente-fieldset">
-                    <legend>Información del acudiente de referencia</legend>
+                    <legend>Datos del acudiente de referencia</legend>
 
                     <div class="expediente-form-grid">
                         <div class="ob-campo">
-                            <label for="fAcudienteNombre">Nombre completo</label>
+                            <label for="fAcudienteNombre">Nombre completo del acudiente</label>
                             <input type="text" id="fAcudienteNombre" maxlength="100">
                         </div>
 
@@ -315,22 +315,22 @@
                         </div>
 
                         <div class="ob-campo">
-                            <label for="fAcudienteCel">Celular</label>
+                            <label for="fAcudienteCel">Teléfono celular</label>
                             <input type="tel" id="fAcudienteCel" maxlength="30">
                         </div>
 
                         <div class="ob-campo">
-                            <label for="fAcudienteCorreo">Correo electrónico</label>
+                            <label for="fAcudienteCorreo">Correo electrónico del acudiente</label>
                             <input type="email" id="fAcudienteCorreo" maxlength="150">
                         </div>
 
                         <div class="ob-campo">
-                            <label for="fAcudienteTrabajo">Trabajo / ocupación</label>
+                            <label for="fAcudienteTrabajo">Ocupación o lugar de trabajo</label>
                             <input type="text" id="fAcudienteTrabajo" maxlength="120">
                         </div>
 
                         <div class="ob-campo" style="grid-column:1/-1;">
-                            <label for="fAcudienteDireccion">Dirección del acudiente (si es diferente)</label>
+                            <label for="fAcudienteDireccion">Dirección del acudiente (si es diferente a la del estudiante)</label>
                             <input type="text" id="fAcudienteDireccion" maxlength="180">
                         </div>
 
@@ -343,7 +343,7 @@
 
                 <div class="expediente-actions">
                     <button type="button" class="expediente-secondary" id="btnCancelarInformacion">Cancelar</button>
-                    <button type="button" class="expediente-primary" id="btnGuardarInformacion">Guardar información</button>
+                    <button type="button" class="expediente-primary" id="btnGuardarInformacion">Guardar cambios</button>
                 </div>
             </section>
 
@@ -351,7 +351,7 @@
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
                     <div>
                         <h3 style="margin-bottom:5px;">Observaciones</h3>
-                        <p class="expediente-subtitulo" style="margin:0;">Consulta el historial registrado para este estudiante.</p>
+                        <p class="expediente-subtitulo" style="margin:0;">Historial de observaciones registradas para este estudiante.</p>
                     </div>
 
                     <button type="button" id="btnAbrirNuevaObs" class="expediente-primary">+ Agregar observación</button>
@@ -365,37 +365,59 @@
                 <p class="expediente-subtitulo">Adjunta y consulta documentos relacionados con la matrícula y el seguimiento del estudiante.</p>
 
                 <div class="documentos-subir" id="bloqueSubirDocumento">
+                    <div class="documentos-subir-cab">
+                        <span class="documentos-subir-icono" aria-hidden="true">📎</span>
+                        <div>
+                            <h4>Subir un documento nuevo</h4>
+                            <p>Sigue estos 3 pasos para adjuntar un archivo al expediente del estudiante.</p>
+                        </div>
+                    </div>
+
                     <form id="formSubirDocumento">
-                        <div class="expediente-form-grid">
-                            <div class="ob-campo">
-                                <label for="docTipo">Tipo de documento *</label>
-                                <select id="docTipo" required>
-                                    <option value="">Seleccione...</option>
-                                    <option value="tarjeta_identidad">Tarjeta de identidad del estudiante</option>
-                                    <option value="documento_acudiente">Documento del acudiente</option>
-                                    <option value="certificado_eps">Certificado de afiliación a EPS</option>
-                                    <option value="recibo_hogar">Recibo de servicio público / hogar</option>
-                                    <option value="registro_civil">Registro civil</option>
-                                    <option value="certificado_estudio">Certificado de estudio</option>
-                                    <option value="otro">Otro documento</option>
-                                </select>
-                            </div>
+                        <div class="documentos-paso">
+                            <span class="documentos-paso-num">1</span>
+                            <div class="documentos-paso-cuerpo">
+                                <div class="ob-campo">
+                                    <label for="docTipo">Elige el tipo de documento *</label>
+                                    <select id="docTipo" required>
+                                        <option value="">Selecciona una opción...</option>
+                                        <option value="tarjeta_identidad">Tarjeta de identidad del estudiante</option>
+                                        <option value="documento_acudiente">Documento del acudiente</option>
+                                        <option value="certificado_eps">Certificado de afiliación a EPS</option>
+                                        <option value="recibo_hogar">Recibo de servicio público / hogar</option>
+                                        <option value="registro_civil">Registro civil</option>
+                                        <option value="certificado_estudio">Certificado de estudio</option>
+                                        <option value="otro">Otro documento</option>
+                                    </select>
+                                </div>
 
-                            <div class="ob-campo">
-                                <label for="docArchivo">Seleccionar archivo *</label>
-                                <input type="file" id="docArchivo" required accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
+                                <div class="ob-campo" id="campoNombreOtroDocumento" hidden>
+                                    <label for="docNombreOtro">Nombre del documento</label>
+                                    <input type="text" id="docNombreOtro" maxlength="100" placeholder="Ej. Autorización firmada">
+                                </div>
                             </div>
                         </div>
 
-                        <div class="ob-campo" id="campoNombreOtroDocumento" hidden>
-                            <label for="docNombreOtro">Nombre del documento</label>
-                            <input type="text" id="docNombreOtro" maxlength="100" placeholder="Ej. Autorización firmada">
+                        <div class="documentos-paso">
+                            <span class="documentos-paso-num">2</span>
+                            <div class="documentos-paso-cuerpo">
+                                <span class="documentos-paso-titulo">Selecciona el archivo desde tu equipo *</span>
+
+                                <div class="documentos-selector">
+                                    <input type="file" id="docArchivo" class="documentos-input-oculto" required accept=".pdf,.png,.jpg,.jpeg,.webp,application/pdf,image/png,image/jpeg,image/webp">
+                                    <label for="docArchivo" class="documentos-btn-archivo">📎 Seleccionar archivo</label>
+                                    <span id="docArchivoNombre" class="documentos-archivo-nombre">Ningún archivo seleccionado</span>
+                                </div>
+
+                                <small class="ob-campo-ayuda">Formatos admitidos: PDF, PNG, JPG/JPEG y WebP. Tamaño máximo por archivo: 10 MB.</small>
+                            </div>
                         </div>
 
-                        <small class="ob-campo-ayuda">Formatos admitidos: PDF, PNG, JPG/JPEG y WebP. Tamaño máximo por archivo: 10 MB.</small>
-
-                        <div style="display:flex;justify-content:flex-end;margin-top:14px;">
-                            <button type="submit" class="expediente-primary" id="btnSubirDocumento">Guardar documento</button>
+                        <div class="documentos-paso">
+                            <span class="documentos-paso-num">3</span>
+                            <div class="documentos-paso-cuerpo">
+                                <button type="submit" class="expediente-primary" id="btnSubirDocumento">Guardar documento</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -446,11 +468,12 @@
 
         <dialog class="ob-modal" id="modalNuevaObs">
             <form id="formNuevaObs" method="dialog">
-                <h3 style="margin-top:0;margin-bottom:20px;">Nueva observación</h3>
+                <h3 class="ob-modal-titulo">Nueva observación</h3>
+                <p class="expediente-subtitulo">Registra de forma clara y objetiva lo ocurrido. Los campos marcados con * son obligatorios.</p>
 
                 <div class="expediente-form-grid">
                     <div class="ob-campo">
-                        <label for="obsTipo">Tipo *</label>
+                        <label for="obsTipo">Tipo de observación *</label>
                         <select id="obsTipo" required>
                             <option value="">Seleccione...</option>
                             <option value="Académica">Académica</option>
@@ -459,25 +482,25 @@
                     </div>
 
                     <div class="ob-campo">
-                        <label for="obsFecha">Fecha *</label>
+                        <label for="obsFecha">Fecha de los hechos *</label>
                         <input type="date" id="obsFecha" required>
                     </div>
                 </div>
 
                 <div class="ob-campo">
-                    <label for="obsDesc">Descripción</label>
-                    <textarea id="obsDesc" rows="4" placeholder="Describe los hechos de forma clara y objetiva..."></textarea>
+                    <label for="obsDesc">Descripción de lo sucedido</label>
+                    <textarea id="obsDesc" rows="4" placeholder="Explica qué pasó, cuándo y dónde, sin juicios personales."></textarea>
                 </div>
 
                 <div class="ob-campo">
-                    <label for="obsCompromiso">Compromiso del estudiante</label>
-                    <textarea id="obsCompromiso" rows="2" placeholder="Compromiso adquirido..."></textarea>
+                    <label for="obsCompromiso">Compromiso del estudiante (opcional)</label>
+                    <textarea id="obsCompromiso" rows="2" placeholder="Escribe qué se compromete a hacer el estudiante."></textarea>
                 </div>
 
                 <div class="ob-campo">
                     <label for="obsFalta">Clasificación de la falta *</label>
                     <select id="obsFalta" required>
-                        <option value="">Seleccione una clasificación...</option>
+                        <option value="">Selecciona una clasificación...</option>
                         <optgroup label="Situaciones de convivencia escolar">
                             <option value="tipo1">Situación Tipo I</option>
                             <option value="tipo2">Situación Tipo II</option>
@@ -496,7 +519,7 @@
                 </div>
 
                 <div class="ob-campo">
-                    <label for="obsFirmaArchivo">Imagen de firma del docente o rector (opcional)</label>
+                    <label for="obsFirmaArchivo">Firma del docente o rector (opcional)</label>
                     <input type="file" id="obsFirmaArchivo" accept="image/png,image/jpeg,image/webp">
                     <small class="ob-campo-ayuda">PNG, JPG/JPEG o WebP. Máximo 5 MB antes de procesar.</small>
 
@@ -553,10 +576,10 @@
         <p>Utiliza el buscador y los filtros para localizar al estudiante. Haz clic en su tarjeta para abrir el expediente.</p>
 
         <h3>¿Cómo actualizar información?</h3>
-        <p>Abre el expediente, selecciona Actualizar Información y guarda los cambios cuando termines.</p>
+        <p>Abre el expediente, selecciona «Actualizar información personal» y pulsa «Guardar cambios» cuando termines.</p>
 
         <h3>¿Cómo adjuntar documentos?</h3>
-        <p>Abre la sección Documentos, selecciona el tipo de documento y el archivo que deseas guardar.</p>
+        <p>Abre la pestaña Documentos, elige el tipo de documento, pulsa «Seleccionar archivo» para escogerlo desde tu equipo y termina con «Guardar documento».</p>
 
         <h3>¿Cómo vincular un acudiente?</h3>
         <p>Abre el expediente del estudiante, selecciona Observador e introduce el correo electrónico de una cuenta registrada con el rol Acudiente.</p>
@@ -1095,6 +1118,7 @@
         $('contadorObservaciones').textContent = String(estudiante.observaciones.length);
         $('docTipo').value = '';
         $('docArchivo').value = '';
+        actualizarNombreArchivo();
         $('docNombreOtro').value = '';
         $('docNombreOtro').required = false;
         $('campoNombreOtroDocumento').hidden = true;
@@ -1490,6 +1514,23 @@
 
         if (estudiante) cargarCamposInformacion(estudiante);
         cambiarPanel('observaciones');
+    });
+
+    function actualizarNombreArchivo() {
+        var archivo = $('docArchivo').files && $('docArchivo').files[0];
+        var etiqueta = $('docArchivoNombre');
+
+        etiqueta.textContent = archivo
+            ? archivo.name + ' (' + formatoTamano(archivo.size) + ')'
+            : 'Ningún archivo seleccionado';
+
+        etiqueta.classList.toggle('seleccionado', !!archivo);
+    }
+
+    $('docArchivo').addEventListener('change', actualizarNombreArchivo);
+
+    $('formSubirDocumento').addEventListener('reset', function () {
+        setTimeout(actualizarNombreArchivo, 0);
     });
 
     $('docTipo').addEventListener('change', function () {
